@@ -1,4 +1,4 @@
-# Bot developed with discord.py (rewrite) - FRENCH
+# Bot developed with [discord.py](https://github.com/Rapptz/discord.py) (rewrite) - FRENCH
 
 #### __Prerequisites__
 
