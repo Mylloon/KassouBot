@@ -1,0 +1,5 @@
+UPDATE/
+.dockerignore
+Dockerfile
+setup.py
+cogs/music_old.py
