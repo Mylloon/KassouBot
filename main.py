@@ -5,7 +5,7 @@ from discord.ext import commands
 from random import randint, choice
 from datetime import datetime, timedelta
 from pytz import timezone
-from setup import token
+from tokens import token_discord as token
 
 client = commands.Bot(command_prefix = ".", case_insensitive = True, intents = discord.Intents.all())
 

@@ -17,12 +17,12 @@ import youtube_dl
 from async_timeout import timeout
 from discord.ext import commands
 
+# Genius API
 from random import randint
 import lyricsgenius
 import time
-
-# Genius API
-genius = lyricsgenius.Genius("gmAB9NLNoDACxvcf5IjJKVVgbYx3UJ8CZmdQkFOitRfyFewI6qvZFe62x6EUETpK")
+from tokens import token_genius as token # à l'importation de l'extension, music.py se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur
+genius = lyricsgenius.Genius(token)
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''

@@ -7,10 +7,11 @@
 
 #### __Setting up__
 
-- A `setup.py` file that contains:
+- A `tokens.py` file in `cogs` folder that contains:
 
 ```py
-token = "your token"
+token_discord = "your discord token"
+token_genius = "your genius token"
 ```
 
 #### __Starting up__
