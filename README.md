@@ -7,7 +7,7 @@
 
 #### __Setting up__
 
-- A `tokens.py` file in `cogs` folder that contains:
+- A `tokens.py` file that contains:
 
 ```py
 token_discord = "your discord token"
