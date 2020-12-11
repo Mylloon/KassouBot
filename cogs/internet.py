@@ -177,7 +177,8 @@ class Internet(commands.Cog):
         info = choice([newsfeed.entries[i] for i in range(0, 10 if len(newsfeed.entries) > 10 else len(newsfeed.entries))])
 
         desc = f"\n\n{info.description}"
-        embed = discord.Embed(title = info.title, color = randint(0, 0xFFFFFF), description = f"[**lien de la news**]({info.link}){'' if '<p>' in desc else desc}")
+        final_desc = "Pas de description trouvée." if "<p>" in desc or "</a>" in desc else desc
+        embed = discord.Embed(title = info.title, color = randint(0, 0xFFFFFF), description = f"[**lien de la news**]({info.link}){final_desc}")
         embed.set_author(name = info.author)
         embed.set_footer(text = f"News de {choix_site.capitalize()}")
         #embed.set_image(url = submission.url)
