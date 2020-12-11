@@ -19,6 +19,7 @@ async def on_connect():
     client.load_extension("cogs.music")
     client.load_extension("cogs.games")
     client.load_extension("cogs.fun")
+    client.load_extension("cogs.autopublish")
 
 @client.event
 async def on_ready():
