@@ -1,9 +1,7 @@
-import discord, praw, json, requests, datetime
+import discord, praw, json, requests, datetime, time, feedparser
 from discord.ext import commands
 from random import randint, choice
-import time
 from tokens import token_reddit as token # à l'importation de l'extension, le fichier se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur pylint
-import feedparser
 
 def setup(client):
     client.add_cog(Internet(client))
