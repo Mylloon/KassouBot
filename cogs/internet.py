@@ -178,7 +178,10 @@ class Internet(commands.Cog):
 
         desc = "Pas de description trouvée." if "<p>" in info.description or "</a>" in info.description else info.description
         embed = discord.Embed(title = info.title, color = randint(0, 0xFFFFFF), description = f"[**lien de la news**]({info.link})\n\n{desc}")
-        embed.set_author(name = info.author)
+        try:
+            embed.set_author(name = info.author)
+        except:
+            pass
         embed.set_footer(text = f"News de {choix_site.capitalize()}")
         #embed.set_image(url = submission.url)
         await ctx.send(embed = embed)
