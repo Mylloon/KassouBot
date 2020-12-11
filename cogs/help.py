@@ -27,7 +27,7 @@ class Help(commands.Cog):
                     if not cmds.hidden:
                         liste_cmds += f", `{ctx.prefix}{cmds.name}`"
                         nb_cmds += 1
-                if name_cog != "Help":
+                if name_cog != "Help" and nb_cmds > 0:
                     halp.add_field(name = f'**{name_cog} — {nb_cmds}**', value = liste_cmds[2:], inline = False)
             cmds_desc = ''
             for y in self.client.walk_commands():
