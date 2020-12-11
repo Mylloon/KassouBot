@@ -3,6 +3,7 @@ from discord.ext import commands
 from random import randint, choice
 import time
 from tokens import token_reddit as token # à l'importation de l'extension, le fichier se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur pylint
+import feedparser
 
 def setup(client):
     client.add_cog(Internet(client))
@@ -138,3 +139,23 @@ class Internet(commands.Cog):
         else:
             await ctx.message.add_reaction(emoji = '❌')
             await ctx.send(f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
+
+    @commands.command(name='news', aliases=['rss'])
+    async def _news(self, ctx):
+        """Info random sur le domaine de l'informatique"""
+        rss_website = [
+            "https://www.lesnumeriques.com/rss.xml"
+        ]
+        
+        newsfeed = {}
+        for i in rss_website:
+            newsfeed[i] = feedparser.parse(i)
+
+        news = []
+        for entry in newsfeed.values():
+            for i in range(0, 10 if len(entry.entries) > 10 else len(entry.entries)):
+                news.append(entry.entries[i])
+
+        info = choice(news)
+        await ctx.send(info.link)
+        await ctx.message.add_reaction(emoji = '✅')
