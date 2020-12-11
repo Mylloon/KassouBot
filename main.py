@@ -113,7 +113,7 @@ async def on_message(message):
                 if int(link[32:-38]) == message.guild.id:
                     msgID = await client.get_channel(int(link[51:-19])).fetch_message(int(link[70:]))
                     if len(msgID.content) > 0:
-                        embed = discord.Embed(description = msgID.content)
+                        embed = discord.Embed(description = msgID.content, colour = 0x2f3136)
                     else:
                         return # si le message ne contient pas de mots (image? vidéo? intégration?)
                     embed.add_field(name = "Auteur", value = msgID.author.mention, inline=True)
