@@ -140,7 +140,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='news', aliases=['rss'])
     async def _news(self, ctx, *, arg = ""):
-        """Info random sur le domaine de l'informatique\n	➡ Syntaxe: .news/rss [site/liste]"""
+        """Info random dans le domaine de l'informatique\n	➡ Syntaxe: .news/rss [site/liste]"""
 
         rss_website = {
             "anandtech": "https://www.anandtech.com/rss/",
