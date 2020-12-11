@@ -144,7 +144,23 @@ class Internet(commands.Cog):
     async def _news(self, ctx):
         """Info random sur le domaine de l'informatique"""
         rss_website = [
-            "https://www.lesnumeriques.com/rss.xml"
+            "https://www.anandtech.com/rss/",
+            "https://arstechnica.com/feed",
+            "https://www.cert.ssi.gouv.fr/feed/",
+            "http://frenchlegion.eu/feed/",
+            "https://www.guru3d.com/news_rss",
+            "https://hardwareleaks.com/feed",
+            "https://www.lesnumeriques.com/rss.xml",
+            "https://www.overclock3d.net/xmlfeed",
+            "https://overclocking.com/feed/",
+            "https://pcper.com/feed",
+            "https://www.rtings.com/reviews-rss.xml",
+            "https://www.storagereview.com/feed",
+            "https://www.techpowerup.com/rss/news",
+            "https://www.techpowerup.com/rss/reviews",
+            "https://www.techspot.com/backend.xml",
+            "https://videocardz.com/feed",
+            "https://vonguru.fr/feed/"
         ]
         
         newsfeed = {}
