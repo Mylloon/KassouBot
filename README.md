@@ -12,8 +12,12 @@
 ```py
 token_discord = "your discord token"
 token_genius = "your genius token"
-token_reddit = {"client_id": "ton client_id", "client_secret": "ton client_secret", "user_agent": "ton pseudo (exemple u/gotaga)"}
+token_reddit = {"client_id": "your client id", "client_secret": "your secret pass", "user_agent": "your reddit's username"}
 ```
+
+To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: : ![instructions](https://i.imgur.com/tEzYKDA.png)
+
+*redirection uri (for copy/paste) : http://localhost:8080*
 
 #### __Starting up__
 
