@@ -12,6 +12,7 @@
 ```py
 token_discord = "your discord token"
 token_genius = "your genius token"
+token_reddit = {"client_id": "ton client_id", "client_secret": "ton client_secret", "user_agent": "ton pseudo (exemple u/gotaga)"}
 ```
 
 #### __Starting up__
