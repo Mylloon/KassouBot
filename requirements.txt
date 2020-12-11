@@ -4,3 +4,4 @@ pytz==2020.4 # timezone
 praw==7.1.0 # reddit
 youtube-dl==2020.11.17 # music
 git+https://github.com/johnwmillr/LyricsGenius.git # lyrics
+feedparser==6.0.2 # rss feed (news)
