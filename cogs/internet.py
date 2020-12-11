@@ -2,6 +2,7 @@ import discord, praw, json, requests, datetime
 from discord.ext import commands
 from random import randint, choice
 import time
+from tokens import token_reddit as token # à l'importation de l'extension, le fichier se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur pylint
 
 def setup(client):
     client.add_cog(Internet(client))
@@ -34,7 +35,7 @@ class Internet(commands.Cog):
     async def _memes(self, ctx, *, args = ""):
         """Envois un meme de reddit.\n	➡ Syntaxe: .memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         try:
-            reddit = praw.Reddit(client_id = 'nHPaCR8L_jlmwQ', client_secret = 'tSCjb4QvdiNyCYKmW35SEWhjV8w', user_agent = 'disreddit /u/mylloon, http://localhost:8080')
+            reddit = praw.Reddit(client_id = token['client_id'], client_secret = token['client_secret'], user_agent = f"disreddit /{token['user_agent']}, http://localhost:8080")
 
             if args != "": # si il y a un arg différent d'un meme
                 subredditchoix = args
