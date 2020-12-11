@@ -141,37 +141,45 @@ class Internet(commands.Cog):
             await ctx.send(f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
 
     @commands.command(name='news', aliases=['rss'])
-    async def _news(self, ctx):
-        """Info random sur le domaine de l'informatique"""
-        rss_website = [
-            "https://www.anandtech.com/rss/",
-            "https://arstechnica.com/feed",
-            "https://www.cert.ssi.gouv.fr/feed/",
-            "http://frenchlegion.eu/feed/",
-            "https://www.guru3d.com/news_rss",
-            "https://hardwareleaks.com/feed",
-            "https://www.lesnumeriques.com/rss.xml",
-            "https://www.overclock3d.net/xmlfeed",
-            "https://overclocking.com/feed/",
-            "https://pcper.com/feed",
-            "https://www.rtings.com/reviews-rss.xml",
-            "https://www.storagereview.com/feed",
-            "https://www.techpowerup.com/rss/news",
-            "https://www.techpowerup.com/rss/reviews",
-            "https://www.techspot.com/backend.xml",
-            "https://videocardz.com/feed",
-            "https://vonguru.fr/feed/"
-        ]
+    async def _news(self, ctx, *, arg = ""):
+        """Info random sur le domaine de l'informatique\n	➡ Syntaxe: .news/rss [site/liste]"""
+
+        rss_website = {
+            "anandtech": "https://www.anandtech.com/rss/",
+            "arstechnica": "https://arstechnica.com/feed",
+            "certssi": "https://www.cert.ssi.gouv.fr/feed/",
+            "frenchlegion": "http://frenchlegion.eu/feed/",
+            "guru3d": "https://www.guru3d.com/news_rss",
+            "hardwareleaks": "https://hardwareleaks.com/feed",
+            "lesnumeriques": "https://www.lesnumeriques.com/rss.xml",
+            "overclock3d": "https://www.overclock3d.net/xmlfeed",
+            "overclocking": "https://overclocking.com/feed/",
+            "pcper": "https://pcper.com/feed",
+            "rtings": "https://www.rtings.com/reviews-rss.xml",
+            "storagereview": "https://www.storagereview.com/feed",
+            "techpowerupnews": "https://www.techpowerup.com/rss/news",
+            "techpowerupreviews": "https://www.techpowerup.com/rss/reviews",
+            "techspot": "https://www.techspot.com/backend.xml",
+            "videocardz": "https://videocardz.com/feed",
+            "vonguru": "https://vonguru.fr/feed/"
+        }
+
+        choix_site = choice([key for key in rss_website.keys()])
         
-        newsfeed = {}
-        for i in rss_website:
-            newsfeed[i] = feedparser.parse(i)
+        if arg.lower() in rss_website: # si on specifie la source
+            choix_site = arg.lower()
 
-        news = []
-        for entry in newsfeed.values():
-            for i in range(0, 10 if len(entry.entries) > 10 else len(entry.entries)):
-                news.append(entry.entries[i])
+        if arg.lower() == "liste":
+            embed = discord.Embed(title = "Liste des sources", color = randint(0, 0xFFFFFF), description = ", ".join([key.capitalize() for key in rss_website.keys()]))
+            return await ctx.send(embed = embed)
 
-        info = choice(news)
-        await ctx.send(info.link)
+        newsfeed = feedparser.parse(rss_website[choix_site])
+        info = choice([newsfeed.entries[i] for i in range(0, 10 if len(newsfeed.entries) > 10 else len(newsfeed.entries))])
+
+        desc = f"\n\n{info.description}"
+        embed = discord.Embed(title = info.title, color = randint(0, 0xFFFFFF), description = f"[**lien de la news**]({info.link}){'' if '<p>' in desc else desc}")
+        embed.set_author(name = info.author)
+        embed.set_footer(text = f"News de {choix_site.capitalize()}")
+        #embed.set_image(url = submission.url)
+        await ctx.send(embed = embed)
         await ctx.message.add_reaction(emoji = '✅')
