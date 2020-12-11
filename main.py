@@ -112,11 +112,15 @@ async def on_message(message):
             try:
                 if int(link[32:-38]) == message.guild.id:
                     msgID = await client.get_channel(int(link[51:-19])).fetch_message(int(link[70:]))
+                    couleur = 0x2f3136
                     if len(msgID.content) > 0:
-                        embed = discord.Embed(description = msgID.content, colour = 0x2f3136)
+                        embed = discord.Embed(description = msgID.content, colour = couleur)
                     else:
-                        return # si le message ne contient pas de mots (image? vidéo? intégration?)
-                    embed.add_field(name = "Auteur", value = msgID.author.mention, inline=True)
+                        embed = discord.Embed(description = "Pas de message (image ? vidéo ? intégration ?)", colour = couleur) # peut etre implémenter autre chose
+                    auteur = "Auteur"
+                    if message.author == msgID.author:
+                        auteur = "Auteur & Citateur"
+                    embed.add_field(name = auteur, value = msgID.author.mention, inline=True)
                     embed.add_field(name = "Channel", value = msgID.channel.mention, inline=True)
                     embed.add_field(name = "Message", value = f"[Aller au message]({linkURL})", inline=True)
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
@@ -132,8 +136,11 @@ async def on_message(message):
 
                     date_2 = str(message.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
                     date_2 = f"{date_2[0][8:]}/{date_2[0][5:-3]}/{date_2[0][:4]} à {date_2[1]}"
-
-                    embed.set_footer(icon_url = icon_url, text = f"{message_1}\nCité par {user_or_nick(message.author)} le {date_2}")
+                    
+                    cite = ""
+                    if auteur == "Auteur":
+                        cite = f"\nCité par {user_or_nick(message.author)} le {date_2}"
+                    embed.set_footer(icon_url = icon_url, text = f"{message_1}{cite}")
                     await message.channel.send(embed = embed)
                     if message.content == linkURL.replace(' ',''):
                         await message.delete()
