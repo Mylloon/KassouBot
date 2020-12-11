@@ -35,7 +35,7 @@ class Internet(commands.Cog):
     async def _memes(self, ctx, *, args = ""):
         """Envois un meme de reddit.\n	➡ Syntaxe: .memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         try:
-            reddit = praw.Reddit(client_id = token['client_id'], client_secret = token['client_secret'], user_agent = f"disreddit /{token['user_agent']}, http://localhost:8080")
+            reddit = praw.Reddit(client_id = token['client_id'], client_secret = token['client_secret'], user_agent = f"disreddit /u/{token['user_agent']}, http://localhost:8080")
 
             if args != "": # si il y a un arg différent d'un meme
                 subredditchoix = args
