@@ -2,7 +2,7 @@
 
 #### __Prerequisites__
 
-- Python 3.9.1 (can probably work with older versions)
+- Python 3.8.6
 - [requirements.txt](requirements.txt)
 
 #### __Setting up__
