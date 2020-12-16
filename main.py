@@ -9,17 +9,18 @@ from tokens import token_discord as token
 
 client = commands.Bot(command_prefix = ".", case_insensitive = True, intents = discord.Intents.all())
 
+print("Chargement des extensions & librairie...")
+client.load_extension("cogs.help")
+client.load_extension("cogs.utils")
+client.load_extension("cogs.internet")
+client.load_extension("cogs.music")
+client.load_extension("cogs.games")
+client.load_extension("cogs.fun")
+client.load_extension("cogs.autopublish")
+
 @client.event
 async def on_connect():
     print(f"Connecté avec le token : {token}.")
-    print("Chargement des extensions & librairie...")
-    client.load_extension("cogs.help")
-    client.load_extension("cogs.utils")
-    client.load_extension("cogs.internet")
-    client.load_extension("cogs.music")
-    client.load_extension("cogs.games")
-    client.load_extension("cogs.fun")
-    client.load_extension("cogs.autopublish")
 
 @client.event
 async def on_ready():
