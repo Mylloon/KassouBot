@@ -186,8 +186,9 @@ class Utils(commands.Cog):
         maps["skeld"] = ["skeld", "the skeld", "theskeld"]
         maps["mira"] = ["mira", "mira hq", "mirahq"]
         maps["polus"] = ["polus"]
+        maps["airship"] = ["airship"]
         if map == "all":
-            return maps["skeld"] + maps["mira"] + maps["polus"]
+            return maps["skeld"] + maps["mira"] + maps["polus"] + maps["airship"]
         return maps[map]
     
     @commands.command(name='among', hidden = True)
@@ -224,8 +225,14 @@ class Utils(commands.Cog):
             embed.set_image(url = image)
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
+        elif map.lower() in self._map_list_among_us("airship"):
+            image = "https://i.imgur.com/CYbPlQ6.png"
+            embed = discord.Embed(title = f"Map Airship d'Among Us", color = randint(0, 0xFFFFFF), description = f"[lien de l'image]({image})")
+            embed.set_image(url = image)
+            await ctx.send(embed = embed)
+            await ctx.message.add_reaction(emoji = '✅')
         else:
-            await ctx.send("`.amongus <mira/polus/skeld>`")
+            await ctx.send("`.amongus <mira/polus/skeld/airship>`")
 
     @commands.command(name='whois')
     async def _whois(self, ctx, *user: discord.Member):
