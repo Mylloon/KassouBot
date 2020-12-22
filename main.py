@@ -122,8 +122,7 @@ async def on_message(message):
                     if message.author == msgID.author:
                         auteur = "Auteur & Citateur"
                     embed.add_field(name = auteur, value = msgID.author.mention, inline=True)
-                    embed.add_field(name = "Channel", value = msgID.channel.mention, inline=True)
-                    embed.add_field(name = "Message", value = f"[Aller au message]({linkURL})", inline=True)
+                    embed.add_field(name = "Message", value = f"{msgID.channel.mention} - [Lien Message]({linkURL})", inline=True)
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
 
                     icon_url = message.author.avatar_url
