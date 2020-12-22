@@ -24,7 +24,7 @@ class Internet(commands.Cog):
             "gatto", "gattina", "neko", "chma", "pising", "feles", "felix", "kakis", "katé", "qattus", "qattusa", "ngeru", "miz", "felino",
             "felina", "muur", "katt", "shimii", "billi", "gorbe", "pusa", "kot", "giat", "pisica", "koshka", "pusi", "macka", "mizhu",
             "kotsur", "bisad", "büsi", "chatz", "paka", "muc", "poonai", "puunay", "kocour", "kocka", "maa-oh", "kedi", "kit", "con mêo",
-            "tchèt", "mouss", "ologbo", "kats", "猫", "кот", "고양이", "poticha", "😼"]
+            "tchèt", "mouss", "ologbo", "kats", "猫", "кот", "고양이", "poticha", "😼", "ʇɐɥɔ"]
             if message.content.lower() in chiens:
                 await self._dog(await self.client.get_context(message))
             if message.content.lower() in chats:
