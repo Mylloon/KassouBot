@@ -83,8 +83,8 @@ async def on_raw_reaction_remove(payload):
 @client.event
 async def on_command_error(ctx, error):
     if not ctx.invoked_with.startswith('.'):
-        await ctx.message.add_reaction(emoji = '❓')
         print(error)
+        await ctx.message.add_reaction(emoji = '❓')
 
 @client.event
 async def on_message(message):
