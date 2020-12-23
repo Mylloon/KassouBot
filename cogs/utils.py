@@ -143,7 +143,7 @@ class Utils(commands.Cog):
         else:
             await ctx.message.delete()
             embed = discord.Embed(description = text, color = randint(0, 0xFFFFFF))
-            embed.set_author(name = "Mémo", icon_url = ctx.author.avatar_url)
+            embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
             embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone("Europe/Paris")).strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
