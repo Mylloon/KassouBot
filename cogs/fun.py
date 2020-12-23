@@ -1,6 +1,7 @@
-import discord
+import discord, re
 from discord.ext import commands
 from random import randint, choice
+from datetime import timedelta
 
 def setup(client):
     client.add_cog(Fun(client))
@@ -105,4 +106,47 @@ class Fun(commands.Cog):
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx):
+        """Pile ou face.\n	➡ Syntaxe: .pileouface/pf"""
+        await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
+
+    @commands.command(name='mock')
+    async def _mock(self, ctx):
+        """Se moque du message précédent⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        first = 0
+        suite_auteur = None
+        temps_limite = (await ctx.message.channel.history(limit = 2).flatten())[1].created_at - timedelta(minutes = 5)
+        final_message = ""
+        async for message in ctx.message.channel.history(limit = 20, after = temps_limite, oldest_first = False):
+            if first == 0:
+                first = 1
+                continue
+            if first == 1:
+                final_message = message.content
+                first = 2
+            if suite_auteur:
+                if suite_auteur == message.author:
+                    final_message = f"{message.content}\n{final_message}"
+                    continue
+                else:
+                    break
+            if message.author != ctx.author:
+                final_message = message.content
+                suite_auteur = message.author
+                
+        urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', final_message)
+        for i in range (0, len(urls)):
+            final_message = final_message.replace(urls[i], '')
+
+        message = []
+        message[:0] = final_message.lower()
+
+        for i in range (0, len(message)):
+            if randint(0,1) == 1:
+                message[i] = message[i].upper()
+
+        await ctx.message.delete()
+        if len(message) > 0:
+            return await ctx.send("".join(message).replace("\\N", "\n").replace("\\n", "\n"))
+        else:
+            return await ctx.send("Le message ne contient aucun texte.")
