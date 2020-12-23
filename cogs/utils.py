@@ -186,7 +186,7 @@ class Utils(commands.Cog):
         maps["skeld"] = ["skeld", "the skeld", "theskeld"]
         maps["mira"] = ["mira", "mira hq", "mirahq"]
         maps["polus"] = ["polus"]
-        maps["airship"] = ["airship"]
+        maps["airship"] = ["airship", "air ship"]
         if map == "all":
             return maps["skeld"] + maps["mira"] + maps["polus"] + maps["airship"]
         return maps[map]
