@@ -149,4 +149,4 @@ class Fun(commands.Cog):
         if len(message) > 0:
             return await ctx.send("".join(message).replace("\\N", "\n").replace("\\n", "\n"))
         else:
-            return await ctx.send("Le message ne contient aucun texte.")
+            return await ctx.send("Le message ne contient aucun texte.", delete_after = 5)
