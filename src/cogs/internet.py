@@ -181,6 +181,5 @@ class Internet(commands.Cog):
         except:
             pass
         embed.set_footer(text = f"News de {choix_site.capitalize()}")
-        #embed.set_image(url = submission.url)
         await ctx.send(embed = embed)
         await ctx.message.add_reaction(emoji = '✅')
