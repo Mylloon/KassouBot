@@ -1,6 +1,6 @@
-discord.py[voice]==1.5.1 # discord
-pytz==2020.4 # timezone
-praw==7.1.0 # reddit
-youtube-dl==2020.11.17 # music
-git+https://github.com/johnwmillr/LyricsGenius.git # lyrics
+discord.py[voice]==1.6.0 # discord
+pytz==2021.1 # timezone
+praw==7.1.4 # reddit
+youtube-dl==2021.2.22 # music
+lyricsgenius==3.0.0 # lyrics
 feedparser==6.0.2 # rss feed (news)
