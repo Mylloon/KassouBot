@@ -1,5 +1,5 @@
 UPDATE/
 .dockerignore
 Dockerfile
-tokens.py
-cogs/music_old.py
+src/tokens.py
+src/cogs/music_old.py
