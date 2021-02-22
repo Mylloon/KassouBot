@@ -116,6 +116,7 @@ async def on_message(message):
                     couleur = 0x2f3136
                     msgFiles = msgID.attachments
                     imageExtensions = ["jpg", "jpeg", "png", "webp", "gif"]
+                    desc = msgID.content
                     if len(msgFiles) > 1:
                         listOfFiles = ""
                         for i in range(0, len(msgFiles)):
@@ -128,15 +129,11 @@ async def on_message(message):
                     else:
                         if len(msgFiles) == 1:
                             if msgFiles[0].filename[-4:].split('.')[1] in imageExtensions:
-                                if len(msgID.content) > 0:
-                                    desc = msgID.content
-                                else:
+                                if not len(msgID.content) > 0:
                                     desc = f"Une image jointe : {msgFiles[0].filename}"
                             else:
                                 linkFile = msgFiles[0].url
-                                if len(msgID.content) > 0:
-                                    desc = msgID.content
-                                else:
+                                if not len(msgID.content) > 0:
                                     desc = f"Un fichier joint : {msgFiles[0].filename}"
                     embed = discord.Embed(description = desc, colour = couleur)
                     auteur = "Auteur"
