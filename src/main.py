@@ -114,17 +114,45 @@ async def on_message(message):
                 if int(link[32:-38]) == message.guild.id:
                     msgID = await client.get_channel(int(link[51:-19])).fetch_message(int(link[70:]))
                     couleur = 0x2f3136
-                    if len(msgID.content) > 0:
-                        embed = discord.Embed(description = msgID.content, colour = couleur)
+                    msgFiles = msgID.attachments
+                    imageExtensions = ["jpg", "jpeg", "png", "webp", "gif"]
+                    if len(msgFiles) > 1:
+                        listOfFiles = ""
+                        for i in range(0, len(msgFiles)):
+                            listOfFiles = f"{listOfFiles}, {msgFiles[i].filename}"
+                        listOfFiles = listOfFiles[2:]
+                        if len(msgID.content) > 0:
+                            desc = f"{msgID.content}\n\nIl y a plusieurs fichiers dans ce message : {listOfFiles}"
+                        else:
+                            desc = f"Il y a plusieurs fichiers dans ce message : {listOfFiles}"
                     else:
-                        embed = discord.Embed(description = "Pas de message (image ? vidéo ? intégration ?)", colour = couleur) # peut etre implémenter autre chose
+                        if len(msgFiles) == 1:
+                            if msgFiles[0].filename[-4:].split('.')[1] in imageExtensions:
+                                if len(msgID.content) > 0:
+                                    desc = msgID.content
+                                else:
+                                    desc = f"Une image jointe : {msgFiles[0].filename}"
+                            else:
+                                linkFile = msgFiles[0].url
+                                if len(msgID.content) > 0:
+                                    desc = msgID.content
+                                else:
+                                    desc = f"Un fichier joint : {msgFiles[0].filename}"
+                    embed = discord.Embed(description = desc, colour = couleur)
                     auteur = "Auteur"
                     if message.author == msgID.author:
                         auteur = "Auteur & Citateur"
                     embed.add_field(name = auteur, value = msgID.author.mention, inline=True)
+                    try:
+                        if len(msgFiles) == 1:
+                            if msgFiles[0].filename[-4:].split('.')[1] in imageExtensions:
+                                embed.set_image(url=msgFiles[0].url)
+                            else:
+                                embed.add_field(name = "Fichier", value = f"[Lien]({linkFile})", inline=True)
+                    except:
+                        pass
                     embed.add_field(name = "Message", value = f"{msgID.channel.mention} - [Lien Message]({linkURL})", inline=True)
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
-
                     icon_url = message.author.avatar_url
 
                     date_1 = str(msgID.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
