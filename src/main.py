@@ -42,19 +42,19 @@ async def on_member_join(member):
         except:
             pass
         channel = client.get_channel(741639570172674120) # salons des arrivées
-        switch = {
-            0: f"Bienvenue, {member.mention}. On espère que tu as apporté de la pizza.",
-            1: f"C'est un plaisir de te voir, {member.mention}.",
-            2: f"{member.mention} vient juste d'arriver !",
-            3: f"{member.mention} vient juste d'atterrir.",
-            4: f"{member.mention} vient de se glisser dans le serveur.",
-            5: f"{member.mention} a bondi dans le serveur.",
-            6: f"Contents de te voir, {member.mention}.",
-            7: f"{member.mention} est arrivé(e).",
-            8: f"Tout le monde, accueillez comme il se doit {member.mention} !",
-            9: f"Youhou, tu as réussi, {member.mention} !",
-            10: f"{member.mention} a rejoint le groupe.",
-        }
+        switch = [
+            f"Bienvenue, {member.mention}. On espère que tu as apporté de la pizza.",
+            f"C'est un plaisir de te voir, {member.mention}.",
+            f"{member.mention} vient juste d'arriver !",
+            f"{member.mention} vient juste d'atterrir.",
+            f"{member.mention} vient de se glisser dans le serveur.",
+            f"{member.mention} a bondi dans le serveur.",
+            f"Contents de te voir, {member.mention}.",
+            f"{member.mention} est arrivé(e).",
+            f"Tout le monde, accueillez comme il se doit {member.mention} !",
+            f"Youhou, tu as réussi, {member.mention} !",
+            f"{member.mention} a rejoint le groupe."
+        ]
         message = await channel.send("...") # évite d'envoyer une notification
         await message.edit(content = choice(switch))
 
