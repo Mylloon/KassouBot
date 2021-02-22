@@ -2,8 +2,8 @@ print("Connexion à Discord...")
 
 import discord, re, pytz
 from discord.ext import commands
-from random import randint, choice
-from datetime import datetime, timedelta
+from random import choice
+from datetime import datetime
 from pytz import timezone
 from tokens import token_discord as token
 

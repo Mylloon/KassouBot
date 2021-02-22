@@ -1,4 +1,4 @@
-import discord, praw, json, requests, datetime, time, feedparser
+import discord, praw, json, requests, time, feedparser
 from discord.ext import commands
 from random import randint, choice
 from tokens import token_reddit as token # à l'importation de l'extension, le fichier se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur pylint

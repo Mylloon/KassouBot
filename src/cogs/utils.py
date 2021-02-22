@@ -4,7 +4,6 @@ from random import randint, shuffle
 from datetime import datetime
 from pytz import timezone
 import re
-import asyncio
 
 def setup(client):
     client.add_cog(Utils(client))

@@ -1,6 +1,5 @@
 import discord
 from discord.ext import commands
-from random import randint
 
 def setup(client):
     client.add_cog(Help(client))
