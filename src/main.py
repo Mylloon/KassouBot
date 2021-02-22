@@ -141,9 +141,11 @@ async def on_message(message):
                     if auteur == "Auteur":
                         cite = f"\nCité par {user_or_nick(message.author)} le {date_2}"
                     embed.set_footer(icon_url = icon_url, text = f"{message_1}{cite}")
-                    await message.channel.send(embed = embed)
                     if message.content == linkURL.replace(' ',''):
+                        await message.channel.send(embed = embed)
                         await message.delete()
+                    else:
+                        await message.reply(embed = embed)
             except Exception as e:
                 e = str(e)
                 if not "invalid literal for int() with base 10:" in e or not "404 Not Found (error code: 10008)" in e: # faute de frappe / message supprimé
