@@ -19,7 +19,7 @@ class Help(commands.Cog):
             """Liste des Cog"""
             halp=discord.Embed(title = 'Liste des catégories et commandes sans catégorie',
                             description = f'Utilisez `{ctx.prefix}help [catégorie]` pour en savoir plus sur elles et leur commande.',
-                            color = randint(0, 0xFFFFFF))
+                            color = discord.Colour.random())
             for name_cog in self.client.cogs:
                 liste_cmds = ""
                 nb_cmds = 0
@@ -50,7 +50,7 @@ class Help(commands.Cog):
                 for x in self.client.cogs:
                     for y in cog:
                         if x == y:
-                            halp = discord.Embed(title = f'{cog[0]} - Liste des commandes', description = self.client.cogs[cog[0]].__doc__, color = randint(0, 0xFFFFFF))
+                            halp = discord.Embed(title = f'{cog[0]} - Liste des commandes', description = self.client.cogs[cog[0]].__doc__, color = discord.Colour.random())
                             for c in self.client.get_cog(y).get_commands():
                                 if not c.hidden:
                                     cmds_help = str(c.help).split("\n")

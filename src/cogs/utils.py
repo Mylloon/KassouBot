@@ -20,14 +20,14 @@ class Utils(commands.Cog):
     async def _ping(self, ctx, *, question = '0'):
         """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if question == 'help':
-            return await ctx.send(embed = discord.Embed(color = randint(0, 0xFFFFFF), description = ":hourglass: correspond au temps entre deux battements de cœurs (en millisecondes)\n\n:stopwatch: correspond au temps que met le client a calculer le ping (en millisecondes)\n\n:heartbeat: correspond au temps que met le client a réagir au messages (en millisecondes)"))
+            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs (en millisecondes)\n\n:stopwatch: correspond au temps que met le client a calculer le ping (en millisecondes)\n\n:heartbeat: correspond au temps que met le client a réagir au messages (en millisecondes)"))
         else:
             now = int(round(time.time() * 1000))
             ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
             embed = discord.Embed(description = 'Pinging...')
             message = await ctx.send(embed = embed)
             ping2 = int(round(time.time() * 1000)) - now
-            await message.edit(embed = discord.Embed(color = randint(0, 0xFFFFFF), description = f':hourglass: {round(self.client.latency * 1000)}ms\n\n:stopwatch: {ping2}ms\n\n:heartbeat: {ping}ms'))
+            await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)}ms\n\n:stopwatch: {ping2}ms\n\n:heartbeat: {ping}ms'))
             await ctx.message.add_reaction(emoji = '✅')
 
     @commands.command(name='avatar')
@@ -38,7 +38,7 @@ class Utils(commands.Cog):
         else:
             user = self.client.get_user(int(user[2:-1].replace("!","")))
         await ctx.message.add_reaction(emoji = '✅')
-        embed = discord.Embed(description = f"[lien vers la photo de profil]({user.avatar_url}) de {user.mention}", color = randint(0, 0xFFFFFF))
+        embed = discord.Embed(description = f"[lien vers la photo de profil]({user.avatar_url}) de {user.mention}", color = discord.Colour.random())
         embed.set_author(name = f"Photo de profil de {user.name}")
         embed.set_image(url = user.avatar_url)
         await ctx.send(embed = embed)
@@ -74,7 +74,7 @@ class Utils(commands.Cog):
                 answer = str(round(float(answer),2))
                 equation = f"'{equation}' arrondi à 2"
         equation = equation.replace('*', '×').replace('/', '÷').replace('>=', '≥').replace('<=', '≤')
-        embed = discord.Embed(color = randint(0, 0xFFFFFF), title = 'Calculatrice')
+        embed = discord.Embed(color = discord.Colour.random(), title = 'Calculatrice')
         embed.set_footer(text = ctx.author)
 
         embed.add_field(name = 'Calcul :', value = equation, inline = False)
@@ -142,7 +142,7 @@ class Utils(commands.Cog):
             return await ctx.send("Ta note doit faire moins de 2048 caractères.")
         else:
             await ctx.message.delete()
-            embed = discord.Embed(description = text, color = randint(0, 0xFFFFFF))
+            embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
             embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone("Europe/Paris")).strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
@@ -157,7 +157,7 @@ class Utils(commands.Cog):
         """Donne des infos sur le bot.\n	➡ Syntaxe: .infos/info⁢"""
         appinfo = await self.client.application_info()
 
-        embed = discord.Embed(color = randint(0, 0xFFFFFF))
+        embed = discord.Embed(color = discord.Colour.random())
 
         embed.set_author(name = appinfo.name, icon_url = self.client.user.avatar_url)
 
@@ -209,25 +209,25 @@ class Utils(commands.Cog):
         """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if map.lower() in self._map_list_among_us("mira"):
             image = "https://i.imgur.com/6ijrH1h.jpg"
-            embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = randint(0, 0xFFFFFF), description = f"[lien de l'image]({image})")
+            embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         elif map.lower() in self._map_list_among_us("polus"):
             image = "https://i.imgur.com/mhFmcw3.jpg"
-            embed = discord.Embed(title = f"Map Polus d'Among Us", color = randint(0, 0xFFFFFF), description = f"[lien de l'image]({image})")
+            embed = discord.Embed(title = f"Map Polus d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         elif map.lower() in self._map_list_among_us("skeld"):
             image = "https://i.imgur.com/OSXI4Zv.jpg"
-            embed = discord.Embed(title = f"Map The Skeld d'Among Us", color = randint(0, 0xFFFFFF), description = f"[lien de l'image]({image})")
+            embed = discord.Embed(title = f"Map The Skeld d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         elif map.lower() in self._map_list_among_us("airship"):
             image = "https://i.imgur.com/CYbPlQ6.png"
-            embed = discord.Embed(title = f"Map Airship d'Among Us", color = randint(0, 0xFFFFFF), description = f"[lien de l'image]({image})")
+            embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
@@ -243,7 +243,7 @@ class Utils(commands.Cog):
             nom = f"{user[0].name}#{user[0].discriminator}"
             if user[0].nick:
                 nom = f"{user[0].nick} ({user[0].name}#{user[0].discriminator})"
-            embed = discord.Embed(color = randint(0, 0xFFFFFF)).set_author(name = nom, icon_url = user[0].avatar_url)
+            embed = discord.Embed(color = discord.Colour.random()).set_author(name = nom, icon_url = user[0].avatar_url)
             
             embed.add_field(name = "ID", value = user[0].id)
             
@@ -328,7 +328,7 @@ class Utils(commands.Cog):
                     shuffle(emojis_chosen)
                 for i in range(len(args[1:])):
                     message += f"{emojis_chosen[i]} -> {propositions[i]}\n"
-                embed = discord.Embed(title = question, description = message,color = randint(0, 0xFFFFFF)).set_footer(text = self.user_or_nick(ctx.author), icon_url = ctx.author.avatar_url)
+                embed = discord.Embed(title = question, description = message,color = discord.Colour.random()).set_footer(text = self.user_or_nick(ctx.author), icon_url = ctx.author.avatar_url)
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])

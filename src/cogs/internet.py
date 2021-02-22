@@ -53,7 +53,7 @@ class Internet(commands.Cog):
 
             image = ["png", "jpg", "jpeg", "bmp", "gif"]
             if submission.url[-3:] in image:
-                embed = discord.Embed(title = f"r/{subredditchoix} pour {ctx.author.name}", color = randint(0, 0xFFFFFF), description = f"[lien du meme]({submission.url})")
+                embed = discord.Embed(title = f"r/{subredditchoix} pour {ctx.author.name}", color = discord.Colour.random(), description = f"[lien du meme]({submission.url})")
                 embed.set_footer(text = f"Meme de Reddit")
                 embed.set_image(url = submission.url)
                 message = await ctx.send(embed = embed)
@@ -95,7 +95,7 @@ class Internet(commands.Cog):
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"
         else:
             name = f"{ctx.author.name}"
-        embed = discord.Embed(title = f"Poticha pour {name}", colour = randint(0, 0xFFFFFF))
+        embed = discord.Embed(title = f"Poticha pour {name}", colour = discord.Colour.random())
         cat = self._random_image("http://aws.random.cat/meow")
         embed.set_image(url = cat[0]['file'])
         embed.set_footer(text = f"random.cat a pris {cat[1]} ms.")
@@ -111,7 +111,7 @@ class Internet(commands.Cog):
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"
         else:
             name = f"{ctx.author.name}"
-        embed = discord.Embed(title = f"Potichien pour {name}", colour = randint(0, 0xFFFFFF))
+        embed = discord.Embed(title = f"Potichien pour {name}", colour = discord.Colour.random())
         dog = self._random_image("https://dog.ceo/api/breeds/image/random")
         embed.set_image(url = dog[0]['message'])
         embed.set_footer(text = f"dog.ceo a pris {dog[1]} ms.")
@@ -128,7 +128,7 @@ class Internet(commands.Cog):
         else:
             choice_of_nsfw = choice(liste_hot)
         if ctx.channel.is_nsfw():
-            embed = discord.Embed(title = f"{choice_of_nsfw.capitalize()} pour {ctx.author.name}", colour = randint(0, 0xFFFFFF))
+            embed = discord.Embed(title = f"{choice_of_nsfw.capitalize()} pour {ctx.author.name}", colour = discord.Colour.random())
             nsfw = self._random_image(f'http://api.o{choice_of_nsfw}.ru/noise/')
             embed.set_image(url = f"http://media.o{choice_of_nsfw}.ru/{nsfw[0][0]['preview']}")
             embed.set_footer(text = f"o{choice_of_nsfw}.ru a pris {nsfw[1]} ms.")
@@ -168,14 +168,14 @@ class Internet(commands.Cog):
             choix_site = arg.lower()
 
         if arg.lower() == "liste":
-            embed = discord.Embed(title = "Liste des sources", color = randint(0, 0xFFFFFF), description = ", ".join([key.capitalize() for key in rss_website.keys()]))
+            embed = discord.Embed(title = "Liste des sources", color = discord.Colour.random(), description = ", ".join([key.capitalize() for key in rss_website.keys()]))
             return await ctx.send(embed = embed)
 
         newsfeed = feedparser.parse(rss_website[choix_site])
         info = choice([newsfeed.entries[i] for i in range(0, 10 if len(newsfeed.entries) > 10 else len(newsfeed.entries))])
 
         desc = "Pas de description trouvée." if "<p>" in info.description or "</a>" in info.description else info.description
-        embed = discord.Embed(title = info.title, color = randint(0, 0xFFFFFF), description = f"[**lien de la news**]({info.link})\n\n{desc}")
+        embed = discord.Embed(title = info.title, color = discord.Colour.random(), description = f"[**lien de la news**]({info.link})\n\n{desc}")
         try:
             embed.set_author(name = info.author)
         except:

@@ -157,7 +157,7 @@ class Song:
     def create_embed(self):
         embed = (discord.Embed(title="Joue",
                                description=f"\n[{self.source.title}]({self.source.url})\n",
-                               color=randint(0, 0xFFFFFF))
+                               color=discord.Colour.random())
                  .add_field(name="Durée", value=self.source.duration)
                  .add_field(name="Demandé par", value=self.requester.mention)
                  .add_field(name="Chaîne", value=f"[{self.source.uploader}]({self.source.uploader_url})")
@@ -419,7 +419,7 @@ class Music(commands.Cog):
         for i, song in enumerate(ctx.voice_state.songs[start:end], start=start):
             queue += f"`{i + 1}.` [**{song.source.title}**]({song.source.url})\n"
 
-        embed = (discord.Embed(description=f"**{len(ctx.voice_state.songs)} piste{'s' if len(ctx.voice_state.songs)>1 else ''} :**\n\n{queue}", color = randint(0, 0xFFFFFF))
+        embed = (discord.Embed(description=f"**{len(ctx.voice_state.songs)} piste{'s' if len(ctx.voice_state.songs)>1 else ''} :**\n\n{queue}", color = discord.Colour.random())
                  .set_footer(text=f"Page {page}/{pages}"))
         await ctx.send(embed=embed)
 
@@ -500,7 +500,7 @@ class Music(commands.Cog):
                 message = await ctx.send(f":mag: **Cherche les paroles de ** `{song}`")
             temps_requete = int(round(time.time() * 1000))
             song_genius = genius.search_song(song)
-            couleur_embed = randint(0, 0xFFFFFF)
+            couleur_embed = discord.Colour.random()
             try:
                 paroles = song_genius.lyrics
             except:
