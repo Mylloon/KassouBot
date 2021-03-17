@@ -1,4 +1,4 @@
-UPDATE/
+update/
 .dockerignore
 Dockerfile
 src/tokens.py
