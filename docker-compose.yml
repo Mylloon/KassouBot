@@ -1,0 +1,12 @@
+version: "2.1"
+services:
+  kassoubot:
+    image: mylloon/kassoubot
+    container_name: kassoubot
+    environment:
+      - TOKEN_DISCORD=your-token-discord
+      - TOKEN_GENIUS=your-token-genius
+      - TOKEN_REDDIT_CLIENT_ID=your-reddit-client-id
+      - TOKEN_REDDIT_CLIENT_SECRET=your-reddit-client-secret
+      - TOKEN_REDDIT_USER_AGENT=your-reddit-user-agent
+    restart: unless-stopped

@@ -4,24 +4,27 @@
 
 - Python 3.8.6
 - [requirements.txt](requirements.txt)
+- Docker
 
 #### __Setting up__
 
-- A `tokens.py` file that contains:
+You have to replace `TOKEN_DISCORD`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET` and `TOKEN_REDDIT_USER_AGENT` with your desired values.
+With a [docker-compose](docker-compose.yml) or in command line:
 
-```py
-token_discord = "your discord token"
-token_genius = "your genius token"
-token_reddit = {"client_id": "your client id", "client_secret": "your secret pass", "user_agent": "your reddit's username"}
+```
+docker run -d \
+    --name="kassoubot" \
+    mylloon/kassoubot \
+    --TOKEN_DISCORD="yourValue" \
+    --TOKEN_GENIUS="yourValue" \
+    --TOKEN_REDDIT_CLIENT_ID="yourValue" \
+    --TOKEN_REDDIT_CLIENT_SECRET="yourValue" \
+    --TOKEN_REDDIT_USER_AGENT="yourValue"
 ```
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)
 
 *redirection uri (for copy/paste) : http://localhost:8080*
-
-#### __Starting up__
-
-- Run [main.py](main.py)
 
 #### __Add the bot to your server__
 
