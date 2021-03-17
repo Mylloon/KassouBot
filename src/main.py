@@ -1,11 +1,10 @@
 print("Connexion à Discord...")
 
-import discord, re, pytz
+import discord, re, pytz, os
 from discord.ext import commands
 from random import choice
 from datetime import datetime
 from pytz import timezone
-from tokens import token_discord as token
 
 client = commands.Bot(command_prefix = ".", case_insensitive = True, intents = discord.Intents.all())
 
@@ -20,7 +19,7 @@ client.load_extension("cogs.autopublish")
 
 @client.event
 async def on_connect():
-    print(f"Connecté avec le token : {token}.")
+    print(f"Connecté.")
 
 @client.event
 async def on_ready():
@@ -212,4 +211,4 @@ def user_or_nick(user):
     else:
         return f"{user.name}#{user.discriminator}"
 
-client.run(token)
+client.run(os.environ['TOKEN_DISCORD'])

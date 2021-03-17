@@ -20,8 +20,8 @@ from discord.ext import commands
 # Genius API
 import lyricsgenius
 import time
-from tokens import token_genius as token # à l'importation de l'extension, music.py se retrouve dans le '/' et non dans 'cogs/', ignorez l'erreur
-genius = lyricsgenius.Genius(token)
+import os
+genius = lyricsgenius.Genius(os.environ['TOKEN_GENIUS'])
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''

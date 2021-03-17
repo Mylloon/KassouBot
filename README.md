@@ -4,24 +4,24 @@
 
 - Python 3.8.6
 - [requirements.txt](requirements.txt)
+- Docker
 
 #### __Setting up__
 
-- A `tokens.py` file that contains:
+docker...in progress...
 
-```py
-token_discord = "your discord token"
-token_genius = "your genius token"
-token_reddit = {"client_id": "your client id", "client_secret": "your secret pass", "user_agent": "your reddit's username"}
-```
+env:
+
+TOKEN_DISCORD="your token discord"
+TOKEN_GENIUS="your genius token"
+TOKEN_REDDIT_CLIENT_ID="your client id"
+TOKEN_REDDIT_CLIENT_SECRET="your client secret"
+TOKEN_REDDIT_USER_AGENT="your user agent"
+
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)
 
 *redirection uri (for copy/paste) : http://localhost:8080*
-
-#### __Starting up__
-
-- Run [main.py](main.py)
 
 #### __Add the bot to your server__
 
