@@ -1,5 +1,5 @@
+.vscode/
 update/
 .dockerignore
-Dockerfile
 src/tokens.env
 src/cogs/music_old.py
