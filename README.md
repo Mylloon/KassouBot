@@ -8,16 +8,19 @@
 
 #### __Setting up__
 
-docker...in progress...
+You have to replace `TOKEN_DISCORD`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET` and `TOKEN_REDDIT_USER_AGENT` with your desired values.
+With a [docker-compose](docker-compose.yml) or in command line:
 
-env:
-
-TOKEN_DISCORD="your token discord"
-TOKEN_GENIUS="your genius token"
-TOKEN_REDDIT_CLIENT_ID="your client id"
-TOKEN_REDDIT_CLIENT_SECRET="your client secret"
-TOKEN_REDDIT_USER_AGENT="your user agent"
-
+```
+docker run -d \
+    --name="kassoubot" \
+    mylloon/kassoubot \
+    --TOKEN_DISCORD="yourValue" \
+    --TOKEN_GENIUS="yourValue" \
+    --TOKEN_REDDIT_CLIENT_ID="yourValue" \
+    --TOKEN_REDDIT_CLIENT_SECRET="yourValue" \
+    --TOKEN_REDDIT_USER_AGENT="yourValue"
+```
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)
 
