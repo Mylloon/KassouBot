@@ -1,11 +1,10 @@
 # Bot developed with [discord.py](https://github.com/Rapptz/discord.py) (rewrite) - FRENCH
 
-[![Version](https://img.shields.io/badge/version-1.0-green.svg?style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/releases/latest)
-[![Docker Stars](https://img.shields.io/docker/stars/mylloon/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
-[![Docker Pulls](https://img.shields.io/docker/pulls/mylloon/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
-[![Github Stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
-[![Github Forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
-
+[![Version](https://img.shields.io/badge/version-1.0-green?style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/releases/latest)
+[![Docker Stars](https://img.shields.io/docker/stars/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
+[![Docker Pulls](https://img.shields.io/docker/pulls/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
+[![Github stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot?label=Github%20Stars&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/stargazers)
+[![Github forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot?label=Github%20Forks&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/network)
 ## __Setting up__
 
 You have to replace `TOKEN_DISCORD`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET` and `TOKEN_REDDIT_USER_AGENT` with your desired values.
