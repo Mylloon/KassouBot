@@ -2,7 +2,7 @@ version: "2.1"
 services:
   kassoubot:
     image: mylloon/kassoubot
-    container_name: kassoubot
+    container_name: KassouBot
     environment:
       - TOKEN_DISCORD=your-token-discord
       - TOKEN_GENIUS=your-token-genius
