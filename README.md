@@ -4,12 +4,12 @@
 [![Docker Stars](https://img.shields.io/docker/stars/mylloon/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
 [![Docker Pulls](https://img.shields.io/docker/pulls/mylloon/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
 [![Github Stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
-[![Github Forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/kassoubot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
+[![Github Forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot.svg?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
 
 ## __Setting up__
 
 You have to replace `TOKEN_DISCORD`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET` and `TOKEN_REDDIT_USER_AGENT` with your desired values.
-With a [docker-compose](docker-compose.yml) or in command line:
+With a [docker-compose](https://github.com/Confrerie-du-Kassoulait/KassouBot/blob/master/docker-compose.yml) or in command line:
 
 ```
 docker run -d \
