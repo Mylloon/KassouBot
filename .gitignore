@@ -2,3 +2,4 @@
 update/
 src/cogs/music_old.py
 src/cogs/__pycache__/
+.envrc
