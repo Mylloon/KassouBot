@@ -151,14 +151,14 @@ async def on_message(message):
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
                     icon_url = message.author.avatar_url
 
-                    date_1 = str(msgID.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
+                    date_1 = str(msgID.created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
                     edit = ""
                     if msgID.edited_at:
-                        date_edit = str(msgID.edited_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
+                        date_edit = str(msgID.edited_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
                         edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]})"
                     messageDuBas = f"Posté le {date_1[0][8:]}/{date_1[0][5:-3]}/{date_1[0][:4]} à {date_1[1]}{edit}"
 
-                    date_2 = str(message.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
+                    date_2 = str(message.created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
                     date_2 = f"{date_2[0][8:]}/{date_2[0][5:-3]}/{date_2[0][:4]} à {date_2[1]}"
                     
                     if auteur == "Auteur":
@@ -196,9 +196,9 @@ async def on_message_delete(message):
             embed.set_author(name = user_or_nick(message.author), icon_url = message.author.avatar_url)
 
             if not user_suppressed:
-                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {str(message.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').replace(' ', ' à ')}\nSupprimé le {datetime.now(pytz.timezone('Europe/Paris')).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {str(message.created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').replace(' ', ' à ')}\nSupprimé le {datetime.now(pytz.timezone(os.environ['TIMEZONE'])).strftime('%d/%m/%Y à %H:%M:%S')}")
             else:                
-                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {str(message.created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').replace(' ', ' à ')}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(pytz.timezone('Europe/Paris')).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {str(message.created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').replace(' ', ' à ')}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(pytz.timezone(os.environ['TIMEZONE'])).strftime('%d/%m/%Y à %H:%M:%S')}")
             
             await channel.send(embed = embed)
             # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
