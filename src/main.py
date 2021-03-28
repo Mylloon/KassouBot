@@ -212,8 +212,8 @@ def user_or_nick(user):
 
 def goodTimezone(date, type):
     if type == 0:
-        return str(date.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
+        return str(pytz.timezone(os.environ['TIMEZONE']).fromutc(date))[:-13].replace('-', '/').split()
     elif type == 1:
-        return str(date.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').replace(' ', ' à ')
+        return str(pytz.timezone(os.environ['TIMEZONE']).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
 
 client.run(os.environ['TOKEN_DISCORD'])
