@@ -12,7 +12,7 @@ With a [docker-compose](https://github.com/Confrerie-du-Kassoulait/KassouBot/blo
 
 ```
 docker run -d \
-    --name="kassoubot" \
+    --name="KassouBot" \
     mylloon/kassoubot \
     --TOKEN_DISCORD="yourValue" \
     --TOKEN_GENIUS="yourValue" \
