@@ -1,4 +1,4 @@
-import discord, pytz, time
+import discord, pytz, time, os
 from discord.ext import commands
 from random import randint, shuffle
 from datetime import datetime
@@ -225,7 +225,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         elif map.lower() in self._map_list_among_us("airship"):
-            image = "https://i.imgur.com/CYbPlQ6.png"
+            image = "https://i.imgur.com/cm8Wogw.png"
             embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
@@ -246,14 +246,14 @@ class Utils(commands.Cog):
             
             embed.add_field(name = "ID", value = user[0].id)
             
-            value = str(user[0].created_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
+            value = str(user[0].created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
             embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
             embed.add_field(name = "Âge du compte", value = self._age_layout(self._get_age(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
-            value = str(user[0].joined_at.astimezone(timezone('Europe/Paris')))[:-13].replace('-', '/').split()
+            value = str(user[0].joined_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
             embed.add_field(name = "Est sur le serveur depuis", value = self._age_layout(self._get_age(user[0].joined_at)))
