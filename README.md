@@ -1,6 +1,6 @@
 # Bot developed with [discord.py](https://github.com/Rapptz/discord.py) (rewrite) - FRENCH
 
-[![Version](https://img.shields.io/badge/version-1.0-green?style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/releases/latest)
+[![Version](https://img.shields.io/badge/version-1.1-green?style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/releases/latest)
 [![Docker Stars](https://img.shields.io/docker/stars/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
 [![Docker Pulls](https://img.shields.io/docker/pulls/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/repository/docker/mylloon/kassoubot)
 [![Github stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot?label=Github%20Stars&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/stargazers)
