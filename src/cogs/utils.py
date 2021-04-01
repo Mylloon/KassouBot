@@ -225,7 +225,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         elif map.lower() in self._map_list_among_us("airship"):
-            image = "https://i.imgur.com/CYbPlQ6.png"
+            image = "https://i.imgur.com/cm8Wogw.png"
             embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             await ctx.send(embed = embed)
