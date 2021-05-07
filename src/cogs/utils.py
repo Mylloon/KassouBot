@@ -337,7 +337,34 @@ class Utils(commands.Cog):
         else:
             return await ctx.send(f'Désolé, mais il manque des arguments : `.sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
     def user_or_nick(self, user):
+        if user == None:
+            return "Utilisateur inconnu" # Mauvais copié/collé -> changement d'ID
         if user.nick:
             return f"{user.nick} ({user.name}#{user.discriminator})"
         else:
             return f"{user.name}#{user.discriminator}"
+
+    @commands.command(name='avis', aliases=['vote'])
+    async def _avis(self, ctx, *args):
+        """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .avis "[Titre]" "<Demande>" """
+        args = list(args)
+        if len(args) > 2 or len(args) == 0:
+            return await ctx.send("Désolé, la syntaxe est mauvaise.")
+        else:
+            if len(args) == 1:
+                titre = "Nouveau vote"
+            else:
+                titre = args[0].replace("<@!", "").replace(">", "").replace("<@", "")
+                for findedId in re.findall(r'\d+', titre):
+                    associatedId = self.user_or_nick(ctx.author.guild.get_member(int(findedId)))
+                    try:
+                        titre = titre.replace(findedId, associatedId)
+                    except:
+                        pass
+                args = args[1:]
+            embed = discord.Embed(title = titre, description = f"```{args[0]}```", color = discord.Colour.random()).set_footer(text = self.user_or_nick(ctx.author), icon_url = ctx.author.avatar_url)
+            message = await ctx.send(embed = embed)
+            reactions = ['✅', '🤷', '❌']
+            for i in reactions:
+                await message.add_reaction(emoji = i)
+            return await ctx.message.delete()
