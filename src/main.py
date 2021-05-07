@@ -5,8 +5,9 @@ from discord.ext import commands
 from random import choice
 from datetime import datetime
 from pytz import timezone
+customPrefix = os.environ['PREFIX']
 
-client = commands.Bot(command_prefix = ".", case_insensitive = True, intents = discord.Intents.all())
+client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 
 print("Chargement des extensions & librairie...")
 client.load_extension("cogs.help")

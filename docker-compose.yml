@@ -10,4 +10,5 @@ services:
       - TOKEN_REDDIT_CLIENT_SECRET=your-reddit-client-secret
       - TOKEN_REDDIT_USER_AGENT=your-reddit-user-agent
       - TIMEZONE=your-timezone # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      - PREFIX=your-prefix
     restart: unless-stopped
