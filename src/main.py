@@ -24,7 +24,7 @@ async def on_connect():
 
 @client.event
 async def on_ready():
-    await client.change_presence(status = discord.Status.online, activity = discord.Activity(name = ".help", type = discord.ActivityType.playing))
+    await client.change_presence(status = discord.Status.online, activity = discord.Activity(name = f"{customPrefix}help", type = discord.ActivityType.playing))
     print("Bot prêt.")
     channel = client.get_channel(742564480050790512)
     await channel.send("Le bot a bien démarré.")
