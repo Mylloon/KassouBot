@@ -249,14 +249,14 @@ class Utils(commands.Cog):
             value = str(user[0].created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
             embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Âge du compte", value = self._age_layout(self._get_age(user[0].created_at)))
+            embed.add_field(name = "Âge du compte", value = self._ageLayout(self._get_age(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
             value = str(user[0].joined_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Est sur le serveur depuis", value = self._age_layout(self._get_age(user[0].joined_at)))
+            embed.add_field(name = "Est sur le serveur depuis", value = self._ageLayout(self._get_age(user[0].joined_at)))
             await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
         await ctx.send("Tu mentionnes trop d'utilisateurs :  `.whois [@Membre]`")
@@ -269,7 +269,7 @@ class Utils(commands.Cog):
         minutes = (hours - int(hours)) * 60
         seconds = (minutes - int(minutes)) * 60
         return (int(years), int(months), int(days),  int(hours), int(minutes), int(seconds))
-    def _age_layout(self, tuple):
+    def _ageLayout(self, tuple):
         time = {}
         time[0], time[1], time[2], time[3], time[4], time[5] = "an", "mois", "jour", "heure", "minute", "seconde"
         for i in range(len(tuple)):
@@ -291,6 +291,22 @@ class Utils(commands.Cog):
         for i in affichage:
             message = message + f", {tuple[i]} {time[i]}"
         return message[2:]
+   
+    def _userOrNick(self, user):
+        if user == None:
+            return "Utilisateur inconnu" # Mauvais copié/collé -> changement d'ID
+        if user.nick:
+            return f"{user.nick} ({user.name}#{user.discriminator})"
+        else:
+            return f"{user.name}#{user.discriminator}"
+
+    def _cleanUser(self, ctx, stringMessage, stringID, option = 0):
+        associatedId = self._userOrNick(ctx.author.guild.get_member(int(stringID)))
+        try:
+            stringMessage = stringMessage.replace(stringID, associatedId)
+        except:
+            pass
+        return stringMessage
 
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
@@ -299,11 +315,7 @@ class Utils(commands.Cog):
         if len(args) > 2:
             question = args[0].replace("<@!", "").replace(">", "").replace("<@", "")
             for i in re.findall(r'\d+', question):
-                ii = self.user_or_nick(ctx.author.guild.get_member(int(i)))
-                try:
-                    question = question.replace(i, ii)
-                except:
-                    pass
+                question = self._cleanUser(ctx, question, i)
             propositions = args[1:]
             if len(propositions) <= 20:
                 message = ""
@@ -327,7 +339,7 @@ class Utils(commands.Cog):
                     shuffle(emojis_chosen)
                 for i in range(len(args[1:])):
                     message += f"{emojis_chosen[i]} -> {propositions[i]}\n"
-                embed = discord.Embed(title = question, description = message,color = discord.Colour.random()).set_footer(text = self.user_or_nick(ctx.author), icon_url = ctx.author.avatar_url)
+                embed = discord.Embed(title = question, description = message,color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])
@@ -336,13 +348,6 @@ class Utils(commands.Cog):
                 return await ctx.send(f"Désolé, mais tu as mis trop de possibilités (maximum : 20)")
         else:
             return await ctx.send(f'Désolé, mais il manque des arguments : `.sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
-    def user_or_nick(self, user):
-        if user == None:
-            return "Utilisateur inconnu" # Mauvais copié/collé -> changement d'ID
-        if user.nick:
-            return f"{user.nick} ({user.name}#{user.discriminator})"
-        else:
-            return f"{user.name}#{user.discriminator}"
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
@@ -356,13 +361,9 @@ class Utils(commands.Cog):
             else:
                 titre = args[0].replace("<@!", "").replace(">", "").replace("<@", "")
                 for findedId in re.findall(r'\d+', titre):
-                    associatedId = self.user_or_nick(ctx.author.guild.get_member(int(findedId)))
-                    try:
-                        titre = titre.replace(findedId, associatedId)
-                    except:
-                        pass
+                    titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            embed = discord.Embed(title = titre, description = f"```{args[0]}```", color = discord.Colour.random()).set_footer(text = self.user_or_nick(ctx.author), icon_url = ctx.author.avatar_url)
+            embed = discord.Embed(title = titre, description = f"```{args[0]}```", color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
