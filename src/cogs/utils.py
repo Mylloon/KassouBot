@@ -358,23 +358,23 @@ class Utils(commands.Cog):
         if len(args) > 2 or len(args) == 0:
             return await ctx.send("Désolé, la syntaxe est mauvaise.")
         else:
-            if len(args) == 1:
+            if len(args) == 1: # si aucun titre défini
                 titre = "Nouveau vote"
-            else:
+            else: # si titre défini
                 titre = args[0]
-                for findedId in re.findall(r'\d+', titre):
+                for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
             demande = f"`{args[0]}`"
             findedMention = []
-            for findingMention in re.findall(r'<@[!]?\d*>', demande):
+            for findingMention in re.findall(r'<@[!]?\d*>', demande): # récupération mention dans la demande
                 findedMention.append(findingMention)
-            findedMention = list(dict.fromkeys(findedMention))
+            findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention
             for i in range(0, len(findedMention)):
-                demande = demande.replace(findedMention[i], f"`{findedMention[i]}`")
-            if demande.startswith("``<@"):
+                demande = demande.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
+            if demande.startswith("``<@"): # conserve le format quand mention au début de la demande
                 demande = demande[2:]
-            if demande.endswith(">``"):
+            if demande.endswith(">``"): # conserve le format quand mention à la fin de la demande
                 demande = demande[:-2]
             embed = discord.Embed(title = titre, description = demande, color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
