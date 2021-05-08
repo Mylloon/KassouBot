@@ -365,10 +365,18 @@ class Utils(commands.Cog):
                 for findedId in re.findall(r'\d+', titre):
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            demande = args[0]
-            for findedMention in re.findall(r'<@[!]?\d*>', demande):
-                demande = demande.replace(findedMention, f"`{findedMention}`")
-            embed = discord.Embed(title = titre, description = f"`{demande}`", color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+            demande = f"`{args[0]}`"
+            findedMention = []
+            for findingMention in re.findall(r'<@[!]?\d*>', demande):
+                findedMention.append(findingMention)
+            findedMention = list(dict.fromkeys(findedMention))
+            for i in range(0, len(findedMention)):
+                demande = demande.replace(findedMention[i], f"`{findedMention[i]}`")
+            if demande.startswith("``<@"):
+                demande = demande[2:]
+            if demande.endswith(">``"):
+                demande = demande[:-2]
+            embed = discord.Embed(title = titre, description = demande, color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
