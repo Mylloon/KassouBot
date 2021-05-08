@@ -14,13 +14,13 @@ With a [docker-compose](https://github.com/Confrerie-du-Kassoulait/KassouBot/blo
 docker run -d \
     --name="KassouBot" \
     mylloon/kassoubot \
-    --TOKEN_DISCORD="yourValue" \
-    --TOKEN_GENIUS="yourValue" \
-    --TOKEN_REDDIT_CLIENT_ID="yourValue" \
-    --TOKEN_REDDIT_CLIENT_SECRET="yourValue" \
-    --TOKEN_REDDIT_USER_AGENT="yourValue" \
+    --TOKEN_DISCORD="yourTokenDiscord" \
+    --TOKEN_GENIUS="yourTokenGenius" \
+    --TOKEN_REDDIT_CLIENT_ID="yourRedditClientID" \
+    --TOKEN_REDDIT_CLIENT_SECRET="yourRedditClientSecret" \
+    --TOKEN_REDDIT_USER_AGENT="yourRedditUserAgent" \
     --TIMEZONE="yourTimezone" \
-    --PREFIX="."
+    --PREFIX="yourPrefix"
 ```
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)

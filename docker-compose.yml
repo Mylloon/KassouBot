@@ -4,11 +4,11 @@ services:
     image: mylloon/kassoubot
     container_name: KassouBot
     environment:
-      - TOKEN_DISCORD=your-token-discord
-      - TOKEN_GENIUS=your-token-genius
-      - TOKEN_REDDIT_CLIENT_ID=your-reddit-client-id
-      - TOKEN_REDDIT_CLIENT_SECRET=your-reddit-client-secret
-      - TOKEN_REDDIT_USER_AGENT=your-reddit-user-agent
-      - TIMEZONE=your-timezone # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
-      - PREFIX=your-prefix
+      - TOKEN_DISCORD=yourTokenDiscord
+      - TOKEN_GENIUS=yourTokenGenius
+      - TOKEN_REDDIT_CLIENT_ID=yourRedditClientID
+      - TOKEN_REDDIT_CLIENT_SECRET=yourRedditClientSecret
+      - TOKEN_REDDIT_USER_AGENT=yourRedditUserAgent
+      - TIMEZONE=yourTimezone # More info here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      - PREFIX=yourPrefix
     restart: unless-stopped
