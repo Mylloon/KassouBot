@@ -300,10 +300,11 @@ class Utils(commands.Cog):
         else:
             return f"{user.name}#{user.discriminator}"
 
-    def _cleanUser(self, ctx, stringMessage, stringID, option = 0):
-        associatedId = self._userOrNick(ctx.author.guild.get_member(int(stringID)))
+    def _cleanUser(self, ctx, stringMessage, stringID):
+        stringMessage = stringMessage.replace("<@!", "").replace(">", "").replace("<@", "")
+        associatedID = self._userOrNick(ctx.author.guild.get_member(int(stringID)))
         try:
-            stringMessage = stringMessage.replace(stringID, associatedId)
+            stringMessage = stringMessage.replace(stringID, associatedID)
         except:
             pass
         return stringMessage
@@ -313,7 +314,7 @@ class Utils(commands.Cog):
         """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
         args = list(args)
         if len(args) > 2:
-            question = args[0].replace("<@!", "").replace(">", "").replace("<@", "")
+            question = args[0]
             for i in re.findall(r'\d+', question):
                 question = self._cleanUser(ctx, question, i)
             propositions = args[1:]
@@ -339,7 +340,7 @@ class Utils(commands.Cog):
                     shuffle(emojis_chosen)
                 for i in range(len(args[1:])):
                     message += f"{emojis_chosen[i]} -> {propositions[i]}\n"
-                embed = discord.Embed(title = question, description = message,color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+                embed = discord.Embed(title = question, description = message, color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])
@@ -351,7 +352,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
-        """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .avis "[Titre]" "<Demande>" """
+        """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .avis/vote "[Titre]" "<Demande>" """
         args = list(args)
         if len(args) > 2 or len(args) == 0:
             return await ctx.send("Désolé, la syntaxe est mauvaise.")
@@ -359,11 +360,14 @@ class Utils(commands.Cog):
             if len(args) == 1:
                 titre = "Nouveau vote"
             else:
-                titre = args[0].replace("<@!", "").replace(">", "").replace("<@", "")
+                titre = args[0]
                 for findedId in re.findall(r'\d+', titre):
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            embed = discord.Embed(title = titre, description = f"```{args[0]}```", color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+            demande = args[0]
+            for findedMention in re.findall(r'<@[!]?\d*>', demande):
+                demande = demande.replace(findedMention, f"`{findedMention}`")
+            embed = discord.Embed(title = titre, description = f"`{demande}`", color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
