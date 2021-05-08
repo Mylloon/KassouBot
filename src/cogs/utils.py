@@ -149,7 +149,7 @@ class Utils(commands.Cog):
     @_memo.error
     async def _note_error(self, ctx, error):
         if str(error) == "text is a required argument that is missing.":
-            await ctx.send("Vous devez renseigner un message : `.note/memo <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢`.")
+            await ctx.send(f"Vous devez renseigner un message : `{ctx.prefix}note/memo <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢`.")
 
     @commands.command(name='infos', aliases = ['info'])
     async def _infos(self, ctx):
@@ -231,7 +231,7 @@ class Utils(commands.Cog):
             await ctx.send(embed = embed)
             await ctx.message.add_reaction(emoji = '✅')
         else:
-            await ctx.send("`.amongus <mira/polus/skeld/airship>`")
+            await ctx.send(f"`{ctx.prefix}amongus <mira/polus/skeld/airship>`")
 
     @commands.command(name='whois')
     async def _whois(self, ctx, *user: discord.Member):
@@ -259,7 +259,8 @@ class Utils(commands.Cog):
             embed.add_field(name = "Est sur le serveur depuis", value = self._ageLayout(self._get_age(user[0].joined_at)))
             await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
-        await ctx.send("Tu mentionnes trop d'utilisateurs :  `.whois [@Membre]`")
+        return await ctx.send(f"Tu mentionnes trop d'utilisateurs :  `{ctx.prefix}whois [@Membre]`")
+
     def _get_age(self, date):
         joursRestants = datetime.now() - date
         years = joursRestants.total_seconds() / (365.242 * 24 * 3600)
@@ -348,7 +349,7 @@ class Utils(commands.Cog):
             else:
                 return await ctx.send(f"Désolé, mais tu as mis trop de possibilités (maximum : 20)")
         else:
-            return await ctx.send(f'Désolé, mais il manque des arguments : `.sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
+            return await ctx.send(f'Désolé, mais il manque des arguments : `{ctx.prefix}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):

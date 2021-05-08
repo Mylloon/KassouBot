@@ -320,7 +320,7 @@ class Music(commands.Cog):
         """Arrête la chanson en cours de lecture et quitte le salon vocal.\n	➡ Syntaxe: .disconnect/dc/stop⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if not ctx.voice_state.voice:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose ou `.join [id]` pour me connecter à un salon vocal.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose ou `{ctx.prefix}join [id]` pour me connecter à un salon vocal.", color = 0xC41B1B)
             embed.set_author(name = "Je ne suis connecté à aucun vocal.")
             return await ctx.send(embed = embed)
 
@@ -359,7 +359,7 @@ class Music(commands.Cog):
             await ctx.message.add_reaction('⏯')
             await ctx.send(f"**`{ctx.author}`** met en pause la chanson en cours.")
         else:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
             embed.set_author(name = "Je ne joue rien en ce moment !")
             return await ctx.send(embed = embed)
 
@@ -373,11 +373,11 @@ class Music(commands.Cog):
             await ctx.send(f"**`{ctx.author}`** relance la chanson.")
         else:
             if ctx.voice_state.is_playing:
-                embed = discord.Embed(description = "Tape `.pause` pour mettre en pause la chanson.", color = 0xC41B1B)
+                embed = discord.Embed(description = f"Tape `{ctx.prefix}pause` pour mettre en pause la chanson.", color = 0xC41B1B)
                 embed.set_author(name = "Je suis déjà en lecture !")
                 return await ctx.send(embed = embed)
             else:
-                embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose ou `.join [id]` pour me connecter à un salon vocal.", color = 0xC41B1B)
+                embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose ou `{ctx.prefix}join [id]` pour me connecter à un salon vocal.", color = 0xC41B1B)
                 embed.set_author(name = "Je ne suis connecté à aucun vocal.")
                 return await ctx.send(embed = embed)
 
@@ -386,7 +386,7 @@ class Music(commands.Cog):
         """Passe la chanson.\n	➡ Syntaxe: .skip/s"""
 
         if not ctx.voice_state.is_playing:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
             embed.set_author(name = "Je ne joue rien en ce moment !")
             return await ctx.send(embed = embed)
         
@@ -399,7 +399,7 @@ class Music(commands.Cog):
         """Affiche la file d'attente des chansons à venir.\n	➡ Syntaxe: .queue/q⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢/playlist [page]"""
 
         if len(ctx.voice_state.songs) == 0:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
             embed.set_author(name = "Il n'y a plus de chanson à venir dans la playlist.")
             return await ctx.send(embed = embed)
 
@@ -407,7 +407,7 @@ class Music(commands.Cog):
         pages = math.ceil(len(ctx.voice_state.songs) / items_per_page)
 
         if page > pages:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour rajouter encore de la musique.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour rajouter encore de la musique.", color = 0xC41B1B)
             embed.set_author(name = "Il n'y a pas autant de pages")
             return await ctx.send(embed = embed)
 
@@ -427,7 +427,7 @@ class Music(commands.Cog):
         """Mélange la file d'attente."""
 
         if len(ctx.voice_state.songs) == 0:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
             embed.set_author(name = "La file est vide.")
             return await ctx.send(embed = embed)
 
@@ -450,7 +450,7 @@ class Music(commands.Cog):
         """Répète la chanson actuellement en lecture.\n	➡ Syntaxe: .loop/repeat"""
 
         if not ctx.voice_state.is_playing:
-            embed = discord.Embed(description = "Tape `.play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
+            embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
             embed.set_author(name = "Je ne joue rien en ce moment !")
             return await ctx.send(embed = embed)
 
@@ -544,7 +544,7 @@ class Music(commands.Cog):
                 return await ctx.send(embed = embed)
         else:
             await ctx.message.add_reaction(emoji = '❌')
-            await ctx.send("Aucune musique demandé... `.lyrics/l/lyrics <song>`.")
+            await ctx.send(f"Aucune musique demandé... `{ctx.prefix}lyrics/l/lyrics <song>`.")
     def ligne_formatage(self, ligne):
         liste_balise = [
             ('[Hook', '[Accroche'), ('[Verse', '[Couplet'), ('[Chorus', '[Chœur'),

@@ -80,7 +80,7 @@ class Fun(commands.Cog):
             await ctx.send(f"{''.join(user1)} et {''.join(user2)} ont {coef_amour}% de chance de se mettre en couple !")
         else:
             await ctx.message.add_reaction(emoji = '❌')
-            await ctx.send("Erreur! Syntaxe : `.love <User1> [User2]`\n")
+            await ctx.send(f"Erreur! Syntaxe : `{ctx.prefix}love <User1> [User2]`\n")
     def _retirerDoublons(self, liste):
         Newliste = []
         for element in liste:
@@ -102,7 +102,7 @@ class Fun(commands.Cog):
     @_8ball.error
     async def _8ball_error(self, ctx, error):
         if str(error) == "question is a required argument that is missing.":
-            await ctx.send("Mauvaise syntaxe : `.8ball/8b/8balls <question>`.")
+            await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}8ball/8b/8balls <question>`.")
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx):

@@ -42,7 +42,7 @@ class Games(commands.Cog):
         await ctx.message.add_reaction(emoji = '✅')
     @_chifumi.error
     async def _chifumi_error(self, ctx, error):
-        await ctx.send("Mauvaise syntaxe : `.chifumi/shifumi/ppc <pierre/papier/ciseaux>`.")
+        await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}chifumi/shifumi/ppc <pierre/papier/ciseaux>`.")
 
 
     @commands.command(name='plusoumoins', aliases = ['+ou-', '+-'])
