@@ -3,7 +3,7 @@ from discord.ext import commands
 from random import randint, shuffle
 from datetime import datetime
 from pytz import timezone
-import re
+import re, asyncio
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -382,3 +382,34 @@ class Utils(commands.Cog):
             for i in reactions:
                 await message.add_reaction(emoji = i)
             return await ctx.message.delete()
+
+    @commands.command(name='reminder', aliases=["remind", "remindme", "remind_me"])
+    async def _reminder(self, ctx, time, *, reminder):
+        embed = discord.Embed(color = 0xC41B1B)
+        seconds = 0
+        if reminder:
+            if time.lower().endswith("d"):
+                seconds += int(time[:-1]) * 60 * 60 * 24
+                counter = f"{seconds // 60 // 60 // 24} jours"
+            if time.lower().endswith("h"):
+                seconds += int(time[:-1]) * 60 * 60
+                counter = f"{seconds // 60 // 60} heures"
+            elif time.lower().endswith("m"):
+                seconds += int(time[:-1]) * 60
+                counter = f"{seconds // 60} minutes"
+            elif time.lower().endswith("s"):
+                seconds += int(time[:-1])
+                counter = f"{seconds} secondes"
+            if seconds == 0:
+                embed.add_field(name="Attention", value="Mauvais format pour l'heure, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité).")
+            elif seconds < 300:
+                embed.add_field(name="Attention", value="Tu as spécifié une durée trop courte, la durée minimum étant de 5 minutes.")
+            elif seconds > 7776000:
+                embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
+            else:
+                await ctx.send(f"Ok, je t'en parles dans {counter} !")
+                await asyncio.sleep(seconds)
+                return await ctx.send(f"{ctx.author.mention}, voici ton message d'il y a {counter} :```{reminder}```")
+        else:
+            embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
+        await ctx.send(embed = embed)
