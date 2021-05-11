@@ -312,7 +312,7 @@ class Utils(commands.Cog):
         return stringMessage
 
     def _cleanCodeStringWithMention(self, string):
-        string = f"`{string}`"
+        string = f"`{self._removeStartEndSpacesString(string)}`"
         findedMention = self._getMentionInString(string)
         for i in range(0, len(findedMention)):
             string = string.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
@@ -328,6 +328,13 @@ class Utils(commands.Cog):
             findedMention.append(findingMention)
         findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention
         return findedMention
+    
+    def _removeStartEndSpacesString(self, string):
+        while string.startswith(" "):
+            string = string[1:]
+        while string.endswith(" "):
+            string = string[:-1]
+        return string
 
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
