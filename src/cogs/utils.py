@@ -383,8 +383,9 @@ class Utils(commands.Cog):
                 await message.add_reaction(emoji = i)
             return await ctx.message.delete()
 
-    @commands.command(name='reminder', aliases=["remind", "remindme", "remind_me"])
+    @commands.command(name='reminder', aliases=["remind", "remindme"])
     async def _reminder(self, ctx, time, *, reminder):
+        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .reminder/remind/remindme <temps (d/h/m/s)> <message> """
         embed = discord.Embed(color = 0xC41B1B)
         seconds = 0
         if reminder:
