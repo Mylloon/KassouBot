@@ -403,9 +403,9 @@ class Utils(commands.Cog):
                 counter = f"{seconds} secondes"
             if seconds == 0:
                 embed.add_field(name="Attention", value="Mauvais format pour l'heure, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité).")
-            elif seconds < 300:
+            elif seconds < 300: # 5 * 60
                 embed.add_field(name="Attention", value="Tu as spécifié une durée trop courte, la durée minimum étant de 5 minutes.")
-            elif seconds > 7776000:
+            elif seconds > 7776000: # 90 * 60 * 60 * 24
                 embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
             else:
                 await ctx.send(f"Ok, je t'en parles dans {counter} !")
