@@ -310,6 +310,20 @@ class Utils(commands.Cog):
             pass
         return stringMessage
 
+    def _cleanCodeStringWithMention(self, string):
+        string = f"`{string}`"
+        findedMention = []
+        for findingMention in re.findall(r'<@[!]?\d*>', string): # récupération mention dans la string
+            findedMention.append(findingMention)
+        findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention
+        for i in range(0, len(findedMention)):
+            string = string.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
+        if string.startswith("``<@"): # conserve le format quand mention au début de la string
+            string = string[2:]
+        if string.endswith(">``"): # conserve le format quand mention à la fin de la string
+            string = string[:-2]
+        return string
+
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
         """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
@@ -365,18 +379,7 @@ class Utils(commands.Cog):
                 for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            demande = f"`{args[0]}`"
-            findedMention = []
-            for findingMention in re.findall(r'<@[!]?\d*>', demande): # récupération mention dans la demande
-                findedMention.append(findingMention)
-            findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention
-            for i in range(0, len(findedMention)):
-                demande = demande.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
-            if demande.startswith("``<@"): # conserve le format quand mention au début de la demande
-                demande = demande[2:]
-            if demande.endswith(">``"): # conserve le format quand mention à la fin de la demande
-                demande = demande[:-2]
-            embed = discord.Embed(title = titre, description = demande, color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMention(args[0]), color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
@@ -388,21 +391,28 @@ class Utils(commands.Cog):
         """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .reminder/remind/remindme <temps (d/h/m/s)> <message> """
         embed = discord.Embed(color = 0xC41B1B)
         seconds = 0
+        timestamp = datetime.utcnow()
         if reminder:
-            if time.lower().endswith("d"):
-                seconds += int(time[:-1]) * 60 * 60 * 24
-                counter = f"{seconds // 60 // 60 // 24} jours"
-            if time.lower().endswith("h"):
-                seconds += int(time[:-1]) * 60 * 60
-                counter = f"{seconds // 60 // 60} heures"
-            elif time.lower().endswith("m"):
-                seconds += int(time[:-1]) * 60
-                counter = f"{seconds // 60} minutes"
-            elif time.lower().endswith("s"):
-                seconds += int(time[:-1])
-                counter = f"{seconds} secondes"
+            try:
+                if time.lower().endswith("d"):
+                    seconds += int(time[:-1]) * 60 * 60 * 24
+                    _seconds = seconds // 60 // 60 // 24
+                    counter = f"{_seconds} jour{'s' if _seconds > 1 else ''}"
+                if time.lower().endswith("h"):
+                    seconds += int(time[:-1]) * 60 * 60
+                    _seconds = seconds // 60 // 60
+                    counter = f"{_seconds} heure{'s' if _seconds > 1 else ''}"
+                elif time.lower().endswith("m"):
+                    seconds += int(time[:-1]) * 60
+                    _seconds = seconds // 60
+                    counter = f"{_seconds} minute{'s' if _seconds > 1 else ''}"
+                elif time.lower().endswith("s"):
+                    seconds += int(time[:-1])
+                    counter = f"{seconds} seconde{'s' if seconds > 1 else ''}"
+            except:
+                pass
             if seconds == 0:
-                embed.add_field(name="Attention", value="Mauvais format pour l'heure, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité).")
+                embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité).")
             elif seconds < 300: # 5 * 60
                 embed.add_field(name="Attention", value="Tu as spécifié une durée trop courte, la durée minimum étant de 5 minutes.")
             elif seconds > 7776000: # 90 * 60 * 60 * 24
@@ -410,7 +420,7 @@ class Utils(commands.Cog):
             else:
                 await ctx.send(f"Ok, je t'en parles dans {counter} !")
                 await asyncio.sleep(seconds)
-                return await ctx.send(f"{ctx.author.mention}, voici ton message d'il y a {counter} :```{reminder}```")
+                return await ctx.send(ctx.author.mention, embed = discord.Embed(description = self._cleanCodeStringWithMention(reminder), timestamp = timestamp, color = discord.Colour.random()).set_footer(text=f"Message d'il y a {counter}"))
         else:
             embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
         await ctx.send(embed = embed)
