@@ -39,7 +39,7 @@ class Internet(commands.Cog):
                 subredditchoix = args
 
             else: # si il n'y a pas d'arguments
-                subredditchoix = choice(['memes', 'anime_irl', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFriedMemes',
+                subredditchoix = choice(['memes', 'anime_irl', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
                 'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
                 'physicsmemes', 'reactiongifs', 'blackpeopletwitter', 'metal_me_irl', 'bee_irl', '195',
                 'shittyadviceanimals', 'meirl', '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
