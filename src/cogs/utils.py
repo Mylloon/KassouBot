@@ -19,14 +19,14 @@ class Utils(commands.Cog):
     async def _ping(self, ctx, *, question = '0'):
         """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if question == 'help':
-            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs (en millisecondes)\n\n:stopwatch: correspond au temps que met le client a calculer le ping (en millisecondes)\n\n:heartbeat: correspond au temps que met le client a réagir au messages (en millisecondes)"))
+            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:stopwatch: correspond au temps que met le client a calculer le ping\n\n:heartbeat: correspond au temps que met le client a réagir au messages"))
         else:
             now = int(round(time.time() * 1000))
             ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
             embed = discord.Embed(description = 'Pinging...')
             message = await ctx.send(embed = embed)
             ping2 = int(round(time.time() * 1000)) - now
-            await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)}ms\n\n:stopwatch: {ping2}ms\n\n:heartbeat: {ping}ms'))
+            await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)} ms\n\n:stopwatch: {ping2} ms\n\n:heartbeat: {ping} ms'))
             await ctx.message.add_reaction(emoji = '✅')
 
     @commands.command(name='avatar')
