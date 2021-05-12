@@ -1,6 +1,7 @@
-import discord, praw, json, requests, time, feedparser, os
+import discord, json, requests, time, feedparser, os
 from discord.ext import commands
-from random import randint, choice
+from random import choice
+from asyncpraw import Reddit
 
 def setup(client):
     client.add_cog(Internet(client))
@@ -33,8 +34,6 @@ class Internet(commands.Cog):
     async def _memes(self, ctx, *, args = ""):
         """Envois un meme de reddit.\n	➡ Syntaxe: .memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         try:
-            reddit = praw.Reddit(client_id = os.environ['TOKEN_REDDIT_CLIENT_ID'], client_secret = os.environ['TOKEN_REDDIT_CLIENT_SECRET'], user_agent = f"disreddit /u/{os.environ['TOKEN_REDDIT_USER_AGENT']}, http://localhost:8080")
-
             if args != "": # si il y a un arg différent d'un meme
                 subredditchoix = args
 
@@ -44,11 +43,11 @@ class Internet(commands.Cog):
                 'physicsmemes', 'reactiongifs', 'blackpeopletwitter', 'metal_me_irl', 'bee_irl', '195',
                 'shittyadviceanimals', 'meirl', '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
 
-            memes_submissions = reddit.subreddit(subredditchoix).hot()
-            post_to_pick = randint(1, 10)
-            for i in range(0, post_to_pick): # i pas important
-                i = i #retire l'erreur sur vscode
-                submission = next(x for x in memes_submissions if not x.stickied)
+            async with Reddit(client_id = os.environ['TOKEN_REDDIT_CLIENT_ID'], client_secret = os.environ['TOKEN_REDDIT_CLIENT_SECRET'], user_agent = f"disreddit /u/{os.environ['TOKEN_REDDIT_USER_AGENT']}, http://localhost:8080") as reddit:
+                subreddit = await reddit.subreddit(subredditchoix) # récupération du subreddit
+                hot = subreddit.top(limit = 20) # récupération des memes avec une limite aux 10 premiers memes
+                all_subs = [item async for item in hot] # liste des memes
+                submission = choice(all_subs) # choix aléatoire
 
             image = ["png", "jpg", "jpeg", "bmp", "gif"]
             if submission.url[-3:] in image:
