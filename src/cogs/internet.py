@@ -31,18 +31,18 @@ class Internet(commands.Cog):
                 await self._cat(await self.client.get_context(message))
 
     @commands.command(name='memes', aliases = ['meme'])
-    async def _memes(self, ctx, *, args = ""):
+    async def _memes(self, ctx, *, args = None):
         """Envois un meme de reddit.\n	➡ Syntaxe: .memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+
+        if args: # s'il y a un subreddit de défini
+            subredditchoix = args
+        else: # s'il n'y en a pas
+            subredditchoix = choice(['memes', 'anime_irl', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
+            'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
+            'physicsmemes', 'reactiongifs', 'blackpeopletwitter', 'metal_me_irl', 'bee_irl', '195', 'shittyadviceanimals', 'meirl',
+            '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
+
         try:
-            if args != "": # si il y a un arg différent d'un meme
-                subredditchoix = args
-
-            else: # si il n'y a pas d'arguments
-                subredditchoix = choice(['memes', 'anime_irl', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
-                'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
-                'physicsmemes', 'reactiongifs', 'blackpeopletwitter', 'metal_me_irl', 'bee_irl', '195',
-                'shittyadviceanimals', 'meirl', '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
-
             async with Reddit(client_id = os.environ['TOKEN_REDDIT_CLIENT_ID'], client_secret = os.environ['TOKEN_REDDIT_CLIENT_SECRET'], user_agent = f"disreddit /u/{os.environ['TOKEN_REDDIT_USER_AGENT']}, http://localhost:8080") as reddit:
                 subreddit = await reddit.subreddit(subredditchoix) # récupération du subreddit
                 hot = subreddit.top(limit = 20) # récupération des memes avec une limite aux 10 premiers memes
@@ -63,7 +63,7 @@ class Internet(commands.Cog):
             return await message.add_reaction('👎')
 
         except Exception as error:
-            print(f"args: {args}, subreddit: {subredditchoix}, error: {error}")
+            print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
             await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send(f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
 
