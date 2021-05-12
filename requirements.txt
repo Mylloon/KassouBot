@@ -1,6 +1,6 @@
-discord.py[voice]==1.6.0 # discord
+discord.py[voice]==1.7.2 # discord
 pytz==2021.1 # timezone
-praw==7.1.4 # reddit
-youtube-dl==2021.2.22 # music
-lyricsgenius==3.0.0 # lyrics
+asyncpraw==7.2.0 # reddit
+youtube-dl==2021.4.26 # music
+lyricsgenius==3.0.1 # lyrics
 feedparser==6.0.2 # rss feed (news)
