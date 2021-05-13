@@ -449,6 +449,10 @@ class Utils(commands.Cog):
                     mentionList = self._getMentionInString(reminder)
                     for i in mentionList:
                         message += f" {i}"
+                try:
+                    await ctx.message.add_reaction(emoji = '✅')
+                except:
+                    pass
                 return await ctx.send(message, embed = discord.Embed(description = self._cleanCodeStringWithMention(reminder), timestamp = timestamp, color = discord.Colour.random()).set_footer(text=f"Message d'il y a {counter}"))
         else:
             embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
