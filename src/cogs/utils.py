@@ -13,6 +13,7 @@ class Utils(commands.Cog):
 
     def __init__(self, client):
         self.client = client
+        self.customTimezone = os.environ['TIMEZONE']
 
 
     @commands.command(name='ping')
@@ -143,7 +144,7 @@ class Utils(commands.Cog):
             await ctx.message.delete()
             embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
-            embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone("Europe/Paris")).strftime("%d/%m/%Y à %H:%M:%S")}')
+            embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
@@ -246,14 +247,14 @@ class Utils(commands.Cog):
             
             embed.add_field(name = "ID", value = user[0].id)
             
-            value = str(user[0].created_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
+            value = str(user[0].created_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
             embed.add_field(name = "Âge du compte", value = self._ageLayout(self._get_age(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
-            value = str(user[0].joined_at.astimezone(timezone(os.environ['TIMEZONE'])))[:-13].replace('-', '/').split()
+            value = str(user[0].joined_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
             embed.add_field(name = "Est sur le serveur depuis", value = self._ageLayout(self._get_age(user[0].joined_at)))

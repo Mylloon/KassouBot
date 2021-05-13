@@ -6,6 +6,7 @@ from random import choice
 from datetime import datetime
 from pytz import timezone
 customPrefix = os.environ['PREFIX']
+customTimezone = os.environ['TIMEZONE']
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 
@@ -197,9 +198,9 @@ async def on_message_delete(message):
             embed.set_author(name = user_or_nick(message.author), icon_url = message.author.avatar_url)
 
             if not user_suppressed:
-                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé le {datetime.now(pytz.timezone(os.environ['TIMEZONE'])).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé le {datetime.now(pytz.timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
             else:                
-                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(pytz.timezone(os.environ['TIMEZONE'])).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(pytz.timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
             
             await channel.send(embed = embed)
             # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
@@ -213,8 +214,8 @@ def user_or_nick(user):
 
 def goodTimezone(date, type):
     if type == 0:
-        return str(pytz.timezone(os.environ['TIMEZONE']).fromutc(date))[:-13].replace('-', '/').split()
+        return str(pytz.timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').split()
     elif type == 1:
-        return str(pytz.timezone(os.environ['TIMEZONE']).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
+        return str(pytz.timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
 
 client.run(os.environ['TOKEN_DISCORD'])
