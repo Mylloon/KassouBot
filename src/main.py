@@ -157,7 +157,7 @@ async def on_message(message):
                     edit = ""
                     if msgID.edited_at:
                         date_edit = goodTimezone(msgID.edited_at, 0)
-                        edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]})"
+                        edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"
                     messageDuBas = f"Posté le {date_1[0][8:]}/{date_1[0][5:-3]}/{date_1[0][:4]} à {date_1[1]}{edit}"
 
                     date_2 = goodTimezone(message.created_at, 0)
