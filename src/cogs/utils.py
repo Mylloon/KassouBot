@@ -172,11 +172,20 @@ class Utils(commands.Cog):
 
         text = len(text_channels)
         voice = len(voice_channels)
+        nombreServeur = len(self.client.guilds)
+        
+        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md"), "r") as file:
+            for versionNumber in re.findall(r'https://img.shields.io/badge/version-(\d+\.\d+)', file.readlines()[2]):
+                version = versionNumber
 
         embed.add_field(name = "Dev", value = f"[{appinfo.owner}](https://github.com/Mylloon)")
-        embed.add_field(name = "Serveurs", value = len(self.client.guilds))
-        embed.add_field(name = "Membres", value = f"{total_unique} au total\n{total_online} en ligne")
-        embed.add_field(name = "Channels", value = f"{text} textuelles\n{voice} vocales")
+        embed.add_field(name = f"Serveur{'s' if nombreServeur > 1 else ''}", value = f"`{nombreServeur}`")
+        embed.add_field(name = f"Membre{'s' if total_unique > 1 else ''}", value = f"`{total_unique}` au total\n`{total_online}` en ligne")
+        embed.add_field(name = f"Salon{'s' if (text + voice) > 1 else ''}", value = f"`{text}` textuel{'s' if text > 1 else ''}\n`{voice}` voca{'ux' if voice > 1 else 'l'}")
+        embed.add_field(name = "Prefix", value = f"`{ctx.prefix}`")
+        embed.add_field(name = "Code source", value = f"[Lien Github](https://github.com/Confrerie-du-Kassoulait/KassouBot/)")
+        embed.add_field(name = "Timezone", value = f"`{self.customTimezone}`")
+        embed.add_field(name = "Version", value = f"`{version}`")
         embed.set_footer(text = f"Basé sur discord.py {discord.__version__}")
         await ctx.message.add_reaction(emoji = '✅')
         await ctx.send(embed = embed)
