@@ -15,7 +15,7 @@ class Games(commands.Cog):
 
     @commands.command(name='chifumi', aliases = ["shifumi", "ppc"])
     async def _chifumi(self, ctx, *, choix):
-        """Un simple Chifumi contre le bot.\n	➡ Syntaxe: .chifumi/shifumi/ppc <pierre/papier/ciseaux>"""
+        """Un simple Chifumi contre le bot.\n	➡ Syntaxe: {PREFIX}chifumi/shifumi/ppc <pierre/papier/ciseaux>"""
 
         choix_jeu = ["Pierre ✊", "Papier 🧻", "Ciseaux ✂"]
         orditxt = choice(choix_jeu)
@@ -47,7 +47,7 @@ class Games(commands.Cog):
 
     @commands.command(name='plusoumoins', aliases = ['+ou-', '+-'])
     async def _plusoumoins(self, ctx):
-        """Un plus ou moins entre 1 et 100.\n	➡ Syntaxe: .plusoumoins/+ou-/+-⁢⁢⁢⁢⁢"""
+        """Un plus ou moins entre 1 et 100.\n	➡ Syntaxe: {PREFIX}plusoumoins/+ou-/+-⁢⁢⁢⁢⁢"""
         if str(ctx.author.id) in self.guessing_game:
             return await ctx.send("Tu es déjà en partie.")
         guess = 5

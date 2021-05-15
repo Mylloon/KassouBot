@@ -13,7 +13,7 @@ class School(commands.Cog):
     @commands.command(name='appel')
     # @commands.has_any_role("Professeur", "professeur", "Prof", "prof")
     async def _appel(self, ctx, *, voice_channel: int = None):
-        """Fais l'appel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .appel [ID salon vocal]"""
+        """Fais l'appel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}appel [ID salon vocal]"""
         voice_channels = []
         voice_channels.extend(ctx.guild.voice_channels)
         await ctx.message.add_reaction(emoji = "✅")

@@ -32,7 +32,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='memes', aliases = ['meme'])
     async def _memes(self, ctx, *, args = None):
-        """Envois un meme de reddit.\n	➡ Syntaxe: .memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Envois un meme de reddit.\n	➡ Syntaxe: {PREFIX}memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if args: # s'il y a un subreddit de défini
             subredditchoix = args
@@ -87,7 +87,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='cat', aliases = ['chat'])
     async def _cat(self, ctx):
-        """Te montre un magnifique chat\n	➡ Syntaxe: .cat/chat"""
+        """Te montre un magnifique chat\n	➡ Syntaxe: {PREFIX}cat/chat"""
 
         if ctx.author.nick:
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"
@@ -103,7 +103,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='dog', aliases = ['chien'])
     async def _dog(self, ctx):
-        """Te montre un magnifique chien\n	➡ Syntaxe: .dog/chien"""
+        """Te montre un magnifique chien\n	➡ Syntaxe: {PREFIX}dog/chien"""
 
         if ctx.author.nick:
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"
@@ -119,7 +119,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='sexe', aliases=['sexes', 'nude', 'nudes', 'nsfw'])
     async def _sexe(self, ctx, *, choice_of_nsfw = None):
-        """Envois une image coquine. (NSFW)\n	➡ Syntaxe: .sexe/sexes/nude/nudes [butts/boobs]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Envois une image coquine. (NSFW)\n	➡ Syntaxe: {PREFIX}sexe/sexes/nude/nudes [butts/boobs]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         liste_hot = ['butts', 'boobs']
         if choice_of_nsfw in liste_hot:
             pass
@@ -138,7 +138,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='news', aliases=['rss'])
     async def _news(self, ctx, *, arg = ""):
-        """Info random dans le domaine de l'informatique\n	➡ Syntaxe: .news/rss [site/liste]"""
+        """Info random dans le domaine de l'informatique\n	➡ Syntaxe: {PREFIX}news/rss [site/liste]"""
 
         rss_website = {
             "anandtech": "https://www.anandtech.com/rss/",

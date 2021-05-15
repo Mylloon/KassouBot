@@ -14,7 +14,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='iq')
     async def _iq(self, ctx, *, user = '0'):
-        """Calcule ton IQ.\n	➡ Syntaxe: .iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Calcule ton IQ.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if user == '0':
             user = ctx.author
             await ctx.message.add_reaction(emoji = '✅')
@@ -41,7 +41,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='love')
     async def _love(self, ctx, *users: discord.Member):
-        """Découvre la probabilité que ces deux personnes se mettent en couple.\n	➡ Syntaxe: .love <User1> <User2>"""
+        """Découvre la probabilité que ces deux personnes se mettent en couple.\n	➡ Syntaxe: {PREFIX}love <User1> <User2>"""
         if len(users) == 2 or len(users) == 1:
             UneDemande = False
             if len(users) == 1:
@@ -93,7 +93,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='8ball', aliases=['8b', '8balls'])
     async def _8ball(self, ctx, *, question):
-        """Répond à ta question 🔮.\n	➡ Syntaxe: .8ball/8b <question>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Répond à ta question 🔮.\n	➡ Syntaxe: {PREFIX}8ball/8b <question>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         reponses=["c'est sûr.","il en est décidément ainsi.","incontestablement.","oui sans aucun doute.","tu peux t'y fier.","tel que je le vois, oui.","c'est le plus probable.",
         "cela montre de bonnes perspectives.","certes.","les signes indiquent que oui.","ma réponse est oui.","ta question est trop floue, réessaie.","redemandes plus tard stp.",
         "je ferais mieux de pas te le dire maintenant...","je ne peux pas le prédire actuellement :/","concentre-toi et redemande.","n'y comptes pas trop.","ma réponse est non.",
@@ -106,7 +106,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx):
-        """Pile ou face.\n	➡ Syntaxe: .pileouface/pf"""
+        """Pile ou face.\n	➡ Syntaxe: {PREFIX}pileouface/pf"""
         await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
 

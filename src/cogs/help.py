@@ -13,7 +13,7 @@ class Help(commands.Cog):
 
     @commands.command(name='help')
     async def _help(self, ctx, *cog):
-        """Affiche toutes les commandes du bot.\n	➡ Syntaxe: .help [catégorie]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche toutes les commandes du bot.\n	➡ Syntaxe: {PREFIX}help [catégorie]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if not cog:
             """Liste des Cog"""
             halp=discord.Embed(title = 'Liste des catégories et commandes sans catégorie',
@@ -52,7 +52,7 @@ class Help(commands.Cog):
                             halp = discord.Embed(title = f'{cog[0]} - Liste des commandes', description = self.client.cogs[cog[0]].__doc__, color = discord.Colour.random())
                             for c in self.client.get_cog(y).get_commands():
                                 if not c.hidden:
-                                    cmds_help = str(c.help).split("\n")
+                                    cmds_help = str(c.help).replace("{PREFIX}", ctx.prefix).split("\n")
                                     del cmds_help[0]
                                     backslash = '\n'
                                     halp.add_field(name = f"`{ctx.prefix}{c.name}` - {str(c.help).split(backslash)[0]}", value = f"{''.join(cmds_help)}\u200b", inline = False)

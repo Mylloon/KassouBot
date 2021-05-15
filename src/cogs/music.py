@@ -301,7 +301,7 @@ class Music(commands.Cog):
 
     @commands.command(name='join', aliases=['j'], invoke_without_subcommand=True)
     async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
-        """Se connecte au salon vocal.\n	➡ Syntaxe: .connect/join⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Se connecte au salon vocal.\n	➡ Syntaxe: {PREFIX}connect/join⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if not channel and not ctx.author.voice:
             await ctx.send("Aucun channel à rejoindre. Connecte toi dans un vocal ou donne-moi son id.")
@@ -317,7 +317,7 @@ class Music(commands.Cog):
 
     @commands.command(name='stop', aliases=['disconnect', 'dc'])
     async def _leave(self, ctx: commands.Context):
-        """Arrête la chanson en cours de lecture et quitte le salon vocal.\n	➡ Syntaxe: .disconnect/dc/stop⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Arrête la chanson en cours de lecture et quitte le salon vocal.\n	➡ Syntaxe: {PREFIX}disconnect/dc/stop⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if not ctx.voice_state.voice:
             embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose ou `{ctx.prefix}join [id]` pour me connecter à un salon vocal.", color = 0xC41B1B)
@@ -330,7 +330,7 @@ class Music(commands.Cog):
 
     @commands.command(name='volume', aliases=['vol'])
     async def _volume(self, ctx: commands.Context, *, volume: int = False):
-        """Modifie le volume du bot (entre 1 et 100).\n	➡ Syntaxe: .volume/vol [1;100]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Modifie le volume du bot (entre 1 et 100).\n	➡ Syntaxe: {PREFIX}volume/vol [1;100]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if not ctx.voice_state.is_playing:
             return await ctx.send("Rien n'est joué pour le moment.")
@@ -346,7 +346,7 @@ class Music(commands.Cog):
 
     @commands.command(name='now', aliases=['current', 'playing', 'np'])
     async def _now(self, ctx: commands.Context):
-        """Affiche des informations sur la chanson en cours de lecture.\n	➡ Syntaxe: .now/current⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢/playing/np"""
+        """Affiche des informations sur la chanson en cours de lecture.\n	➡ Syntaxe: {PREFIX}now/current⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢/playing/np"""
 
         await ctx.send(embed=ctx.voice_state.current.create_embed())
 
@@ -383,7 +383,7 @@ class Music(commands.Cog):
 
     @commands.command(name='skip', aliases=['s'])
     async def _skip(self, ctx: commands.Context):
-        """Passe la chanson.\n	➡ Syntaxe: .skip/s"""
+        """Passe la chanson.\n	➡ Syntaxe: {PREFIX}skip/s"""
 
         if not ctx.voice_state.is_playing:
             embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
@@ -396,7 +396,7 @@ class Music(commands.Cog):
 
     @commands.command(name='queue', aliases=['q', 'playlist'])
     async def _queue(self, ctx: commands.Context, *, page: int = 1):
-        """Affiche la file d'attente des chansons à venir.\n	➡ Syntaxe: .queue/q⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢/playlist [page]"""
+        """Affiche la file d'attente des chansons à venir.\n	➡ Syntaxe: {PREFIX}queue/q⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢/playlist [page]"""
 
         if len(ctx.voice_state.songs) == 0:
             embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
@@ -447,7 +447,7 @@ class Music(commands.Cog):
 
     @commands.command(name='loop', aliases=['repeat'])
     async def _loop(self, ctx: commands.Context):
-        """Répète la chanson actuellement en lecture.\n	➡ Syntaxe: .loop/repeat"""
+        """Répète la chanson actuellement en lecture.\n	➡ Syntaxe: {PREFIX}loop/repeat"""
 
         if not ctx.voice_state.is_playing:
             embed = discord.Embed(description = f"Tape `{ctx.prefix}play <chanson>` pour jouer quelque chose.", color = 0xC41B1B)
@@ -461,7 +461,7 @@ class Music(commands.Cog):
 
     @commands.command(name='play', aliases=['p'])
     async def _play(self, ctx: commands.Context, *, search: str):
-        """Recherche une chanson sur les sites compatibles avec YoutubeDL si aucun URL n'est donné et l'ajoute à la file d'attente.\n	➡ Syntaxe: .play/p⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Recherche une chanson sur les sites compatibles avec YoutubeDL si aucun URL n'est donné et l'ajoute à la file d'attente.\n	➡ Syntaxe: {PREFIX}play/p⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
         if not ctx.voice_state.voice:
             await ctx.invoke(self._summon)
@@ -489,7 +489,7 @@ class Music(commands.Cog):
 
     @commands.command(name='lyrics', aliases = ['l', 'lyric'])
     async def _lyrics(self, ctx, *, song: str = None):
-        """Affiche les paroles de la musique en cours, ou de la chanson spécifiée.\n	➡ Syntaxe: .lyrics/lyric/l (musique)⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche les paroles de la musique en cours, ou de la chanson spécifiée.\n	➡ Syntaxe: {PREFIX}lyrics/lyric/l (musique)⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if song or ctx.voice_state.is_playing:
             if not song:
                 song = f"{ctx.voice_state.current.title()}"

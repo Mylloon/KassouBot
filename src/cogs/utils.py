@@ -18,7 +18,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='ping')
     async def _ping(self, ctx, *, question = '0'):
-        """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if question == 'help':
             return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:stopwatch: correspond au temps que met le client a calculer le ping\n\n:heartbeat: correspond au temps que met le client a réagir au messages"))
         else:
@@ -32,7 +32,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='avatar')
     async def _avatar(self, ctx, *, user = '0'):
-        """Affiche ton avatar ou celui que tu mentionnes.\n	➡ Syntaxe: .avatar [user]"""
+        """Affiche ton avatar ou celui que tu mentionnes.\n	➡ Syntaxe: {PREFIX}avatar [user]"""
         if user == '0':
             user = ctx.author
         else:
@@ -45,7 +45,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='calc')
     async def _calc(self, ctx, *, msg):
-        """Calculatrice.\n	➡ Syntaxe: .calc <calcul>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Calculatrice.\n	➡ Syntaxe: {PREFIX}calc <calcul>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         equation = msg.replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('≥', '>=').replace('≤', '<=')
         try:
             try:
@@ -133,7 +133,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='memo', aliases = ['note'])
     async def _memo(self, ctx, *, text):
-        """T'envoie un petit memo par message privé.\n	➡ Syntaxe: .memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """T'envoie un petit memo par message privé.\n	➡ Syntaxe: {PREFIX}memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if len(text) <= 5:
             await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send("Ta note doit au moins faire 5 caractères.")
@@ -154,7 +154,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='infos', aliases = ['info'])
     async def _infos(self, ctx):
-        """Donne des infos sur le bot.\n	➡ Syntaxe: .infos/info⁢"""
+        """Donne des infos sur le bot.\n	➡ Syntaxe: {PREFIX}infos/info⁢"""
         appinfo = await self.client.application_info()
 
         embed = discord.Embed(color = discord.Colour.random())
@@ -215,7 +215,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='amongus')
     async def _amongus(self, ctx, *, map = "0"):
-        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if map.lower() in self._map_list_among_us("mira"):
             image = "https://i.imgur.com/6ijrH1h.jpg"
             embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
@@ -245,7 +245,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='whois')
     async def _whois(self, ctx, *user: discord.Member):
-        """Affiche les infos sur l'utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .whois [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche les infos sur l'utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}whois [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if len(user) <= 1:
             if user == ():
                 user = [ctx.author]
@@ -357,7 +357,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
-        """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
+        """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
         args = list(args)
         if len(args) > 2:
             question = args[0]
@@ -398,7 +398,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
-        """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .avis/vote "[Titre]" "<Demande>" """
+        """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}avis/vote "[Titre]" "<Demande>" """
         args = list(args)
         if len(args) > 2 or len(args) == 0:
             return await ctx.send("Désolé, la syntaxe est mauvaise.")
@@ -419,7 +419,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='reminder', aliases=["remind", "remindme"])
     async def _reminder(self, ctx, time, *, reminder):
-        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: .reminder/remind/remindme <temps (d/h/m/s)>[@] <message> """
+        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme <temps (d/h/m/s)>[@] <message> """
         embed = discord.Embed(color = 0xC41B1B)
         seconds = 0
         timestamp = datetime.utcnow()
