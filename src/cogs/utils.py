@@ -321,23 +321,32 @@ class Utils(commands.Cog):
             pass
         return stringMessage
 
-    def _cleanCodeStringWithMention(self, string):
+    def _cleanCodeStringWithMentionAndURLs(self, string):
         string = f"`{self._removeStartEndSpacesString(string)}`"
+
         findedMention = self._getMentionInString(string)
         for i in range(0, len(findedMention)):
             string = string.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
+
         if string.startswith("``<@"): # conserve le format quand mention au début de la string
             string = string[2:]
         if string.endswith(">``"): # conserve le format quand mention à la fin de la string
             string = string[:-2]
+        string = string.replace("``", "") # conserve le format quand deux mentions sont collés
         return string
 
     def _getMentionInString(self, string):
         findedMention = []
-        for findingMention in re.findall(r'<@[!]?\d*>', string): # récupération mention dans la string
+        for findingMention in re.findall(r'<@[!]?\d*>', string): # récupération mention dans le string
             findedMention.append(findingMention)
-        findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention
+        findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention dans la liste
         return findedMention
+
+    def _getURLsInString(self, string):
+        findedURLs = []
+        for findingMention in re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string): # récupération URLs dans le string
+            findedURLs.append(findingMention)
+        return findedURLs
     
     def _removeStartEndSpacesString(self, string):
         while string.startswith(" "):
@@ -401,7 +410,7 @@ class Utils(commands.Cog):
                 for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMention(args[0]), color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
@@ -453,7 +462,17 @@ class Utils(commands.Cog):
                     await ctx.message.add_reaction(emoji = '✅')
                 except:
                     pass
-                return await ctx.send(message, embed = discord.Embed(description = self._cleanCodeStringWithMention(reminder), timestamp = timestamp, color = discord.Colour.random()).set_footer(text=f"Message d'il y a {counter}"))
+                finalEmbed = discord.Embed(description = self._cleanCodeStringWithMentionAndURLs(reminder), timestamp = timestamp, color = discord.Colour.random())
+                finalEmbed.set_footer(text=f"Message d'il y a {counter}")
+                
+                links = ""
+                findedURLs = self._getURLsInString(reminder)
+                for i in range(0, len(findedURLs)):
+                    links += f"[Lien {i + 1}]({findedURLs[i]}) · "
+                if len(findedURLs) > 0:
+                    finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
+
+                return await ctx.send(message, embed = finalEmbed)
         else:
             embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
         await ctx.send(embed = embed)
