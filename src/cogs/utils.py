@@ -75,7 +75,7 @@ class Utils(commands.Cog):
                 equation = f"'{equation}' arrondi à 2"
         equation = equation.replace('*', '×').replace('/', '÷').replace('>=', '≥').replace('<=', '≤')
         embed = discord.Embed(color = discord.Colour.random(), title = 'Calculatrice')
-        embed.set_footer(text = ctx.author)
+        embed.set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
 
         embed.add_field(name = 'Calcul :', value = equation, inline = False)
         embed.add_field(name = 'Réponse :', value = answer.replace('False', 'Faux').replace('True', 'Vrai'), inline = False)
