@@ -18,7 +18,7 @@ class School(commands.Cog):
         voice_channels.extend(ctx.guild.voice_channels)
         await ctx.message.add_reaction(emoji = "✅")
         limite_voice_channels = 7
-        if len(voice_channels) > limite_voice_channels:
+        if len(voice_channels) > limite_voice_channels and not voice_channel:
             return await ctx.send(f"""Désolé mais il y a plus de {limite_voice_channels} salons vocaux sur ce serveur, utilisez plutôt `{ctx.prefix}appel {{ID salon vocal}}`.
             \nPour savoir comment récuperer l'id d'un salon vous pouvez faire `{ctx.prefix}getid`.""")
         if voice_channel:
