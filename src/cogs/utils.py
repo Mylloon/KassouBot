@@ -386,7 +386,7 @@ class Utils(commands.Cog):
                     shuffle(emojis_chosen)
                 for i in range(len(args[1:])):
                     message += f"{emojis_chosen[i]} -> {propositions[i]}\n"
-                embed = discord.Embed(title = question, description = message, color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+                embed = discord.Embed(title = question, description = message, color = discord.Colour.random()).set_footer(text = f"Sondage de {self._userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])
@@ -410,7 +410,7 @@ class Utils(commands.Cog):
                 for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
                     titre = self._cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = f"Sondage de {self._userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
