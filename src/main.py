@@ -171,7 +171,7 @@ async def on_message(message):
                         await message.channel.send(embed = embed)
                         await message.delete()
                     else:
-                        await message.reply(embed = embed)
+                        await message.reply(embed = embed, mention_author = False)
             except Exception as e:
                 e = str(e)
                 if not "invalid literal for int() with base 10:" in e or not "404 Not Found (error code: 10008)" in e: # faute de frappe / message supprimé
