@@ -1,6 +1,7 @@
 print("Chargement des extensions & librairie...", end = " ")
 
 import discord, re, pytz, os
+from discord_slash import SlashCommand
 from discord.ext import commands
 from random import choice
 from datetime import datetime
@@ -9,6 +10,7 @@ customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
+slash = SlashCommand(client, sync_commands = True, sync_on_cog_reload = True)
 
 client.load_extension("cogs.help")
 client.load_extension("cogs.utils")
@@ -18,6 +20,7 @@ client.load_extension("cogs.games")
 client.load_extension("cogs.fun")
 client.load_extension("cogs.autopublish")
 client.load_extension("cogs.school")
+client.load_extension("cogs.slash")
 print("Terminé !")
 
 @client.event
