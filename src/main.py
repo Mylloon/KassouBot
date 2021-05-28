@@ -1,4 +1,4 @@
-print("Connexion à Discord...")
+print("Chargement des extensions & librairie...", end = " ")
 
 import discord, re, pytz, os
 from discord.ext import commands
@@ -10,7 +10,6 @@ customTimezone = os.environ['TIMEZONE']
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 
-print("Chargement des extensions & librairie...")
 client.load_extension("cogs.help")
 client.load_extension("cogs.utils")
 client.load_extension("cogs.internet")
@@ -19,10 +18,11 @@ client.load_extension("cogs.games")
 client.load_extension("cogs.fun")
 client.load_extension("cogs.autopublish")
 client.load_extension("cogs.school")
+print("Terminé !")
 
 @client.event
 async def on_connect():
-    print(f"Connecté.")
+    print(f"Connecté !")
 
 @client.event
 async def on_ready():
@@ -219,4 +219,5 @@ def goodTimezone(date, type):
     elif type == 1:
         return str(pytz.timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
 
+print("Connexion à Discord...", end = " ")
 client.run(os.environ['TOKEN_DISCORD'])
