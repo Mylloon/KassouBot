@@ -14,31 +14,42 @@ class Fun(commands.Cog):
         self.client = client
 
     @commands.command(name='iq')
-    async def _iq(self, ctx, *, user = '0'):
-        """Calcule ton IQ.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if user == '0':
+    async def _iq(self, ctx, *user):
+        """Calcule ton QI.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if user[-1] == True:
+            fromSlash = user[-1]
+            user = user[:-1]
+        if len(user) == 0:
             user = ctx.author
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(f"T'as {randint(randint(-100,0),220)} IQ {user.mention} !")
         else:
+            user = user[0]
             try:
                 user2 = user
                 user2 = user2[2:-1]
                 user2 = user2.replace("!","")
                 user2 = int(user2)
                 user2 = self.client.get_user(user2)
-                KassouBot = self.client.get_user(740140888373854269)
-                if user2.id == KassouBot.id:
-                    await ctx.message.add_reaction(emoji = '✅')
-                    return await ctx.send(f"Bah... pas ouf... j'ai juste 100000 IQ :/")
+                if user2.id == self.client.user.id:
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '✅')
+                    return await ctx.send(f"Bah... pas ouf... j'ai juste 100000 de QI :/")
                 else:
-                    await ctx.message.add_reaction(emoji = '✅')
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '✅')
                     message = await ctx.send("...")
-                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} IQ  !")
+                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} de QI  !")
             except:
-                await ctx.message.add_reaction(emoji = '✅')
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '✅')
                 message = await ctx.send("...")
-                return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} IQ  !")
+                return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} de QI  !")
+    @cog_ext.cog_slash(name="iq", description = "Calcule ton QI.")
+    async def __iq(self, ctx, user = ()):
+        await self._iq(ctx, user, True)
 
     @commands.command(name='love')
     async def _love(self, ctx, *users: discord.Member):
@@ -112,7 +123,7 @@ class Fun(commands.Cog):
             await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
     @cog_ext.cog_slash(name="pileouface", description = "Pile ou face.")
-    async def __pileouface(self, ctx: SlashContext):
+    async def __pileouface(self, ctx):
         await self._pileouface(ctx, True)
 
     @commands.command(name='mock')
