@@ -29,9 +29,9 @@ To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and 
 
 ## __Add the bot to your server__
 
-- [This site](https://discordapi.com/permissions.html) allows you to choose which permissions to add by default to the bot.
-    - Choose *Administrator* so you don't get in over your head.
-    - Copy and paste the ID of your bot in *Client ID* found [here](https://discord.com/developers/applications) and go to the link at the bottom of the page.
+- In the [Discord Dev Portal](https://discord.com/developers/applications) create an application, and make sure it's a `Bot` (third tab).
+- To invite it, go to the `OAuth2` (second tab) tab, select the scopes `bot` (required) and `applications.commands` (for the slashs commands) and in the bot permissions select `Administrator` (You can select manually at your own risk).
+- You have the link above between the two blocks scope and permissions
 
 ## __Features__
 
