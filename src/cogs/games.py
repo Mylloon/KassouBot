@@ -15,8 +15,14 @@ class Games(commands.Cog):
         self.guessing_game = {}
 
     @commands.command(name='chifumi', aliases = ["shifumi", "ppc"])
-    async def _chifumi(self, ctx, *, choix):
+    async def _chifumi(self, ctx, *choix):
         """Un simple Chifumi contre le bot.\n	➡ Syntaxe: {PREFIX}chifumi/shifumi/ppc <pierre/papier/ciseaux>"""
+        fromSlash = False
+        if len(choix) < 1:
+            raise ModuleNotFoundError
+        if choix[-1] == True:
+            fromSlash = choix[-1]
+        choix = choix[0]
 
         choix_jeu = ["Pierre ✊", "Papier 🧻", "Ciseaux ✂"]
         orditxt = choice(choix_jeu)
@@ -39,12 +45,15 @@ class Games(commands.Cog):
         
         embed = discord.Embed(title = f"{choix_jeu[choix][-1:]}VS {choix_jeu[ordi][-1:]}", description = description)
         embed.set_author(name = ctx.author.name, icon_url = ctx.author.avatar_url)
-        await ctx.send(embed = embed)
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send(embed = embed)
     @_chifumi.error
     async def _chifumi_error(self, ctx, error):
         await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}chifumi/shifumi/ppc <pierre/papier/ciseaux>`.")
-
+    @cog_ext.cog_slash(name="chifumi", description = "Un simple Chifumi contre le bot.")
+    async def __chifumi(self, ctx, choix):
+        return await self._chifumi(ctx, choix, True)
 
     @commands.command(name='plusoumoins', aliases = ['+ou-', '+-'])
     async def _plusoumoins(self, ctx):
@@ -92,7 +101,6 @@ class Games(commands.Cog):
                     await ctx.send(f"Erreur dans la réponse {ctx.author.mention}, merci de n'écrire qu'un nombre. Tapez `stop` pour arrêter le jeu.")
         del self.guessing_game[str(ctx.author.id)]
         await ctx.send(f"T'as pas trouvé {ctx.author.mention}... dommage, c'était {number}.")
-
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx, fromSlash = False):

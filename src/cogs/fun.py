@@ -116,14 +116,11 @@ class Fun(commands.Cog):
     async def _love_error(self, ctx, error):
         await ctx.send(str(error).replace('Member "', "Le membre **").replace('" not found', "** n'as pas été trouvé."))
     @cog_ext.cog_slash(name="love", description = "Découvre la probabilité que ces deux personnes se mettent en couple.")
-    async def __love(self, ctx, user1 = None, user2 = None):
-        if user1 != None:
-            if user2 != None:
-                return await self._love(ctx, user1, user2, True)
-            else:
-                return await self._love(ctx, user1, True)
+    async def __love(self, ctx, user1: discord.Member, user2: discord.Member = None):
+        if user2 != None:
+            return await self._love(ctx, user1, user2, True)
         else:
-            return await self._love(ctx, True)
+            return await self._love(ctx, user1, True)
 
     @commands.command(name='8ball', aliases=['8b', '8balls'])
     async def _8ball(self, ctx, fromSlash = False):
@@ -140,7 +137,7 @@ class Fun(commands.Cog):
         if str(error) == "question is a required argument that is missing.":
             await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}8ball/8b/8balls <question>`.")
     @cog_ext.cog_slash(name="8ball", description = "Répond à ta question 🔮.")
-    async def __8ball(self, ctx):
+    async def __8ball(self, ctx, question):
         await self._8ball(ctx, True)
 
     @commands.command(name='mock')
