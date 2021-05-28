@@ -17,9 +17,13 @@ class Fun(commands.Cog):
     async def _iq(self, ctx, *user):
         """Calcule ton QI.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         fromSlash = False
-        if user[-1] == True:
-            fromSlash = user[-1]
-            user = user[:-1]
+        if len(user) > 0:
+            if user[-1] == True:
+                fromSlash = user[-1]
+                user = user[:-1]
+        if len(user) > 0:
+            if user[0] == None:
+                user = user[1:]
         if len(user) == 0:
             user = ctx.author
             if fromSlash != True:
@@ -48,7 +52,7 @@ class Fun(commands.Cog):
                 message = await ctx.send("...")
                 return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} de QI  !")
     @cog_ext.cog_slash(name="iq", description = "Calcule ton QI.")
-    async def __iq(self, ctx, user = ()):
+    async def __iq(self, ctx, user = None):
         await self._iq(ctx, user, True)
 
     @commands.command(name='love')
