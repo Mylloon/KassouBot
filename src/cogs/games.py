@@ -51,7 +51,7 @@ class Games(commands.Cog):
     @_chifumi.error
     async def _chifumi_error(self, ctx, error):
         await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}chifumi/shifumi/ppc <pierre/papier/ciseaux>`.")
-    @cog_ext.cog_slash(name="chifumi", description = "Un simple Chifumi contre le bot.")
+    @cog_ext.cog_slash(name="chifumi", description = "Un simple Chifumi contre le bot. <pierre/papier/ciseaux>")
     async def __chifumi(self, ctx, choix):
         return await self._chifumi(ctx, choix, True)
 
