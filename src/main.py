@@ -20,7 +20,6 @@ client.load_extension("cogs.games")
 client.load_extension("cogs.fun")
 client.load_extension("cogs.autopublish")
 client.load_extension("cogs.school")
-client.load_extension("cogs.slash")
 print("Terminé !")
 
 @client.event
