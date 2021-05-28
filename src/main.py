@@ -2,7 +2,6 @@ print("Chargement des extensions & librairie...", end = " ")
 
 import discord
 import re
-import pytz
 import os
 from discord.ext import commands
 from random import choice
@@ -202,9 +201,9 @@ async def on_message_delete(message):
             embed.set_author(name = user_or_nick(message.author), icon_url = message.author.avatar_url)
 
             if not user_suppressed:
-                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé le {datetime.now(pytz.timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
             else:                
-                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(pytz.timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1)}\nSupprimé par {user_or_nick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
             
             await channel.send(embed = embed)
             # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
@@ -218,9 +217,9 @@ def user_or_nick(user):
 
 def goodTimezone(date, type):
     if type == 0:
-        return str(pytz.timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').split()
+        return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').split()
     elif type == 1:
-        return str(pytz.timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
+        return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
 
 print("Connexion à Discord...", end = " ")
 client.run(os.environ['TOKEN_DISCORD'])
