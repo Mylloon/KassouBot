@@ -1,4 +1,5 @@
-import discord, re
+import discord
+import re
 from discord.ext import commands
 from random import randint, choice
 from datetime import timedelta

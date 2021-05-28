@@ -1,4 +1,9 @@
-import discord, json, requests, time, feedparser, os
+import discord
+import json
+import requests
+import time
+import feedparser
+import os
 from discord.ext import commands
 from random import choice
 from asyncpraw import Reddit

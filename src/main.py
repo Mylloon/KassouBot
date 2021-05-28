@@ -1,6 +1,9 @@
 print("Chargement des extensions & librairie...", end = " ")
 
-import discord, re, pytz, os
+import discord
+import re
+import pytz
+import os
 from discord.ext import commands
 from random import choice
 from datetime import datetime

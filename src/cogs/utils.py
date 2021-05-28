@@ -1,9 +1,13 @@
-import discord, pytz, time, os
+import discord
+import pytz
+import time
+import os
+import re
+import asyncio
 from discord.ext import commands
 from random import randint, shuffle
 from datetime import datetime
 from pytz import timezone
-import re, asyncio
 
 def setup(client):
     client.add_cog(Utils(client))
