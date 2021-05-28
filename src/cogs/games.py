@@ -2,6 +2,7 @@ import discord
 from discord.ext import commands
 from random import randint, choice
 import asyncio
+from discord_slash import cog_ext
 
 def setup(client):
     client.add_cog(Games(client))
@@ -91,3 +92,14 @@ class Games(commands.Cog):
                     await ctx.send(f"Erreur dans la réponse {ctx.author.mention}, merci de n'écrire qu'un nombre. Tapez `stop` pour arrêter le jeu.")
         del self.guessing_game[str(ctx.author.id)]
         await ctx.send(f"T'as pas trouvé {ctx.author.mention}... dommage, c'était {number}.")
+
+
+    @commands.command(name='pileouface', aliases=['pf'])
+    async def _pileouface(self, ctx, fromSlash = False):
+        """Pile ou face.\n	➡ Syntaxe: {PREFIX}pileouface/pf"""
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
+    @cog_ext.cog_slash(name="pileouface", description = "Pile ou face.")
+    async def __pileouface(self, ctx):
+        await self._pileouface(ctx, True)
