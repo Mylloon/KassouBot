@@ -67,11 +67,14 @@ class School(commands.Cog):
         # else:
         await ctx.send(f"Une erreur est survenue, syntaxe: `{ctx.prefix}appel [ID salon vocal]`.")
     @cog_ext.cog_slash(name="appel", description = "Fais l'appel.")
-    async def __appel(self, ctx, voice_channel: int = None):
-        if voice_channel == None:
+    async def __appel(self, ctx, voice_channel_id = None):
+        if voice_channel_id == None:
             return await self._appel(ctx, True)
         else:
-            return await self._appel(ctx, voice_channel, True)
+            try:
+                return await self._appel(ctx, int(voice_channel_id), True)
+            except:
+                pass
 
     @commands.command(name='getid', hidden = True)
     async def _getid(self, ctx, fromSlash):
