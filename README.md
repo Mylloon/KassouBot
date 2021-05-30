@@ -31,8 +31,8 @@ To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and 
 
 - In the [Discord Dev Portal](https://discord.com/developers/applications) create an application, and make sure it's a `Bot` (third tab).
 - To invite it, go to the `OAuth2` (second tab) tab, select the scopes `bot` (required) and `applications.commands` (for the slashs commands) and in the bot permissions select `Administrator` (You can select manually at your own risk).
-- You have the link above between the two blocks scope and permissions
-- If you need help, you can [join my Discord](https://discord.gg/Z5ePxH4)
+- You have the link above between the two blocks scope and permissions.
+- If you need help, you can [join my Discord](https://discord.gg/Z5ePxH4).
 
 ## __Features__
 
