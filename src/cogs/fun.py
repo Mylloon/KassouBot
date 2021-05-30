@@ -3,6 +3,7 @@ import re
 from discord.ext import commands
 from random import randint, choice
 from datetime import timedelta
+from discord_slash import cog_ext
 
 def setup(client):
     client.add_cog(Fun(client))
@@ -14,35 +15,55 @@ class Fun(commands.Cog):
         self.client = client
 
     @commands.command(name='iq')
-    async def _iq(self, ctx, *, user = '0'):
-        """Calcule ton IQ.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if user == '0':
+    async def _iq(self, ctx, *user):
+        """Calcule ton QI.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(user) > 0:
+            if user[-1] == True:
+                fromSlash = user[-1]
+                user = user[:-1]
+        if len(user) == 0:
             user = ctx.author
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(f"T'as {randint(randint(-100,0),220)} IQ {user.mention} !")
         else:
+            user = user[0]
             try:
                 user2 = user
                 user2 = user2[2:-1]
                 user2 = user2.replace("!","")
                 user2 = int(user2)
                 user2 = self.client.get_user(user2)
-                KassouBot = self.client.get_user(740140888373854269)
-                if user2.id == KassouBot.id:
-                    await ctx.message.add_reaction(emoji = '✅')
-                    return await ctx.send(f"Bah... pas ouf... j'ai juste 100000 IQ :/")
+                if user2.id == self.client.user.id:
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '✅')
+                    return await ctx.send(f"Bah... pas ouf... j'ai juste 100000 de QI :/")
                 else:
-                    await ctx.message.add_reaction(emoji = '✅')
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '✅')
                     message = await ctx.send("...")
-                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} IQ  !")
+                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} de QI  !")
             except:
-                await ctx.message.add_reaction(emoji = '✅')
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '✅')
                 message = await ctx.send("...")
-                return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} IQ  !")
+                return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} de QI  !")
+    @cog_ext.cog_slash(name="iq", description = "Calcule ton QI.")
+    async def __iq(self, ctx, user = None):
+        if user == None:
+            return await self._iq(ctx, True)
+        else:
+            return await self._iq(ctx, user, True)
 
     @commands.command(name='love')
     async def _love(self, ctx, *users: discord.Member):
         """Découvre la probabilité que ces deux personnes se mettent en couple.\n	➡ Syntaxe: {PREFIX}love <User1> <User2>"""
+        fromSlash = False
+        if len(users) > 0:
+            if users[-1] == True:
+                fromSlash = users[-1]
+                users = users[:-1]
         if len(users) == 2 or len(users) == 1:
             UneDemande = False
             if len(users) == 1:
@@ -52,7 +73,8 @@ class Fun(commands.Cog):
                 users.append(ctx.author)
                 UneDemande = True
             if users[0] == users[1]:
-                await ctx.message.add_reaction(emoji = '✅')
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '✅')
                 return await ctx.send("Je suis sûr que cette personne s'aime ! :angry:")
             if users[0].nick:
                 user1 = list(users[0].nick)
@@ -71,16 +93,19 @@ class Fun(commands.Cog):
             else:
                 taille_du_pls_grand = len(user2_CALC)
                 taille_du_ms_grand = len(user1_CALC)
-            coef_amour = round(float(len(list(set(user1_CALC).intersection(user2_CALC))) / taille_du_pls_grand),1) * 100 + ((taille_du_pls_grand-taille_du_ms_grand) * 1.5) * 1.7
+            coef_amour = round(float(len(list(set(user1_CALC).intersection(user2_CALC))) / taille_du_pls_grand), 1) * 100 + ((taille_du_pls_grand-taille_du_ms_grand) * 1.5) * 1.7
             if coef_amour > 100:
                 coef_amour = 100
             if UneDemande == True:
-                await ctx.message.add_reaction(emoji = '✅')
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '✅')
                 return await ctx.send(f"Tu as {coef_amour}% de chance de te mettre en couple avec {''.join(user1)}")
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(f"{''.join(user1)} et {''.join(user2)} ont {coef_amour}% de chance de se mettre en couple !")
         else:
-            await ctx.message.add_reaction(emoji = '❌')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
             await ctx.send(f"Erreur! Syntaxe : `{ctx.prefix}love <User1> [User2]`\n")
     def _retirerDoublons(self, liste):
         Newliste = []
@@ -91,25 +116,30 @@ class Fun(commands.Cog):
     @_love.error
     async def _love_error(self, ctx, error):
         await ctx.send(str(error).replace('Member "', "Le membre **").replace('" not found', "** n'as pas été trouvé."))
+    @cog_ext.cog_slash(name="love", description = "Découvre la probabilité que ces deux personnes se mettent en couple.")
+    async def __love(self, ctx, user1: discord.Member, user2: discord.Member = None):
+        if user2 != None:
+            return await self._love(ctx, user1, user2, True)
+        else:
+            return await self._love(ctx, user1, True)
 
     @commands.command(name='8ball', aliases=['8b', '8balls'])
-    async def _8ball(self, ctx, *, question):
-        """Répond à ta question 🔮.\n	➡ Syntaxe: {PREFIX}8ball/8b <question>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+    async def _8ball(self, ctx, fromSlash = False):
+        """Répond à ta question 🔮.\n	➡ Syntaxe: {PREFIX}8ball/8b⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         reponses=["c'est sûr.","il en est décidément ainsi.","incontestablement.","oui sans aucun doute.","tu peux t'y fier.","tel que je le vois, oui.","c'est le plus probable.",
         "cela montre de bonnes perspectives.","certes.","les signes indiquent que oui.","ma réponse est oui.","ta question est trop floue, réessaie.","redemandes plus tard stp.",
         "je ferais mieux de pas te le dire maintenant...","je ne peux pas le prédire actuellement :/","concentre-toi et redemande.","n'y comptes pas trop.","ma réponse est non.",
         "mes sources disent que non.", "les perspectives ne sont pas si bonnes...","c'est très douteux."]
-        await ctx.send(f"{ctx.author.mention}, {choice(reponses)}")
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send(f"{ctx.author.mention}, {choice(reponses)}")
     @_8ball.error
     async def _8ball_error(self, ctx, error):
         if str(error) == "question is a required argument that is missing.":
             await ctx.send(f"Mauvaise syntaxe : `{ctx.prefix}8ball/8b/8balls <question>`.")
-
-    @commands.command(name='pileouface', aliases=['pf'])
-    async def _pileouface(self, ctx):
-        """Pile ou face.\n	➡ Syntaxe: {PREFIX}pileouface/pf"""
-        await ctx.message.add_reaction(emoji = '✅')
-        return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
+    @cog_ext.cog_slash(name="8ball", description = "Répond à ta question 🔮.")
+    async def __8ball(self, ctx, question):
+        await self._8ball(ctx, True)
 
     @commands.command(name='mock')
     async def _mock(self, ctx):

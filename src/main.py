@@ -3,6 +3,7 @@ print("Chargement des extensions & librairie...", end = " ")
 import discord
 import re
 import os
+from discord_slash import SlashCommand
 from discord.ext import commands
 from random import choice
 from datetime import datetime
@@ -11,6 +12,7 @@ customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
+slash = SlashCommand(client, sync_commands = True)
 
 client.load_extension("cogs.help")
 client.load_extension("cogs.utils")

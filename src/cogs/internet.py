@@ -7,13 +7,13 @@ import os
 from discord.ext import commands
 from random import choice
 from asyncpraw import Reddit
+from discord_slash import cog_ext
 
 def setup(client):
     client.add_cog(Internet(client))
 
 class Internet(commands.Cog):
     """Commandes relatives à ce qui provient d'internet."""
-
 
     def __init__(self, client):
         self.client = client
@@ -36,8 +36,17 @@ class Internet(commands.Cog):
                 await self._cat(await self.client.get_context(message))
 
     @commands.command(name='memes', aliases = ['meme'])
-    async def _memes(self, ctx, *, args = None):
+    async def _memes(self, ctx, *args):
         """Envois un meme de reddit.\n	➡ Syntaxe: {PREFIX}memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(args) > 0:
+            if args[-1] == True:
+                fromSlash = args[-1]
+                args = args[:-1]
+        if len(args) > 0:
+            args = args[0]
+        else:
+            args = None
 
         if args: # s'il y a un subreddit de défini
             subredditchoix = args
@@ -63,7 +72,8 @@ class Internet(commands.Cog):
             else:
                 await ctx.send(f"```r/{subredditchoix} pour {ctx.author.name}```\n{submission.url}")
                 message = await ctx.send("```Meme de Reddit```")
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             await message.add_reaction('👍')
             return await message.add_reaction('👎')
 
@@ -71,6 +81,13 @@ class Internet(commands.Cog):
             print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
             await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send(f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
+    @cog_ext.cog_slash(name="meme", description = "Envois un meme de reddit.")
+    async def __memes(self, ctx, subreddit = None):
+        if subreddit == None:
+            return await self._memes(ctx, True)
+        else:
+            return await self._memes(ctx, subreddit, True)
+
 
     def _random_image(self, link):
         temps_requete = int(round(time.time() * 1000))
@@ -91,7 +108,7 @@ class Internet(commands.Cog):
         return (json_data, temps_requete)
 
     @commands.command(name='cat', aliases = ['chat'])
-    async def _cat(self, ctx):
+    async def _cat(self, ctx, fromSlash = False):
         """Te montre un magnifique chat\n	➡ Syntaxe: {PREFIX}cat/chat"""
 
         if ctx.author.nick:
@@ -102,12 +119,16 @@ class Internet(commands.Cog):
         cat = self._random_image("http://aws.random.cat/meow")
         embed.set_image(url = cat[0]['file'])
         embed.set_footer(text = f"random.cat a pris {cat[1]} ms.")
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
         message = await ctx.send(embed=embed)
         return await message.add_reaction('❤️')
+    @cog_ext.cog_slash(name="cat", description = "Te montre un magnifique chat")
+    async def __cat(self, ctx):
+        return await self._cat(ctx, True)
 
     @commands.command(name='dog', aliases = ['chien'])
-    async def _dog(self, ctx):
+    async def _dog(self, ctx, fromSlash = False):
         """Te montre un magnifique chien\n	➡ Syntaxe: {PREFIX}dog/chien"""
 
         if ctx.author.nick:
@@ -118,9 +139,13 @@ class Internet(commands.Cog):
         dog = self._random_image("https://dog.ceo/api/breeds/image/random")
         embed.set_image(url = dog[0]['message'])
         embed.set_footer(text = f"dog.ceo a pris {dog[1]} ms.")
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
         message = await ctx.send(embed=embed)
         return await message.add_reaction('❤️')
+    @cog_ext.cog_slash(name="dog", description = "Te montre un magnifique chien")
+    async def __dog(self, ctx):
+        return await self._dog(ctx, True)
 
     @commands.command(name='sexe', aliases=['sexes', 'nude', 'nudes', 'nsfw'])
     async def _sexe(self, ctx, *, choice_of_nsfw = None):
@@ -142,8 +167,17 @@ class Internet(commands.Cog):
             await ctx.send(f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
 
     @commands.command(name='news', aliases=['rss'])
-    async def _news(self, ctx, *, arg = ""):
+    async def _news(self, ctx, *arg):
         """Info random dans le domaine de l'informatique\n	➡ Syntaxe: {PREFIX}news/rss [site/liste]"""
+        fromSlash = False
+        if len(arg) > 0:
+            if arg[-1] == True:
+                fromSlash = arg[-1]
+                arg = arg[:-1]
+        if len(arg) > 0:
+            arg = arg[0]
+        else:
+            arg = ""
 
         rss_website = {
             "anandtech": "https://www.anandtech.com/rss/",
@@ -185,4 +219,11 @@ class Internet(commands.Cog):
             pass
         embed.set_footer(text = f"News de {choix_site.capitalize()}")
         await ctx.send(embed = embed)
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+    @cog_ext.cog_slash(name="news", description = "Info random dans le domaine de l'informatique, met commme arg liste pour la liste des sources dispo.")
+    async def __news(self, ctx, source = None):
+        if source == None:
+            return await self._news(ctx, True)
+        else:
+            return await self._news(ctx, source, True)
