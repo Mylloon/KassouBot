@@ -4,6 +4,8 @@ from random import randint, shuffle
 from datetime import datetime
 from pytz import timezone
 import re, asyncio
+from discord_slash import cog_ext
+import shlex
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -31,22 +33,49 @@ class Utils(commands.Cog):
             await ctx.message.add_reaction(emoji = '✅')
 
     @commands.command(name='avatar')
-    async def _avatar(self, ctx, *, user = '0'):
+    async def _avatar(self, ctx, *user):
         """Affiche ton avatar ou celui que tu mentionnes.\n	➡ Syntaxe: {PREFIX}avatar [user]"""
-        if user == '0':
+        fromSlash = False
+        if len(user) > 0:
+            if user[-1] == True:
+                fromSlash = user[-1]
+                user = user[:-1]
+        if len(user) > 0:
+            user = user[0]
+        else:
+            user = None
+
+        if user == None:
             user = ctx.author
         else:
             user = self.client.get_user(int(user[2:-1].replace("!","")))
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
         embed = discord.Embed(description = f"[lien vers la photo de profil]({user.avatar_url}) de {user.mention}", color = discord.Colour.random())
         embed.set_author(name = f"Photo de profil de {user.name}")
         embed.set_image(url = user.avatar_url)
         await ctx.send(embed = embed)
+    @cog_ext.cog_slash(name="avatar", description = "Affiche ton avatar ou celui que tu mentionnes.")
+    async def __avatar(self, ctx, user = None):
+        if user == None:
+            return await self._avatar(ctx, True)
+        else:
+            return await self._avatar(ctx, user, True)
 
     @commands.command(name='calc')
-    async def _calc(self, ctx, *, msg):
+    async def _calc(self, ctx, *calcul):
         """Calculatrice.\n	➡ Syntaxe: {PREFIX}calc <calcul>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        equation = msg.replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('≥', '>=').replace('≤', '<=')
+        fromSlash = False
+        if len(calcul) > 0:
+            if calcul[-1] == True:
+                fromSlash = calcul[-1]
+                calcul = calcul[:-1]
+        if len(calcul) > 0:
+            calcul = calcul[0]
+        else:
+            raise ModuleNotFoundError
+
+        equation = calcul.replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('≥', '>=').replace('≤', '<=')
         try:
             try:
                 if '=' in equation:
@@ -79,14 +108,18 @@ class Utils(commands.Cog):
 
         embed.add_field(name = 'Calcul :', value = equation, inline = False)
         embed.add_field(name = 'Réponse :', value = answer.replace('False', 'Faux').replace('True', 'Vrai'), inline = False)
-        await ctx.message.add_reaction(emoji = '✅')
-        await ctx.send(content = None, embed = embed)
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        await ctx.send(embed = embed)
     @_calc.error
     async def _calc_error(self, ctx, error):
         await ctx.send("Tu n'as pas spécifié de calcul.")
+    @cog_ext.cog_slash(name="calc", description = "Calculatrice.")
+    async def __calc(self, ctx, calcul):
+        return await self._calc(ctx, calcul, True)
 
     @commands.command(name='syntax')
-    async def _syntax(self, ctx):
+    async def _syntax(self, ctx, fromSlash = False):
         """Informations pour bien éditer son texte.⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         syntaxe = "-----------------------------------------------------\n"
         syntaxe += discord.utils.escape_markdown("```Js\n")
@@ -128,32 +161,52 @@ class Utils(commands.Cog):
         syntaxe += "-----------------------------------------------------\n"
         syntaxe += discord.utils.escape_markdown(">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n")
         syntaxe += ">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n"
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
         await ctx.send(syntaxe)
+    @cog_ext.cog_slash(name="syntax", description = "Informations pour bien éditer son texte.")
+    async def __syntax(self, ctx):
+        return await self._syntax(ctx, True)
 
     @commands.command(name='memo', aliases = ['note'])
-    async def _memo(self, ctx, *, text):
+    async def _memo(self, ctx, *text):
         """T'envoie un petit memo par message privé.\n	➡ Syntaxe: {PREFIX}memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(text) > 0:
+            if text[-1] == True:
+                fromSlash = text[-1]
+                text = text[:-1]
+        if len(text) > 0:
+            text = " ".join(text)
+        else:
+            raise ModuleNotFoundError
+
         if len(text) <= 5:
-            await ctx.message.add_reaction(emoji = '❌')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send("Ta note doit au moins faire 5 caractères.")
         elif len(text) >= 2048:
-            await ctx.message.add_reaction(emoji = '❌')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send("Ta note doit faire moins de 2048 caractères.")
         else:
-            await ctx.message.delete()
+            if fromSlash != True:
+                await ctx.message.delete()
             embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
             embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
-    async def _note_error(self, ctx, error):
+    async def _memo_error(self, ctx, error):
         if str(error) == "text is a required argument that is missing.":
-            await ctx.send(f"Vous devez renseigner un message : `{ctx.prefix}note/memo <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢`.")
+            await ctx.send(f"Vous devez renseigner un message : `{ctx.prefix}memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢`.")
+    @cog_ext.cog_slash(name="memo", description = "T'envoie un petit memo par message privé.")
+    async def __memo(self, ctx, memo):
+        return await self._memo(ctx, memo, True)
 
     @commands.command(name='infos', aliases = ['info'])
-    async def _infos(self, ctx):
+    async def _infos(self, ctx, fromSlash = False):
         """Donne des infos sur le bot.\n	➡ Syntaxe: {PREFIX}infos/info⁢"""
         appinfo = await self.client.application_info()
 
@@ -187,21 +240,60 @@ class Utils(commands.Cog):
         embed.add_field(name = "Timezone", value = f"`{self.customTimezone}`")
         embed.add_field(name = "Version", value = f"`{version}`")
         embed.set_footer(text = f"Basé sur discord.py {discord.__version__}")
-        await ctx.message.add_reaction(emoji = '✅')
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
         await ctx.send(embed = embed)
+    @cog_ext.cog_slash(name="infos", description = "Donne des infos sur le bot.")
+    async def __infos(self, ctx):
+        ctx.prefix = "/"
+        return await self._infos(ctx, True)
 
-    def _map_list_among_us(self, map):
-        maps = {}
-        maps["skeld"] = ["skeld", "the skeld", "theskeld"]
-        maps["mira"] = ["mira", "mira hq", "mirahq"]
-        maps["polus"] = ["polus"]
-        maps["airship"] = ["airship", "air ship"]
-        if map == "all":
-            return maps["skeld"] + maps["mira"] + maps["polus"] + maps["airship"]
-        return maps[map]
-    
+    @commands.command(name='amongus')
+    async def _amongus(self, ctx, *map):
+        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(map) > 0:
+            if map[-1] == True:
+                fromSlash = map[-1]
+                map = map[:-1]
+        if len(map) > 0:
+            map = " ".join(map)
+        else:
+            map = "0"
+
+        if map.lower() in self._map_list_among_us("mira"):
+            image = "https://i.imgur.com/6ijrH1h.jpg"
+            embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
+            embed.set_image(url = image)
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+            await ctx.send(embed = embed)
+        elif map.lower() in self._map_list_among_us("polus"):
+            image = "https://i.imgur.com/mhFmcw3.jpg"
+            embed = discord.Embed(title = f"Map Polus d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
+            embed.set_image(url = image)
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+            await ctx.send(embed = embed)
+        elif map.lower() in self._map_list_among_us("skeld"):
+            image = "https://i.imgur.com/OSXI4Zv.jpg"
+            embed = discord.Embed(title = f"Map The Skeld d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
+            embed.set_image(url = image)
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+            await ctx.send(embed = embed)
+        elif map.lower() in self._map_list_among_us("airship"):
+            image = "https://i.imgur.com/cm8Wogw.png"
+            embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
+            embed.set_image(url = image)
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+            await ctx.send(embed = embed)
+        else:
+            await ctx.send(f"`{ctx.prefix}amongus <mira/polus/skeld/airship>`")
     @commands.command(name='among', hidden = True)
     async def _among(self, ctx, *, args = ""):
+        """Raccourci à la commande amongus⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if not args == "":
             args = args.split()
             del args[0]
@@ -212,40 +304,29 @@ class Utils(commands.Cog):
                 await ctx.invoke(self.client.get_command("amongus"))
         else:
             await ctx.message.add_reaction(emoji = '❓')
-
-    @commands.command(name='amongus')
-    async def _amongus(self, ctx, *, map = "0"):
-        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if map.lower() in self._map_list_among_us("mira"):
-            image = "https://i.imgur.com/6ijrH1h.jpg"
-            embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
-            embed.set_image(url = image)
-            await ctx.send(embed = embed)
-            await ctx.message.add_reaction(emoji = '✅')
-        elif map.lower() in self._map_list_among_us("polus"):
-            image = "https://i.imgur.com/mhFmcw3.jpg"
-            embed = discord.Embed(title = f"Map Polus d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
-            embed.set_image(url = image)
-            await ctx.send(embed = embed)
-            await ctx.message.add_reaction(emoji = '✅')
-        elif map.lower() in self._map_list_among_us("skeld"):
-            image = "https://i.imgur.com/OSXI4Zv.jpg"
-            embed = discord.Embed(title = f"Map The Skeld d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
-            embed.set_image(url = image)
-            await ctx.send(embed = embed)
-            await ctx.message.add_reaction(emoji = '✅')
-        elif map.lower() in self._map_list_among_us("airship"):
-            image = "https://i.imgur.com/cm8Wogw.png"
-            embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
-            embed.set_image(url = image)
-            await ctx.send(embed = embed)
-            await ctx.message.add_reaction(emoji = '✅')
-        else:
-            await ctx.send(f"`{ctx.prefix}amongus <mira/polus/skeld/airship>`")
+    def _map_list_among_us(self, map):
+        """Sélecteur de map pour la commande amongus⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        maps = {}
+        maps["skeld"] = ["skeld", "the skeld", "theskeld"]
+        maps["mira"] = ["mira", "mira hq", "mirahq"]
+        maps["polus"] = ["polus"]
+        maps["airship"] = ["airship", "air ship"]
+        if map == "all":
+            return maps["skeld"] + maps["mira"] + maps["polus"] + maps["airship"]
+        return maps[map]
+    @cog_ext.cog_slash(name="amongus", description = "Affiche la carte voulue d'Among Us.")
+    async def __amongus(self, ctx, map):
+        return await self._amongus(ctx, map, True)
 
     @commands.command(name='whois')
     async def _whois(self, ctx, *user: discord.Member):
         """Affiche les infos sur l'utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}whois [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(user) > 0:
+            if user[-1] == True:
+                fromSlash = user[-1]
+                user = user[:-1]
+
         if len(user) <= 1:
             if user == ():
                 user = [ctx.author]
@@ -267,9 +348,17 @@ class Utils(commands.Cog):
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
             embed.add_field(name = "Est sur le serveur depuis", value = self._ageLayout(self._get_age(user[0].joined_at)))
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
         return await ctx.send(f"Tu mentionnes trop d'utilisateurs :  `{ctx.prefix}whois [@Membre]`")
+    @cog_ext.cog_slash(name="whois", description = "Affiche les infos sur l'utilisateur.")
+    async def __whois(self, ctx, user: discord.Member = None):
+        ctx.prefix = "/" # pas sûr que ce soit utile
+        if user == None:
+            return await self._whois(ctx, True)
+        else:
+            return await self._whois(ctx, user, True)
 
     def _get_age(self, date):
         joursRestants = datetime.now() - date
@@ -358,6 +447,12 @@ class Utils(commands.Cog):
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
         """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
+        fromSlash = False
+        if len(args) > 0:
+            if args[-1] == True:
+                fromSlash = args[-1]
+                args = args[:-1]
+
         args = list(args)
         if len(args) > 2:
             question = args[0]
@@ -390,15 +485,27 @@ class Utils(commands.Cog):
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])
-                return await ctx.message.add_reaction(emoji = '✅')
+                if fromSlash != True:
+                    return await ctx.message.add_reaction(emoji = '✅')
             else:
                 return await ctx.send(f"Désolé, mais tu as mis trop de possibilités (maximum : 20)")
         else:
             return await ctx.send(f'Désolé, mais il manque des arguments : `{ctx.prefix}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
+    @cog_ext.cog_slash(name="sondage", description = "Fais un sondage.")
+    async def __sondage(self, ctx, args):
+        ctx.prefix = "/"
+        args = shlex.split(args)
+        return await self._sondage(ctx, *args, True)
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
         """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}avis/vote "[Titre]" "<Demande>" """
+        fromSlash = False
+        if len(args) > 0:
+            if args[-1] == True:
+                fromSlash = args[-1]
+                args = args[:-1]
+
         args = list(args)
         if len(args) > 2 or len(args) == 0:
             return await ctx.send("Désolé, la syntaxe est mauvaise.")
@@ -415,11 +522,26 @@ class Utils(commands.Cog):
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
                 await message.add_reaction(emoji = i)
-            return await ctx.message.delete()
+            if fromSlash != True:
+                return await ctx.message.delete()
+    @cog_ext.cog_slash(name="avis", description = "Demande un avis.")
+    async def __avis(self, ctx, args):
+        args = shlex.split(args)
+        return await self._avis(ctx, *args, True)
 
     @commands.command(name='reminder', aliases=["remind", "remindme"])
-    async def _reminder(self, ctx, time, *, reminder):
+    async def _reminder(self, ctx, time, *reminder):
         """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme <temps (d/h/m/s)>[@] <message> """
+        fromSlash = False
+        if len(reminder) > 0:
+            if reminder[-1] == True:
+                fromSlash = reminder[-1]
+                reminder = reminder[:-1]
+        if len(reminder) > 0:
+            reminder = " ".join(reminder)
+        else:
+            reminder = None
+
         embed = discord.Embed(color = 0xC41B1B)
         seconds = 0
         timestamp = datetime.utcnow()
@@ -459,7 +581,8 @@ class Utils(commands.Cog):
                     for i in mentionList:
                         message += f" {i}"
                 try:
-                    await ctx.message.add_reaction(emoji = '✅')
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '✅')
                 except:
                     pass
                 finalEmbed = discord.Embed(description = self._cleanCodeStringWithMentionAndURLs(reminder), timestamp = timestamp, color = discord.Colour.random())
@@ -476,3 +599,6 @@ class Utils(commands.Cog):
         else:
             embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
         await ctx.send(embed = embed)
+    @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
+    async def __reminder(self, ctx, time, reminder):
+        return await self._reminder(ctx, time, reminder, True)
