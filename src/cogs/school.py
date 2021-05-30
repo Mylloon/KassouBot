@@ -31,8 +31,6 @@ class School(commands.Cog):
             await ctx.message.add_reaction(emoji = "✅")
         limite_voice_channels = 7
         if len(voice_channels) > limite_voice_channels and not voice_channel:
-            if fromSlash == True:
-                ctx.prefix = "/"
             return await ctx.send(f"""Désolé mais il y a plus de {limite_voice_channels} salons vocaux sur ce serveur, utilisez plutôt `{ctx.prefix}appel {{ID salon vocal}}`.
             \nPour savoir comment récuperer l'id d'un salon vous pouvez faire `{ctx.prefix}getid`.""")
         if voice_channel:
@@ -42,7 +40,7 @@ class School(commands.Cog):
             else:
                 return await ctx.send("Tu as spécifié un channel textuelle et non vocal.")
         if len(voice_channels) > 0:
-            embed = discord.Embed(title = "Réagissez à ce message avec ✋ pour signaler votre présence.", description = f"(attention, je réagis aussi) — Professeur : {ctx.author.mention}")
+            embed = discord.Embed(title = "Réagissez à ce message avec ✋ pour signaler votre présence.", description = f"(attention, je réagis aussi) — Demandeur : {ctx.author.mention}")
             for channel in voice_channels:
                 prof = []
                 for role in ["Professeur", "professeur", "Prof", "prof"]:
@@ -68,6 +66,7 @@ class School(commands.Cog):
         await ctx.send(f"Une erreur est survenue, syntaxe: `{ctx.prefix}appel [ID salon vocal]`.")
     @cog_ext.cog_slash(name="appel", description = "Fais l'appel.")
     async def __appel(self, ctx, voice_channel_id = None):
+        ctx.prefix = "/"
         if voice_channel_id == None:
             return await self._appel(ctx, True)
         else:
@@ -77,7 +76,7 @@ class School(commands.Cog):
                 pass
 
     @commands.command(name='getid', hidden = True)
-    async def _getid(self, ctx, fromSlash):
+    async def _getid(self, ctx, fromSlash = False):
         """Tuto vidéo sur comment récupérer l'ID d'un utilisateur/salon⁢⁢⁢⁢⁢"""
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
