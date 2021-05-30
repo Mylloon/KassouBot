@@ -299,7 +299,7 @@ class Music(commands.Cog):
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
         await ctx.send(f"Une erreur est survenue : {str(error)}")
 
-    @commands.command(name='join', aliases=['j'], invoke_without_subcommand=True)
+    @commands.command(name='join', aliases=['j', 'connect'], invoke_without_subcommand=True)
     async def _summon(self, ctx: commands.Context, *, channel: discord.VoiceChannel = None):
         """Se connecte au salon vocal.\n	➡ Syntaxe: {PREFIX}connect/join⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
 
