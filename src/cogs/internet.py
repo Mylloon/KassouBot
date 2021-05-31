@@ -32,7 +32,7 @@ class Internet(commands.Cog):
         if args: # s'il y a un subreddit de défini
             subredditchoix = args
         else: # s'il n'y en a pas
-            subredditchoix = choice(['memes', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
+            subredditchoix = choice(['memes', 'goodanimemes', 'dankmemes', 'DeepFried',
             'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
             'physicsmemes', 'blackpeopletwitter', 'metal_me_irl', '195', 'shittyadviceanimals', 'meirl',
             '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
@@ -54,8 +54,8 @@ class Internet(commands.Cog):
                 message = await ctx.send(f"```r/{subredditchoix} pour {ctx.author.name}```\n{submission.url}")
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
-            await message.add_reaction('👍')
-            return await message.add_reaction('👎')
+            await message.add_reaction('🔺')
+            return await message.add_reaction('🔻')
 
         except Exception as error:
             print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
