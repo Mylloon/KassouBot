@@ -140,7 +140,7 @@ class Fun(commands.Cog):
 
     @commands.command(name='mock')
     async def _mock(self, ctx):
-        """Se moque du message précédent⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Se moque du message précédent. - Slash command not available⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         first = 0
         suite_auteur = None
         temps_limite = (await ctx.message.channel.history(limit = 2).flatten())[1].created_at - timedelta(minutes = 5)
