@@ -18,7 +18,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='memes', aliases = ['meme'])
     async def _memes(self, ctx, *args):
-        """Envois un meme de reddit.\n	➡ Syntaxe: {PREFIX}memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Envoie un meme de reddit.\n	➡ Syntaxe: {PREFIX}memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         fromSlash = False
         if len(args) > 0:
             if args[-1] == True:
@@ -62,7 +62,7 @@ class Internet(commands.Cog):
             print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
             await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send(f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
-    @cog_ext.cog_slash(name="meme", description = "Envois un meme de reddit.")
+    @cog_ext.cog_slash(name="meme", description = "Envoie un meme de reddit.")
     async def __memes(self, ctx, subreddit = None):
         if subreddit == None:
             return await self._memes(ctx, True)

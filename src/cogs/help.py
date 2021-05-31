@@ -69,7 +69,7 @@ class Help(commands.Cog):
                     if fromSlash != True:
                         await ctx.message.add_reaction(emoji = '✅')
                 await ctx.send('', embed = halp)
-    @cog_ext.cog_slash(name="help", description = "Envois un meme de reddit.")
+    @cog_ext.cog_slash(name="help", description = "Affiche toutes les commandes du bot.")
     async def __help(self, ctx, cog = None):
         ctx.prefix = "/"
         if cog == None:
