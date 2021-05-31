@@ -271,7 +271,7 @@ class VoiceState:
 
 
 class Music(commands.Cog):
-    """Commandes relatives à la musique © vbe0201."""
+    """Commandes relatives à la musique © vbe0201. (slash commands not working)"""
     def __init__(self, client: commands.bot):
         self.client = client
         self.voice_states = {}
