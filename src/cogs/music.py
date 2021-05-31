@@ -22,6 +22,7 @@ import lyricsgenius
 import time
 import os
 genius = lyricsgenius.Genius(os.environ['TOKEN_GENIUS'])
+from utils.core import ligneFormatage, userOrNick
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -518,7 +519,7 @@ class Music(commands.Cog):
                     type_de_comptage = "\n"
             for ligne in paroles.split(type_de_comptage):
                 if len(f"{lignetotal}{type_de_comptage}{ligne}") < 1900:
-                    lignetotal = f"{lignetotal}{type_de_comptage}{self.ligne_formatage(ligne)}"
+                    lignetotal = f"{lignetotal}{type_de_comptage}{ligneFormatage(ligne)}"
                 else:
                     if premierembed == True:
                         premierembed = False
@@ -528,10 +529,10 @@ class Music(commands.Cog):
                     else:
                         embed = discord.Embed(description = lignetotal, color = couleur_embed)
                         await ctx.send(embed = embed)
-                    lignetotal = f"{self.ligne_formatage(ligne)}"
+                    lignetotal = f"{ligneFormatage(ligne)}"
             
             temps_requete = int(round(time.time() * 1000)) - temps_requete
-            footer_embed = f"Pour {self.user_or_nick(ctx.author)} par Genius en {round(temps_requete / 1000, 2)} s."
+            footer_embed = f"Pour {userOrNick(ctx.author)} par Genius en {round(temps_requete / 1000, 2)} s."
             await ctx.message.add_reaction(emoji = '✅')
             if premierembed == True:
                 premierembed = False
@@ -545,19 +546,6 @@ class Music(commands.Cog):
         else:
             await ctx.message.add_reaction(emoji = '❌')
             await ctx.send(f"Aucune musique demandé... `{ctx.prefix}lyrics/l/lyrics <song>`.")
-    def ligne_formatage(self, ligne):
-        liste_balise = [
-            ('[Hook', '[Accroche'), ('[Verse', '[Couplet'), ('[Chorus', '[Chœur'),
-            ('[Bridge', '[Pont'),('[Pre-Chorus', '[Pré-chœur'), ('[Post-Chorus', '[Post-chœur')
-        ]
-        for balises in liste_balise:
-            ligne = ligne.replace(balises[0], balises[1])
-        return ligne
-    def user_or_nick(self, user):
-        if user.nick:
-            return f"{user.nick} ({user.name}#{user.discriminator})"
-        else:
-            return f"{user.name}#{user.discriminator}"
 
     @commands.command(name='lyricsromanized', aliases = ['lr', 'lyricromanized'], hidden = True)
     async def _lyricsromanized(self, ctx, *, song: str = None):

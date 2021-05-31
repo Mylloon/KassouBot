@@ -1,13 +1,11 @@
 import discord
-import json
-import requests
-import time
 import feedparser
 import os
 from discord.ext import commands
 from random import choice
 from asyncpraw import Reddit
 from discord_slash import cog_ext
+from utils.core import randomImage
 
 def setup(client):
     client.add_cog(Internet(client))
@@ -88,25 +86,6 @@ class Internet(commands.Cog):
         else:
             return await self._memes(ctx, subreddit, True)
 
-
-    def _random_image(self, link):
-        temps_requete = int(round(time.time() * 1000))
-        try:
-            request_data = requests.get(link)
-        except Exception as e:
-            raise Exception(f"Une erreur s'est produite lors de la tentative de demande de l'API {link} : {e}")
-
-        if not request_data.status_code == 200:
-            raise Exception(f"Code HTTP {request_data.status_code} au lieu de HTTP 200 à l'appel de {link} : {request_data.text}")
-
-        try:
-            json_data = json.loads(request_data.text)
-        except Exception as e:
-            raise Exception(f"Erreur lors de la transformation les données de {link} en json : {e}")
-
-        temps_requete = int(round(time.time() * 1000)) - temps_requete
-        return (json_data, temps_requete)
-
     @commands.command(name='cat', aliases = ['chat'])
     async def _cat(self, ctx, fromSlash = False):
         """Te montre un magnifique chat\n	➡ Syntaxe: {PREFIX}cat/chat"""
@@ -116,7 +95,7 @@ class Internet(commands.Cog):
         else:
             name = f"{ctx.author.name}"
         embed = discord.Embed(title = f"Poticha pour {name}", colour = discord.Colour.random())
-        cat = self._random_image("http://aws.random.cat/meow")
+        cat = randomImage("http://aws.random.cat/meow")
         embed.set_image(url = cat[0]['file'])
         embed.set_footer(text = f"random.cat a pris {cat[1]} ms.")
         if fromSlash != True:
@@ -136,7 +115,7 @@ class Internet(commands.Cog):
         else:
             name = f"{ctx.author.name}"
         embed = discord.Embed(title = f"Potichien pour {name}", colour = discord.Colour.random())
-        dog = self._random_image("https://dog.ceo/api/breeds/image/random")
+        dog = randomImage("https://dog.ceo/api/breeds/image/random")
         embed.set_image(url = dog[0]['message'])
         embed.set_footer(text = f"dog.ceo a pris {dog[1]} ms.")
         if fromSlash != True:
@@ -157,7 +136,7 @@ class Internet(commands.Cog):
             choice_of_nsfw = choice(liste_hot)
         if ctx.channel.is_nsfw():
             embed = discord.Embed(title = f"{choice_of_nsfw.capitalize()} pour {ctx.author.name}", colour = discord.Colour.random())
-            nsfw = self._random_image(f'http://api.o{choice_of_nsfw}.ru/noise/')
+            nsfw = randomImage(f'http://api.o{choice_of_nsfw}.ru/noise/')
             embed.set_image(url = f"http://media.o{choice_of_nsfw}.ru/{nsfw[0][0]['preview']}")
             embed.set_footer(text = f"o{choice_of_nsfw}.ru a pris {nsfw[1]} ms.")
             await ctx.message.add_reaction(emoji = '✅')

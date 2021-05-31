@@ -5,9 +5,9 @@ import re
 import os
 from discord_slash import SlashCommand
 from discord.ext import commands
-from pytz import timezone
 customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
+from utils.core import userOrNick, goodTimezone
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 slash = SlashCommand(client, sync_commands = True)
@@ -104,18 +104,18 @@ async def on_message(message):
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
                     icon_url = message.author.avatar_url
 
-                    date_1 = goodTimezone(msgID.created_at, 0)
+                    date_1 = goodTimezone(msgID.created_at, 0, customTimezone)
                     edit = ""
                     if msgID.edited_at:
-                        date_edit = goodTimezone(msgID.edited_at, 0)
+                        date_edit = goodTimezone(msgID.edited_at, 0, customTimezone)
                         edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"
                     messageDuBas = f"Posté le {date_1[0][8:]}/{date_1[0][5:-3]}/{date_1[0][:4]} à {date_1[1]}{edit}"
 
-                    date_2 = goodTimezone(message.created_at, 0)
+                    date_2 = goodTimezone(message.created_at, 0, customTimezone)
                     date_2 = f"{date_2[0][8:]}/{date_2[0][5:-3]}/{date_2[0][:4]} à {date_2[1]}"
                     
                     if auteur == "Auteur":
-                        messageDuBas = messageDuBas + f"\nCité par {user_or_nick(message.author)} le {date_2}"
+                        messageDuBas = messageDuBas + f"\nCité par {userOrNick(message.author)} le {date_2}"
                     embed.set_footer(icon_url = icon_url, text = messageDuBas)
                     if message.content == linkURL.replace(' ',''):
                         await message.channel.send(embed = embed)
@@ -126,18 +126,6 @@ async def on_message(message):
                 e = str(e)
                 if not "invalid literal for int() with base 10:" in e or not "404 Not Found (error code: 10008)" in e: # faute de frappe / message supprimé
                     print(e)
-
-def user_or_nick(user):
-    if user.nick:
-        return f"{user.nick} ({user.name}#{user.discriminator})"
-    else:
-        return f"{user.name}#{user.discriminator}"
-
-def goodTimezone(date, type):
-    if type == 0:
-        return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').split()
-    elif type == 1:
-        return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')
 
 print("Connexion à Discord...", end = " ")
 client.run(os.environ['TOKEN_DISCORD'])

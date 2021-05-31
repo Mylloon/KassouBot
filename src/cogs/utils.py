@@ -10,6 +10,7 @@ from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
 import shlex
+from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, ageLayout
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -20,7 +21,6 @@ class Utils(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.customTimezone = os.environ['TIMEZONE']
-
 
     @commands.command(name='ping')
     async def _ping(self, ctx, *, question = '0'):
@@ -108,7 +108,7 @@ class Utils(commands.Cog):
                 equation = f"'{equation}' arrondi à 2"
         equation = equation.replace('*', '×').replace('/', '÷').replace('>=', '≥').replace('<=', '≤')
         embed = discord.Embed(color = discord.Colour.random(), title = 'Calculatrice')
-        embed.set_footer(text = self._userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
+        embed.set_footer(text = userOrNick(ctx.author), icon_url = ctx.author.avatar_url)
 
         embed.add_field(name = 'Calcul :', value = equation, inline = False)
         embed.add_field(name = 'Réponse :', value = answer.replace('False', 'Faux').replace('True', 'Vrai'), inline = False)
@@ -265,28 +265,28 @@ class Utils(commands.Cog):
         else:
             map = "0"
 
-        if map.lower() in self._map_list_among_us("mira"):
+        if map.lower() in map_list_among_us("mira"):
             image = "https://i.imgur.com/6ijrH1h.jpg"
             embed = discord.Embed(title = f"Map Mira HQ d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(embed = embed)
-        elif map.lower() in self._map_list_among_us("polus"):
+        elif map.lower() in map_list_among_us("polus"):
             image = "https://i.imgur.com/mhFmcw3.jpg"
             embed = discord.Embed(title = f"Map Polus d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(embed = embed)
-        elif map.lower() in self._map_list_among_us("skeld"):
+        elif map.lower() in map_list_among_us("skeld"):
             image = "https://i.imgur.com/OSXI4Zv.jpg"
             embed = discord.Embed(title = f"Map The Skeld d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(embed = embed)
-        elif map.lower() in self._map_list_among_us("airship"):
+        elif map.lower() in map_list_among_us("airship"):
             image = "https://i.imgur.com/cm8Wogw.png"
             embed = discord.Embed(title = f"Map Airship d'Among Us", color = discord.Colour.random(), description = f"[lien de l'image]({image})")
             embed.set_image(url = image)
@@ -302,22 +302,12 @@ class Utils(commands.Cog):
             args = args.split()
             del args[0]
             args = " ".join(args)
-            if args.lower() in self._map_list_among_us("all"):
+            if args.lower() in map_list_among_us("all"):
                 await ctx.invoke(self.client.get_command("amongus"), map=args)
             else:
                 await ctx.invoke(self.client.get_command("amongus"))
         else:
             await ctx.message.add_reaction(emoji = '❓')
-    def _map_list_among_us(self, map):
-        """Sélecteur de map pour la commande amongus⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        maps = {}
-        maps["skeld"] = ["skeld", "the skeld", "theskeld"]
-        maps["mira"] = ["mira", "mira hq", "mirahq"]
-        maps["polus"] = ["polus"]
-        maps["airship"] = ["airship", "air ship"]
-        if map == "all":
-            return maps["skeld"] + maps["mira"] + maps["polus"] + maps["airship"]
-        return maps[map]
     @cog_ext.cog_slash(name="amongus", description = "Affiche la carte voulue d'Among Us.")
     async def __amongus(self, ctx, map):
         return await self._amongus(ctx, map, True)
@@ -344,14 +334,14 @@ class Utils(commands.Cog):
             value = str(user[0].created_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Âge du compte", value = self._ageLayout(self._get_age(user[0].created_at)))
+            embed.add_field(name = "Âge du compte", value = ageLayout(get_age(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
             value = str(user[0].joined_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Est sur le serveur depuis", value = self._ageLayout(self._get_age(user[0].joined_at)))
+            embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(get_age(user[0].joined_at)))
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
@@ -363,90 +353,6 @@ class Utils(commands.Cog):
             return await self._whois(ctx, True)
         else:
             return await self._whois(ctx, user, True)
-
-    def _get_age(self, date):
-        joursRestants = datetime.now() - date
-        years = joursRestants.total_seconds() / (365.242 * 24 * 3600)
-        months = (years - int(years)) * 12
-        days = (months - int(months)) * (365.242 / 12)
-        hours = (days - int(days)) * 24
-        minutes = (hours - int(hours)) * 60
-        seconds = (minutes - int(minutes)) * 60
-        return (int(years), int(months), int(days),  int(hours), int(minutes), int(seconds))
-
-    def _ageLayout(self, tuple):
-        time = {}
-        time[0], time[1], time[2], time[3], time[4], time[5] = "an", "mois", "jour", "heure", "minute", "seconde"
-        for i in range(len(tuple)):
-            if tuple[i] > 1 and i != 1:
-                time[i] = time[i] + "s"
-        message = ""
-        if tuple[5] > 0: # pour les secondes
-            affichage = [5] # on affiche que : seconde
-        if tuple[4] > 0:
-            affichage = [4, 5] # on affiche : minute + seconde
-        if tuple[3] > 0:
-            affichage = [3, 4, 5] # on affiche : heure + minute + seconde
-        if tuple[2] > 0:
-            affichage = [2, 3, 4] # on affiche : jour + heure + minute
-        if tuple[1] > 0:
-            affichage = [1, 2, 3] # on affiche : mois + jour + heure
-        if tuple[0] > 0:
-            affichage = [0, 1, 3] # on affiche : an + mois + heure
-        for i in affichage:
-            message = message + f", {tuple[i]} {time[i]}"
-        return message[2:]
-
-    def _userOrNick(self, user):
-        if user == None:
-            return "Utilisateur inconnu" # Mauvais copié/collé -> changement d'ID
-        if user.nick:
-            return f"{user.nick} ({user.name}#{user.discriminator})"
-        else:
-            return f"{user.name}#{user.discriminator}"
-
-    def _cleanUser(self, ctx, stringMessage, stringID):
-        stringMessage = stringMessage.replace("<@!", "").replace(">", "").replace("<@", "")
-        associatedID = self._userOrNick(ctx.author.guild.get_member(int(stringID)))
-        try:
-            stringMessage = stringMessage.replace(stringID, associatedID)
-        except:
-            pass
-        return stringMessage
-
-    def _cleanCodeStringWithMentionAndURLs(self, string):
-        string = f"`{self._removeStartEndSpacesString(string)}`"
-
-        findedMention = self._getMentionInString(string)
-        for i in range(0, len(findedMention)):
-            string = string.replace(findedMention[i], f"`{findedMention[i]}`") # conserve la mention dans le message
-
-        if string.startswith("``<@"): # conserve le format quand mention au début de la string
-            string = string[2:]
-        if string.endswith(">``"): # conserve le format quand mention à la fin de la string
-            string = string[:-2]
-        string = string.replace("``", "") # conserve le format quand deux mentions sont collés
-        return string
-
-    def _getMentionInString(self, string):
-        findedMention = []
-        for findingMention in re.findall(r'<@[!]?\d*>', string): # récupération mention dans le string
-            findedMention.append(findingMention)
-        findedMention = list(dict.fromkeys(findedMention)) # suppression doublon de mention dans la liste
-        return findedMention
-
-    def _getURLsInString(self, string):
-        findedURLs = []
-        for findingMention in re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', string): # récupération URLs dans le string
-            findedURLs.append(findingMention)
-        return findedURLs
-    
-    def _removeStartEndSpacesString(self, string):
-        while string.startswith(" "):
-            string = string[1:]
-        while string.endswith(" "):
-            string = string[:-1]
-        return string
 
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
@@ -461,7 +367,7 @@ class Utils(commands.Cog):
         if len(args) > 2:
             question = args[0]
             for i in re.findall(r'\d+', question):
-                question = self._cleanUser(ctx, question, i)
+                question = cleanUser(ctx, question, i)
             propositions = args[1:]
             if len(propositions) <= 20:
                 message = ""
@@ -485,7 +391,7 @@ class Utils(commands.Cog):
                     shuffle(emojis_chosen)
                 for i in range(len(args[1:])):
                     message += f"{emojis_chosen[i]} -> {propositions[i]}\n"
-                embed = discord.Embed(title = question, description = message, color = discord.Colour.random()).set_footer(text = f"Sondage de {self._userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
+                embed = discord.Embed(title = question, description = message, color = discord.Colour.random()).set_footer(text = f"Sondage de {userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
                 sondage = await ctx.send(embed = embed)
                 for i in range(len(args[1:])):
                     await sondage.add_reaction(emoji = emojis_chosen[i])
@@ -519,9 +425,9 @@ class Utils(commands.Cog):
             else: # si titre défini
                 titre = args[0]
                 for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
-                    titre = self._cleanUser(ctx, titre, findedId)
+                    titre = cleanUser(ctx, titre, findedId)
                 args = args[1:]
-            embed = discord.Embed(title = titre, description = self._cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = f"Sondage de {self._userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
+            embed = discord.Embed(title = titre, description = cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = f"Sondage de {userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
             message = await ctx.send(embed = embed)
             reactions = ['✅', '🤷', '❌']
             for i in reactions:
@@ -581,7 +487,7 @@ class Utils(commands.Cog):
                 await asyncio.sleep(seconds)
                 message = ctx.author.mention
                 if mention:
-                    mentionList = self._getMentionInString(reminder)
+                    mentionList = getMentionInString(reminder)
                     for i in mentionList:
                         message += f" {i}"
                 try:
@@ -589,11 +495,11 @@ class Utils(commands.Cog):
                         await ctx.message.add_reaction(emoji = '✅')
                 except:
                     pass
-                finalEmbed = discord.Embed(description = self._cleanCodeStringWithMentionAndURLs(reminder), timestamp = timestamp, color = discord.Colour.random())
+                finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = timestamp, color = discord.Colour.random())
                 finalEmbed.set_footer(text=f"Message d'il y a {counter}")
                 
                 links = ""
-                findedURLs = self._getURLsInString(reminder)
+                findedURLs = getURLsInString(reminder)
                 for i in range(0, len(findedURLs)):
                     links += f"[Lien {i + 1}]({findedURLs[i]}) · "
                 if len(findedURLs) > 0:

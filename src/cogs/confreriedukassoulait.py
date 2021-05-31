@@ -6,6 +6,7 @@ from random import choice
 from datetime import datetime
 from pytz import timezone
 customTimezone = os.environ['TIMEZONE']
+from utils.core import goodTimezone, userOrNick
 
 def setup(client):
     client.add_cog(ConfrerieDuKassoulait(client))
@@ -91,25 +92,13 @@ class ConfrerieDuKassoulait(commands.Cog):
                 channel = self.client.get_channel(742588187456831659)
                 embed = discord.Embed(description = f"{message.content}")
 
-                embed.set_author(name = self.user_or_nick(message.author), icon_url = message.author.avatar_url)
+                embed.set_author(name = userOrNick(message.author), icon_url = message.author.avatar_url)
 
                 if not user_suppressed:
-                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {self.goodTimezone(message.created_at, 1)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1, customTimezone)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
                 else:                
-                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {self.goodTimezone(message.created_at, 1)}\nSupprimé par {self.user_or_nick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1, customTimezone)}\nSupprimé par {userOrNick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
                 
                 await channel.send(embed = embed)
                 # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
                 # info sur la personne qui a supprimé ne fonctionne pas si il a supprimé un message auparavant (les logs se rajoute a un log deja existant)
-
-    def user_or_nick(user):
-        if user.nick:
-            return f"{user.nick} ({user.name}#{user.discriminator})"
-        else:
-            return f"{user.name}#{user.discriminator}"
-
-    def goodTimezone(self, date, type):
-        if type == 0:
-            return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').split()
-        elif type == 1:
-            return str(timezone(customTimezone).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')

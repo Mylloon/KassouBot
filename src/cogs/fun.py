@@ -4,6 +4,7 @@ from discord.ext import commands
 from random import randint, choice
 from datetime import timedelta
 from discord_slash import cog_ext
+from utils.core import retirerDoublons
 
 def setup(client):
     client.add_cog(Fun(client))
@@ -84,8 +85,8 @@ class Fun(commands.Cog):
                 user2 = list(users[1].nick)
             else:
                 user2 = list(users[1].name)
-            user1_CALC = self._retirerDoublons([x.lower() for x in user1])
-            user2_CALC = self._retirerDoublons([x.lower() for x in user2])
+            user1_CALC = retirerDoublons([x.lower() for x in user1])
+            user2_CALC = retirerDoublons([x.lower() for x in user2])
             coef_amour = 0
             if len(user1_CALC) > len(user2_CALC):
                 taille_du_pls_grand = len(user1_CALC)
@@ -107,12 +108,6 @@ class Fun(commands.Cog):
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
             await ctx.send(f"Erreur! Syntaxe : `{ctx.prefix}love <User1> [User2]`\n")
-    def _retirerDoublons(self, liste):
-        Newliste = []
-        for element in liste:
-            if element not in Newliste:
-                Newliste.append(element)
-        return Newliste
     @_love.error
     async def _love_error(self, ctx, error):
         await ctx.send(str(error).replace('Member "', "Le membre **").replace('" not found', "** n'as pas été trouvé."))
