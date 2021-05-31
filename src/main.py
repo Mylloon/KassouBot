@@ -53,13 +53,15 @@ async def on_message(message):
     
     urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
     for i in range(len(urls)):
-        if urls[i].startswith("https://discordapp.com/channels/") or urls[i].startswith("https://discord.com/channels/") or urls[i].startswith("https://ptb.discordapp.com/"):
+        if urls[i].startswith("https://discordapp.com/channels/") or urls[i].startswith("https://discord.com/channels/") or urls[i].startswith("https://ptb.discordapp.com/") or urls[i].startswith("https://canary.discordapp.com/"):
             link = urls[i]
             linkURL = link
-            if link.startswith("https://discord.com/channels/"):
+            if link.startswith("https://discord.com/"):
                 link = f'000{link}'
             if link.startswith("https://ptb.discordapp.com/"):
                 link = link[4:]
+            if link.startswith("https://canary.discordapp.com/"):
+                link = link[7:]
             if "@me" in urls[i]:
                 return await message.channel.send("Je ne cite pas les messages privés.", delete_after = 5)
             try:
