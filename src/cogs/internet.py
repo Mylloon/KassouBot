@@ -136,7 +136,6 @@ class Internet(commands.Cog):
         if ctx.channel.is_nsfw():
             embed = discord.Embed(title = f"{choice_of_nsfw.capitalize()} pour {ctx.author.name}", colour = discord.Colour.random())
             nsfw = randomImage(f'http://api.o{choice_of_nsfw}.ru/noise/')
-            print(nsfw)
             embed.set_image(url = f"http://media.o{choice_of_nsfw}.ru/{nsfw[0][0]['preview']}")
             embed.set_footer(text = f"o{choice_of_nsfw}.ru a pris {nsfw[1]} ms pour sortir l'image n°{nsfw[0][1]}-{nsfw[1]}.")
             if fromSlash != True:
