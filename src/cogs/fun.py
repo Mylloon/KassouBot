@@ -178,3 +178,30 @@ class Fun(commands.Cog):
             return await ctx.send("".join(message).replace("\\N", "\n").replace("\\n", "\n"))
         else:
             return await ctx.send("Le message ne contient aucun texte.", delete_after = 5)
+
+    @commands.command(name='random', aliases=['randint'])
+    async def _random(self, ctx, *n):
+        """Tire au hasard un chiffre entre 1 et n (par défaut n=10)\n	➡ Syntaxe: {PREFIX}random/randint [n]"""
+        fromSlash = False
+        if len(n) > 0:
+            if n[-1] == True:
+                fromSlash = n[-1]
+                n = n[:-1]
+        if len(n) > 0:
+            try:
+                n = int(n[0])
+            except:
+                return await ctx.send("Veuillez renseigner un chiffre valide.")
+        else:
+            n = 10
+    
+        resultat = randint(1, n)
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send(embed = discord.Embed().set_author(name = f"Tu as tiré le chiffre {resultat} !"))
+    @cog_ext.cog_slash(name="random", description = "Tire au hasard un chiffre entre 1 et n (par défaut n=10)")
+    async def __random(self, ctx, n: int = None):
+        if n == None:
+            await self._random(ctx, True)
+        else:
+            await self._random(ctx, n, True)
