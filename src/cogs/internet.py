@@ -32,9 +32,9 @@ class Internet(commands.Cog):
         if args: # s'il y a un subreddit de défini
             subredditchoix = args
         else: # s'il n'y en a pas
-            subredditchoix = choice(['memes', 'anime_irl', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
+            subredditchoix = choice(['memes', 'goodanimemes', 'BikiniclienttomTwitter', 'dankmemes', 'DeepFried',
             'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
-            'physicsmemes', 'reactiongifs', 'blackpeopletwitter', 'metal_me_irl', 'bee_irl', '195', 'shittyadviceanimals', 'meirl',
+            'physicsmemes', 'blackpeopletwitter', 'metal_me_irl', '195', 'shittyadviceanimals', 'meirl',
             '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
 
         try:
@@ -59,7 +59,8 @@ class Internet(commands.Cog):
 
         except Exception as error:
             print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
-            await ctx.message.add_reaction(emoji = '❌')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
             return await ctx.send(f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
     @cog_ext.cog_slash(name="meme", description = "Envoie un meme de reddit.")
     async def __memes(self, ctx, subreddit = None):
