@@ -16,23 +16,6 @@ class Internet(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.Cog.listener()
-    async def on_message(self, message):
-        if message.channel.id == 770805818487865404 or message.channel.id == 772239638240165928: # Le groupe de l'amour ❤❤ -- channel chien/chat
-            chiens = ["dog", "chien", "potichien"]
-            chats = ["kat", "mace", "kater", "katze", "sinta", "minoos", "cat", "qitt", "besseh", "katu", "caun", "kazh",
-            "bisig", "moggy", "kotka", "maow", "gat", "we'sa", "guigna", "kodkod", "mao", "koyangi", "ghjattu", "míw", "pussi",
-            "gato", "gata", "kato", "kass", "domadh", "demmat", "kissa", "chat", "minou", "piscín", "cath", "k'at'a", "muca", "gali",
-            "gatos", "popoki", "kike", "chatul", "chatula", "billa", "kat poes", "macska", "cica", "kutjing", "kucing", "köttur",
-            "gatto", "gattina", "neko", "chma", "pising", "feles", "felix", "kakis", "katé", "qattus", "qattusa", "ngeru", "miz", "felino",
-            "felina", "muur", "katt", "shimii", "billi", "gorbe", "pusa", "kot", "giat", "pisica", "koshka", "pusi", "macka", "mizhu",
-            "kotsur", "bisad", "büsi", "chatz", "paka", "muc", "poonai", "puunay", "kocour", "kocka", "maa-oh", "kedi", "kit", "con mêo",
-            "tchèt", "mouss", "ologbo", "kats", "猫", "кот", "고양이", "poticha", "😼", "ʇɐɥɔ"]
-            if message.content.lower() in chiens:
-                await self._dog(await self.client.get_context(message))
-            if message.content.lower() in chats:
-                await self._cat(await self.client.get_context(message))
-
     @commands.command(name='memes', aliases = ['meme'])
     async def _memes(self, ctx, *args):
         """Envois un meme de reddit.\n	➡ Syntaxe: {PREFIX}memes/meme [subreddit]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
