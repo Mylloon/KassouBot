@@ -71,7 +71,7 @@ class Internet(commands.Cog):
 
     @commands.command(name='cat', aliases = ['chat'])
     async def _cat(self, ctx, fromSlash = False):
-        """Te montre un magnifique chat\n	➡ Syntaxe: {PREFIX}cat/chat"""
+        """Te montre un magnifique chat.\n	➡ Syntaxe: {PREFIX}cat/chat"""
 
         if ctx.author.nick:
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"
@@ -85,13 +85,13 @@ class Internet(commands.Cog):
             await ctx.message.add_reaction(emoji = '✅')
         message = await ctx.send(embed=embed)
         return await message.add_reaction('❤️')
-    @cog_ext.cog_slash(name="cat", description = "Te montre un magnifique chat")
+    @cog_ext.cog_slash(name="cat", description = "Te montre un magnifique chat.")
     async def __cat(self, ctx):
         return await self._cat(ctx, True)
 
     @commands.command(name='dog', aliases = ['chien'])
     async def _dog(self, ctx, fromSlash = None):
-        """Te montre un magnifique chien\n	➡ Syntaxe: {PREFIX}dog/chien"""
+        """Te montre un magnifique chien.\n	➡ Syntaxe: {PREFIX}dog/chien"""
         if fromSlash == None:
             fromSlash = False
 
@@ -107,14 +107,28 @@ class Internet(commands.Cog):
             await ctx.message.add_reaction(emoji = '✅')
         message = await ctx.send(embed=embed)
         return await message.add_reaction('❤️')
-    @cog_ext.cog_slash(name="dog", description = "Te montre un magnifique chien")
+    @cog_ext.cog_slash(name="dog", description = "Te montre un magnifique chien.")
     async def __dog(self, ctx):
         return await self._dog(ctx, True)
 
     @commands.command(name='sexe', aliases=['sexes', 'nude', 'nudes', 'nsfw'])
-    async def _sexe(self, ctx, *, choice_of_nsfw = None):
+    async def _sexe(self, ctx, *choice_of_nsfw):
         """Envois une image coquine. (NSFW)\n	➡ Syntaxe: {PREFIX}sexe/sexes/nude/nudes [butts/boobs]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        fromSlash = False
+        if len(choice_of_nsfw) > 0:
+            if choice_of_nsfw[-1] == True:
+                fromSlash = choice_of_nsfw[-1]
+                choice_of_nsfw = choice_of_nsfw[:-1]
+        if len(choice_of_nsfw) > 0:
+            choice_of_nsfw = choice_of_nsfw[0]
+        else:
+            choice_of_nsfw = None
+
         liste_hot = ['butts', 'boobs']
+        if choice_of_nsfw == 'butt':
+            choice_of_nsfw = 'butts'
+        if choice_of_nsfw == 'boob':
+            choice_of_nsfw = 'boobs'
         if choice_of_nsfw in liste_hot:
             pass
         else:
@@ -122,13 +136,22 @@ class Internet(commands.Cog):
         if ctx.channel.is_nsfw():
             embed = discord.Embed(title = f"{choice_of_nsfw.capitalize()} pour {ctx.author.name}", colour = discord.Colour.random())
             nsfw = randomImage(f'http://api.o{choice_of_nsfw}.ru/noise/')
+            print(nsfw)
             embed.set_image(url = f"http://media.o{choice_of_nsfw}.ru/{nsfw[0][0]['preview']}")
-            embed.set_footer(text = f"o{choice_of_nsfw}.ru a pris {nsfw[1]} ms.")
-            await ctx.message.add_reaction(emoji = '✅')
+            embed.set_footer(text = f"o{choice_of_nsfw}.ru a pris {nsfw[1]} ms pour sortir l'image n°{nsfw[0][1]}-{nsfw[1]}.")
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(embed = embed)
         else:
-            await ctx.message.add_reaction(emoji = '❌')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
             await ctx.send(f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
+    @cog_ext.cog_slash(name="sexe", description = "Envois une image coquine. (NSFW)")
+    async def __sexe(self, ctx, buttsorboobs = None):
+        if buttsorboobs == None:
+            return await self._sexe(ctx, True)
+        else:
+            return await self._sexe(ctx, buttsorboobs, True)
 
     @commands.command(name='news', aliases=['rss'])
     async def _news(self, ctx, *arg):
