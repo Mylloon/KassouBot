@@ -6,7 +6,7 @@ def setup(client):
     client.add_cog(Help(client))
 
 class Help(commands.Cog):
-    """Listes des commandes et/ou catégories."""
+    """Commandes relatives à l'aide utilisateur."""
 
     def __init__(self, client):
         self.client = client
@@ -76,3 +76,16 @@ class Help(commands.Cog):
             return await self._help(ctx, True)
         else:
             return await self._help(ctx, cog, True)
+
+    @commands.command(name='invite')
+    async def _invite(self, ctx, fromSlash = None):
+        """Invite ce bot sur ton serveur !"""
+        if fromSlash == None:
+            fromSlash = False
+        embed = discord.Embed(description = f"[Lien vers l'invitation Discord](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=0&scope=bot%20applications.commands)").set_author(name="Invite moi !")
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send(embed = embed)
+    @cog_ext.cog_slash(name="invite", description = "Invite ce bot sur ton serveur !")
+    async def __invite(self, ctx):
+        return await self._invite(ctx, True)
