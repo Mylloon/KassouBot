@@ -34,14 +34,13 @@ async def on_ready():
 
 @client.event
 async def on_command_error(ctx, error):
-    if not ctx.invoked_with.startswith('.'):
+    if not ctx.invoked_with.startswith(customPrefix):
         print(error)
         await ctx.message.add_reaction(emoji = '❓')
 
 @client.event
 async def on_message(message):
     await client.process_commands(message)
-
 
     if message.author == client.user:
         return
