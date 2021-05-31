@@ -1,5 +1,4 @@
 import discord
-import pytz
 import time
 import os
 import re
@@ -23,18 +22,40 @@ class Utils(commands.Cog):
         self.customTimezone = os.environ['TIMEZONE']
 
     @commands.command(name='ping')
-    async def _ping(self, ctx, *, question = '0'):
+    async def _ping(self, ctx, *arg):
         """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if question == 'help':
+        fromSlash = False
+        if len(arg) > 0:
+            if arg[-1] == True:
+                fromSlash = arg[-1]
+                arg = arg[:-1]
+        if len(arg) > 0:
+            arg = arg[0]
+        else:
+            arg = None
+
+        if arg == 'help':
             return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:stopwatch: correspond au temps que met le client a calculer le ping\n\n:heartbeat: correspond au temps que met le client a réagir au messages"))
         else:
             now = int(round(time.time() * 1000))
-            ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
+            if fromSlash != True:
+                ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
+            else:
+                ping = now - int(round(ctx.slash_created_at * 1000))
             embed = discord.Embed(description = 'Pinging...')
             message = await ctx.send(embed = embed)
             ping2 = int(round(time.time() * 1000)) - now
             await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)} ms\n\n:stopwatch: {ping2} ms\n\n:heartbeat: {ping} ms'))
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+    @cog_ext.cog_slash(name="ping", description = "Affiche mon ping.")
+    async def __ping(self, ctx, arg = None):
+        ctx.slash_created_at = int(datetime.now(timezone(self.customTimezone)).timestamp())
+        if arg == None:
+            return await self._ping(ctx, True)
+        else:
+            return await self._ping(ctx, arg, True)
+
 
     @commands.command(name='avatar')
     async def _avatar(self, ctx, *user):
@@ -203,7 +224,7 @@ class Utils(commands.Cog):
                 await ctx.message.delete()
             embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
-            embed.set_footer(text = f'📝 le {datetime.now(pytz.timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
+            embed.set_footer(text = f'📝 le {datetime.now(timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
