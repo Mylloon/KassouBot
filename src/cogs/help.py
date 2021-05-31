@@ -82,7 +82,7 @@ class Help(commands.Cog):
         """Invite ce bot sur ton serveur !"""
         if fromSlash == None:
             fromSlash = False
-        embed = discord.Embed(description = f"[Lien vers l'invitation Discord](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=0&scope=bot%20applications.commands)").set_author(name="Invite moi !")
+        embed = discord.Embed(description = f"[Lien vers l'invitation Discord](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot%20applications.commands)").set_author(name="Invite moi !")
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(embed = embed)
