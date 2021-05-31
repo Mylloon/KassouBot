@@ -101,6 +101,9 @@ class Games(commands.Cog):
                     await ctx.send(f"Erreur dans la réponse {ctx.author.mention}, merci de n'écrire qu'un nombre. Tapez `stop` pour arrêter le jeu.")
         del self.guessing_game[str(ctx.author.id)]
         await ctx.send(f"T'as pas trouvé {ctx.author.mention}... dommage, c'était {number}.")
+    @cog_ext.cog_slash(name="plusoumoins", description = "Un plus ou moins entre 1 et 100.")
+    async def __plusoumoins(self, ctx):
+        await self._plusoumoins(ctx)
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx, fromSlash = None):
