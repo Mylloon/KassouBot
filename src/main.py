@@ -52,18 +52,21 @@ async def on_message(message):
         await ctx.send(f">>> Coucou !\nMon préfix est `{prefix}` et ma commande d'aide est `{prefix}help`")
     
     urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
+    httpsString = "https://"
+    channelsString = "discord.com/channels/"
     for i in range(len(urls)):
-        if urls[i].startswith("https://discordapp.com/channels/") or urls[i].startswith("https://discord.com/channels/") or urls[i].startswith("https://ptb.discordapp.com/") or urls[i].startswith("https://canary.discordapp.com/"):
+        if urls[i].startswith(f"{httpsString}{channelsString}") or urls[i].startswith(f"{httpsString}ptb.{channelsString}") or urls[i].startswith(f"{httpsString}canary.{channelsString}"):
             link = urls[i]
             linkURL = link
-            if link.startswith("https://discord.com/"):
+            if link.startswith(f"{httpsString}{channelsString}"):
                 link = f'000{link}'
-            if link.startswith("https://ptb.discordapp.com/"):
+            if link.startswith(f"{httpsString}ptb.{channelsString}"):
+                link = link[1:]
+            if link.startswith(f"{httpsString}canary.{channelsString}"):
                 link = link[4:]
-            if link.startswith("https://canary.discordapp.com/"):
-                link = link[7:]
             if "@me" in urls[i]:
                 return await message.channel.send("Je ne cite pas les messages privés.", delete_after = 5)
+            print(link)
             try:
                 if int(link[32:-38]) == message.guild.id:
                     msgID = await client.get_channel(int(link[51:-19])).fetch_message(int(link[70:]))
