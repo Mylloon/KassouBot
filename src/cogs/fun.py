@@ -119,14 +119,16 @@ class Fun(commands.Cog):
             return await self._love(ctx, user1, True)
 
     @commands.command(name='8ball', aliases=['8b', '8balls'])
-    async def _8ball(self, ctx, fromSlash = False):
+    async def _8ball(self, ctx, fromSlash = None):
         """Répond à ta question 🔮.\n	➡ Syntaxe: {PREFIX}8ball/8b⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        if fromSlash == None:
+            fromSlash = False
         reponses=["c'est sûr.","il en est décidément ainsi.","incontestablement.","oui sans aucun doute.","tu peux t'y fier.","tel que je le vois, oui.","c'est le plus probable.",
         "cela montre de bonnes perspectives.","certes.","les signes indiquent que oui.","ma réponse est oui.","ta question est trop floue, réessaie.","redemandes plus tard stp.",
         "je ferais mieux de pas te le dire maintenant...","je ne peux pas le prédire actuellement :/","concentre-toi et redemande.","n'y comptes pas trop.","ma réponse est non.",
         "mes sources disent que non.", "les perspectives ne sont pas si bonnes...","c'est très douteux."]
         if fromSlash != True:
-            await ctx.message.add_reaction(emoji = '✅')
+            if fromSlash != True: await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(f"{ctx.author.mention}, {choice(reponses)}")
     @_8ball.error
     async def _8ball_error(self, ctx, error):

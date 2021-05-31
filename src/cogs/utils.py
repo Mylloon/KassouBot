@@ -123,8 +123,10 @@ class Utils(commands.Cog):
         return await self._calc(ctx, calcul, True)
 
     @commands.command(name='syntax')
-    async def _syntax(self, ctx, fromSlash = False):
+    async def _syntax(self, ctx, fromSlash = None):
         """Informations pour bien éditer son texte.⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        if fromSlash == None:
+            fromSlash = False
         syntaxe = "-----------------------------------------------------\n"
         syntaxe += discord.utils.escape_markdown("```Js\n")
         syntaxe += discord.utils.escape_markdown("//code en js (possible de remplacer 'js' par d'autres languages . adaptez le !)\n")
@@ -165,8 +167,11 @@ class Utils(commands.Cog):
         syntaxe += "-----------------------------------------------------\n"
         syntaxe += discord.utils.escape_markdown(">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n")
         syntaxe += ">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n"
-        if fromSlash != True:
-            await ctx.message.add_reaction(emoji = '✅')
+        try:
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+        except:
+            pass
         await ctx.send(syntaxe)
     @cog_ext.cog_slash(name="syntax", description = "Informations pour bien éditer son texte.")
     async def __syntax(self, ctx):
@@ -210,8 +215,10 @@ class Utils(commands.Cog):
         return await self._memo(ctx, memo, True)
 
     @commands.command(name='infos', aliases = ['info'])
-    async def _infos(self, ctx, fromSlash = False):
+    async def _infos(self, ctx, fromSlash = None):
         """Donne des infos sur le bot.\n	➡ Syntaxe: {PREFIX}infos/info⁢"""
+        if fromSlash == None:
+            fromSlash = False
         appinfo = await self.client.application_info()
 
         embed = discord.Embed(color = discord.Colour.random())
@@ -244,8 +251,11 @@ class Utils(commands.Cog):
         embed.add_field(name = "Timezone", value = f"`{self.customTimezone}`")
         embed.add_field(name = "Version", value = f"`{version}`")
         embed.set_footer(text = f"Basé sur discord.py {discord.__version__}")
-        if fromSlash != True:
-            await ctx.message.add_reaction(emoji = '✅')
+        try:
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+        except:
+            pass
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="infos", description = "Donne des infos sur le bot.")
     async def __infos(self, ctx):

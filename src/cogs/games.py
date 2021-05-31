@@ -103,8 +103,10 @@ class Games(commands.Cog):
         await ctx.send(f"T'as pas trouvé {ctx.author.mention}... dommage, c'était {number}.")
 
     @commands.command(name='pileouface', aliases=['pf'])
-    async def _pileouface(self, ctx, fromSlash = False):
+    async def _pileouface(self, ctx, fromSlash = None):
         """Pile ou face.\n	➡ Syntaxe: {PREFIX}pileouface/pf"""
+        if fromSlash == None:
+            fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")

@@ -107,8 +107,10 @@ class Internet(commands.Cog):
         return await self._cat(ctx, True)
 
     @commands.command(name='dog', aliases = ['chien'])
-    async def _dog(self, ctx, fromSlash = False):
+    async def _dog(self, ctx, fromSlash = None):
         """Te montre un magnifique chien\n	➡ Syntaxe: {PREFIX}dog/chien"""
+        if fromSlash == None:
+            fromSlash = False
 
         if ctx.author.nick:
             name =  f"{ctx.author.nick} ({ctx.author.name}#{ctx.author.discriminator})"

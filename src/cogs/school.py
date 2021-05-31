@@ -76,8 +76,10 @@ class School(commands.Cog):
                 pass
 
     @commands.command(name='getid', hidden = True)
-    async def _getid(self, ctx, fromSlash = False):
+    async def _getid(self, ctx, fromSlash = None):
         """Tuto vidéo sur comment récupérer l'ID d'un utilisateur/salon⁢⁢⁢⁢⁢"""
+        if fromSlash == None:
+            fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send("Explication sur comment récuperer l'ID d'un utilisateur/salon : https://cdn.discordapp.com/attachments/640312926892195842/780802253258358834/GetID.mp4")
