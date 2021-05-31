@@ -51,8 +51,7 @@ class Internet(commands.Cog):
                 embed.set_image(url = submission.url)
                 message = await ctx.send(embed = embed)
             else:
-                await ctx.send(f"```r/{subredditchoix} pour {ctx.author.name}```\n{submission.url}")
-                message = await ctx.send("```Meme de Reddit```")
+                message = await ctx.send(f"```r/{subredditchoix} pour {ctx.author.name}```\n{submission.url}")
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             await message.add_reaction('👍')
