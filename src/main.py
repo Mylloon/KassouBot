@@ -66,7 +66,6 @@ async def on_message(message):
                 link = link[4:]
             if "@me" in urls[i]:
                 return await message.channel.send("Je ne cite pas les messages privés.", delete_after = 5)
-            print(link)
             try:
                 if int(link[32:-38]) == message.guild.id:
                     msgID = await client.get_channel(int(link[51:-19])).fetch_message(int(link[70:]))
