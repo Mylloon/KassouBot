@@ -5,9 +5,9 @@ import re
 import os
 from discord_slash import SlashCommand
 from discord.ext import commands
+from utils.core import userOrNick, goodTimezone
 customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
-from utils.core import userOrNick, goodTimezone
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 slash = SlashCommand(client, sync_commands = True)
@@ -45,11 +45,13 @@ async def on_message(message):
     if message.author == client.user:
         return
     
+    """informations concernant le bot lorsqu'il est mentionner"""
     if client.user.mention == message.content.replace("!",""):
         ctx = await client.get_context(message)
         prefix = await client.get_prefix(message)
         await ctx.send(f">>> Coucou !\nMon préfix est `{prefix}` et ma commande d'aide est `{prefix}help`")
     
+    """citation"""
     urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
     httpsString = "https://"
     channelsString = "discord.com/channels/"
