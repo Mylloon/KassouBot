@@ -195,7 +195,10 @@ class Fun(commands.Cog):
         else:
             n = 10
     
-        resultat = randint(1, n)
+        x = 1
+        if x > n:
+            x, n = n, x
+        resultat = randint(x, n)
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         return await ctx.send(embed = discord.Embed().set_author(name = f"Tu as tiré le chiffre {resultat} !"))
