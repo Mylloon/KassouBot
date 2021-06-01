@@ -105,9 +105,12 @@ class ConfrerieDuKassoulait(commands.Cog):
                 # info sur la personne qui a supprimé ne fonctionne pas si il a supprimé un message auparavant (les logs se rajoute a un log deja existant)
 
 
-    # autre serveur
     @commands.Cog.listener()
     async def on_message(self, message):
+        if message.author.id == 786897204816117771 and message.author.name == "GitHub" and message.author.bot: # Autopublish
+            await message.publish()
+        
+        # autre serveur
         if message.channel.id == 770805818487865404 or message.channel.id == 772239638240165928: # Le groupe de l'amour ❤❤ -- channel chien/chat
             chiens = ["dog", "chien", "potichien", "doggo"]
             chats = ["kat", "mace", "kater", "katze", "sinta", "minoos", "cat", "qitt", "besseh", "katu", "caun", "kazh",

@@ -18,7 +18,6 @@ client.load_extension("cogs.internet")
 client.load_extension("cogs.music")
 client.load_extension("cogs.games")
 client.load_extension("cogs.fun")
-client.load_extension("cogs.autopublish")
 client.load_extension("cogs.school")
 client.load_extension("cogs.confreriedukassoulait") # you can remove this cogs, only for my private guild
 print("Terminé !")
