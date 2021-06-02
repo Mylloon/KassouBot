@@ -473,7 +473,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='reminder', aliases=["remind", "remindme"])
     async def _reminder(self, ctx, time, *reminder):
-        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme <temps (d/h/m/s)>[@] <message> """
+        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme <temps>[@] [message] """
         fromSlash = False
         if len(reminder) > 0:
             if reminder[-1] == True:
