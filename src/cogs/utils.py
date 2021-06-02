@@ -486,42 +486,44 @@ class Utils(commands.Cog):
 
         embed = discord.Embed(color = 0xC41B1B)
         mention = False
-        if reminder:
-            if time.lower().endswith("@"):
-                time = time[:-1]
-                mention = True
-            seconds = stringTempsVersSecondes(time)
-            if seconds == 0:
-                embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité)\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
-            elif seconds > 7776000: # 90 * 60 * 60 * 24
-                embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
-            else:
-                await ctx.send(f"Ok, je t'en parles dans {time} !")
-                await asyncio.sleep(seconds)
-                message = ctx.author.mention
-                if mention:
-                    mentionList = getMentionInString(reminder)
-                    for i in mentionList:
-                        message += f" {i}"
-                try:
-                    if fromSlash != True:
-                        await ctx.message.add_reaction(emoji = '✅')
-                except:
-                    pass
-                finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
-                finalEmbed.set_footer(text=f"Message d'il y a {time}")
-                
-                links = ""
-                findedURLs = getURLsInString(reminder)
-                for i in range(0, len(findedURLs)):
-                    links += f"[Lien {i + 1}]({findedURLs[i]}) · "
-                if len(findedURLs) > 0:
-                    finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
-
-                return await ctx.send(message, embed = finalEmbed)
+        if not reminder:
+            reminder = "Notification"
+        if time.lower().endswith("@"):
+            time = time[:-1]
+            mention = True
+        seconds = stringTempsVersSecondes(time)
+        if seconds == 0:
+            embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
+        elif seconds > 7776000: # 90 * 60 * 60 * 24
+            embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
-            embed.add_field(name="Attention", value="Mauvaise syntaxe : reminder <temps> <message>")
+            await ctx.send(f"Ok, je t'en parles dans {time} !")
+            await asyncio.sleep(seconds)
+            message = ctx.author.mention
+            if mention:
+                mentionList = getMentionInString(reminder)
+                for i in mentionList:
+                    message += f" {i}"
+            try:
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '✅')
+            except:
+                pass
+            finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
+            finalEmbed.set_footer(text=f"Message d'il y a {time}")
+            
+            links = ""
+            findedURLs = getURLsInString(reminder)
+            for i in range(0, len(findedURLs)):
+                links += f"[Lien {i + 1}]({findedURLs[i]}) · "
+            if len(findedURLs) > 0:
+                finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
+
+            return await ctx.send(message, embed = finalEmbed)
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
-    async def __reminder(self, ctx, time, reminder):
-        return await self._reminder(ctx, time, reminder, True)
+    async def __reminder(self, ctx, time, reminder = None):
+        if reminder == None:
+            return await self._reminder(ctx, time, True)
+        else:
+            return await self._reminder(ctx, time, reminder, True)
