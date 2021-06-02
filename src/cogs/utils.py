@@ -9,7 +9,8 @@ from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
 import shlex
-from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, ageLayout
+from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
+from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -484,37 +485,18 @@ class Utils(commands.Cog):
             reminder = None
 
         embed = discord.Embed(color = 0xC41B1B)
-        seconds = 0
-        timestamp = datetime.utcnow()
         mention = False
         if reminder:
             if time.lower().endswith("@"):
                 time = time[:-1]
                 mention = True
-            try:
-                if time.lower().endswith("d"):
-                    seconds += int(time[:-1]) * 60 * 60 * 24
-                    _seconds = seconds // 60 // 60 // 24
-                    counter = f"{_seconds} jour{'s' if _seconds > 1 else ''}"
-                if time.lower().endswith("h"):
-                    seconds += int(time[:-1]) * 60 * 60
-                    _seconds = seconds // 60 // 60
-                    counter = f"{_seconds} heure{'s' if _seconds > 1 else ''}"
-                elif time.lower().endswith("m"):
-                    seconds += int(time[:-1]) * 60
-                    _seconds = seconds // 60
-                    counter = f"{_seconds} minute{'s' if _seconds > 1 else ''}"
-                elif time.lower().endswith("s"):
-                    seconds += int(time[:-1])
-                    counter = f"{seconds} seconde{'s' if seconds > 1 else ''}"
-            except:
-                pass
+            seconds = stringTempsVersSecondes(time)
             if seconds == 0:
                 embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (ne fonctionne qu'avec une seule unité)\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
             elif seconds > 7776000: # 90 * 60 * 60 * 24
                 embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
             else:
-                await ctx.send(f"Ok, je t'en parles dans {counter} !")
+                await ctx.send(f"Ok, je t'en parles dans {time} !")
                 await asyncio.sleep(seconds)
                 message = ctx.author.mention
                 if mention:
@@ -526,8 +508,8 @@ class Utils(commands.Cog):
                         await ctx.message.add_reaction(emoji = '✅')
                 except:
                     pass
-                finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = timestamp, color = discord.Colour.random())
-                finalEmbed.set_footer(text=f"Message d'il y a {counter}")
+                finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
+                finalEmbed.set_footer(text=f"Message d'il y a {time}")
                 
                 links = ""
                 findedURLs = getURLsInString(reminder)

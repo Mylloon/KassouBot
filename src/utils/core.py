@@ -151,3 +151,28 @@ def ligneFormatage(ligne):
     for balises in liste_balise:
         ligne = ligne.replace(balises[0], balises[1])
     return ligne
+
+def stringTempsVersSecondes(time):
+    conversionTemps = {
+        "86400": ["j", "d"],
+        "3600": ["h"],
+        "60": ["m"],
+        "1": ["s", ""]
+    }
+
+    valeursMultiplicateur = ""
+    for i in conversionTemps.values():
+        for j in i:
+            valeursMultiplicateur += f"{j}|"
+    match = re.findall(f'([0-9]+)({valeursMultiplicateur[:-1]})?', time)
+
+    if not match:
+        return "Veuillez entrer un temps valide."
+
+    remindertime = 0
+    for i in match:
+        for tempsEnSeconde, nomCommun in conversionTemps.items():
+            if i[1] in nomCommun:
+                remindertime += int(tempsEnSeconde) * int(i[0])
+
+    return remindertime
