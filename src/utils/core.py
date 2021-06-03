@@ -4,7 +4,7 @@ import requests
 import time
 import os
 from pytz import timezone
-from datetime import datetime
+from datetime import datetime, timedelta
 
 myTimezone = os.environ['TIMEZONE']
 
@@ -188,3 +188,19 @@ def nowTimestampUTC():
 
 def intToTimestamp(int):
     return datetime.fromtimestamp(int)
+
+def timedeltaToString(time):
+    age = str(timedelta(seconds = time)).replace('days, ', 'jours, :').split(':')
+    if len(age) == 4:
+        a = [1, 1, 1, 1] # a pour affichage
+    if len(age) == 3:
+        a = [0, 1, 1, 1]
+        age.insert(0, None)
+    for i in range(1, 4):
+        if int(age[i]) == 0:
+            a[i] = 0
+    age[0] = age[0] if a[0] == 1 else ''
+    age[1] = f"{age[1]}h " if a[1] == 1 else ''
+    age[2] = f"{age[2]}m " if a[2] == 1 else ''
+    age[3] = f"{age[3]}s" if a[3] == 1 else ''
+    return ''.join(age)

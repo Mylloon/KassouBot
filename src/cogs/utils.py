@@ -9,7 +9,7 @@ from pytz import timezone
 from discord_slash import cog_ext
 import shlex
 from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
-from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, nowTimestampCustom, intToTimestamp, nowTimestampUTC
+from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, timedeltaToString, intToTimestamp, nowTimestampUTC
 from utils.reminder import Reminder
 
 def setup(client):
@@ -503,7 +503,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
-            return await ctx.send(f"Ok, je t'en parles dans {time} !")
+            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} !")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
@@ -529,7 +529,7 @@ class Utils(commands.Cog):
             except:
                 pass
             finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToTimestamp(expired[3]), color = discord.Colour.random())
-            finalEmbed.set_footer(text=f"Message d'il y a {str(timedelta(seconds = int(nowTimestampUTC()) - expired[3])).replace('days', 'jours')} secondes")
+            finalEmbed.set_footer(text=f"Message d'il y a {timedeltaToString(int(nowTimestampUTC()) - expired[3])}")
             
             links = ""
             findedURLs = getURLsInString(reminder)
