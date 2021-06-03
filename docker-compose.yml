@@ -11,4 +11,6 @@ services:
       - TOKEN_REDDIT_USER_AGENT=yourRedditUserAgent
       - TIMEZONE=yourTimezone # More info here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
       - PREFIX=yourPrefix
+    volumes:
+      - /here/your/path/bot.sqlite3:/src/db/bot.sqlite3
     restart: unless-stopped

@@ -7,7 +7,7 @@
 [![Github forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot?label=Github%20Forks&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/network)
 ## __Setting up__
 
-You have to replace `TOKEN_DISCORD`, `PREFIX`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET`, `TOKEN_REDDIT_USER_AGENT` and [`TIMEZONE`](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) with your desired values.
+You have to replace `TOKEN_DISCORD`, `PREFIX`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET`, `TOKEN_REDDIT_USER_AGENT` and [`TIMEZONE`](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) with your desired values. You must also specify a path to the folder where the database will be.
 With a [docker-compose](https://github.com/Confrerie-du-Kassoulait/KassouBot/blob/master/docker-compose.yml) or in command line:
 
 ```
@@ -20,7 +20,8 @@ docker run -d \
     --TOKEN_REDDIT_CLIENT_SECRET="yourRedditClientSecret" \
     --TOKEN_REDDIT_USER_AGENT="yourRedditUserAgent" \
     --TIMEZONE="yourTimezone" \
-    --PREFIX="yourPrefix"
+    --PREFIX="yourPrefix" \
+    -v /here/your/path/:/src/db/
 ```
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)

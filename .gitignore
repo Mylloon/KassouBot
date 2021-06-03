@@ -2,3 +2,4 @@
 update/
 __pycache__/
 .envrc
+src/db/*
