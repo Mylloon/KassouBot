@@ -6,7 +6,7 @@ class Reminder(Database):
         requete = """
                   CREATE TABLE IF NOT EXISTS reminder (
                       id INTEGER PRIMARY KEY,
-                      guild_id INTEGER,
+                      message_id INTEGER,
                       channel_id INTEGER,
                       mention_bool INTEGER,
                       reminder_str TEXT,
@@ -17,16 +17,16 @@ class Reminder(Database):
                   """
         self.requete(requete)
     
-    def ajoutReminder(self, guildID, channelID, mention, reminder, creation, expiration, userID):
+    def ajoutReminder(self, messageID, channelID, mention, reminder, creation, expiration, userID):
         """Ajoute un reminder"""
         requete = """
                   INSERT INTO reminder (
-                      guild_id, channel_id, mention_bool, reminder_str, creation_int, expiration_int, user_id
+                      message_id, channel_id, mention_bool, reminder_str, creation_int, expiration_int, user_id
                   ) VALUES (
                       ?, ?, ?, ?, ?, ?, ?
                   );
                   """
-        self.requete(requete, (guildID, channelID, mention, reminder, creation, expiration, userID))
+        self.requete(requete, (messageID, channelID, mention, reminder, creation, expiration, userID))
     
     def suppressionReminder(self, id):
         """Supprime un reminder"""
@@ -34,12 +34,16 @@ class Reminder(Database):
                   DELETE FROM reminder
                   WHERE id = ?
                   """
-        self.requete(requete, id)
+        self.requete(requete, [id])
 
     def listeReminder(self, userID = None):
         """Retourne la liste des reminders, si un userID est mentionné, retourne la liste de cet utilisateur"""
         return
 
-    def recuperationReminder(self, id):
-        """Récupère les informations d'un reminder"""
-        return
+    def recuperationExpiration(self, time):
+        """Récupère les reminders qui sont arrivés à expiration et ses infos"""
+        requete = """
+                  SELECT channel_id, mention_bool, reminder_str, creation_int, user_id, id, message_id FROM reminder
+                  WHERE expiration_int < ?
+                  """
+        return self.affichageResultat(self.requete(requete, [time]))
