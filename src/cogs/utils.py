@@ -10,7 +10,8 @@ from pytz import timezone
 from discord_slash import cog_ext
 import shlex
 from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
-from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes
+from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, nowTimestamp
+from utils.reminder import Reminder
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -38,7 +39,7 @@ class Utils(commands.Cog):
         if arg == 'help':
             return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:stopwatch: correspond au temps que met le client a calculer le ping\n\n:heartbeat: correspond au temps que met le client a réagir au messages"))
         else:
-            now = int(round(time.time() * 1000))
+            now = int(nowTimestamp())
             if fromSlash != True:
                 ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
             else:
@@ -51,7 +52,7 @@ class Utils(commands.Cog):
                 await ctx.message.add_reaction(emoji = '✅')
     @cog_ext.cog_slash(name="ping", description = "Affiche mon ping.")
     async def __ping(self, ctx, arg = None):
-        ctx.slash_created_at = int(datetime.now(timezone(self.customTimezone)).timestamp())
+        ctx.slash_created_at = int(nowTimestamp())
         if arg == None:
             return await self._ping(ctx, True)
         else:
@@ -225,7 +226,7 @@ class Utils(commands.Cog):
                 await ctx.message.delete()
             embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
-            embed.set_footer(text = f'📝 le {datetime.now(timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
+            embed.set_footer(text = f'📝 le {nowTimestamp().strftime("%d/%m/%Y à %H:%M:%S")}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
@@ -485,45 +486,48 @@ class Utils(commands.Cog):
             reminder = None
 
         embed = discord.Embed(color = 0xC41B1B)
-        mention = False
+        mention = 0
         if not reminder:
             reminder = "Notification"
         if time.lower().endswith("@"):
             time = time[:-1]
-            mention = True
+            mention = 1
         seconds = stringTempsVersSecondes(time)
         if seconds == 0:
             embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
         elif seconds > 7776000: # 90 * 60 * 60 * 24
             embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
-            await ctx.send(f"Ok, je t'en parles dans {time} !")
-            await asyncio.sleep(seconds)
-            message = ctx.author.mention
-            if mention:
-                mentionList = getMentionInString(reminder)
-                for i in mentionList:
-                    message += f" {i}"
-            try:
-                if fromSlash != True:
-                    await ctx.message.add_reaction(emoji = '✅')
-            except:
-                pass
-            finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
-            finalEmbed.set_footer(text=f"Message d'il y a {time}")
-            
-            links = ""
-            findedURLs = getURLsInString(reminder)
-            for i in range(0, len(findedURLs)):
-                links += f"[Lien {i + 1}]({findedURLs[i]}) · "
-            if len(findedURLs) > 0:
-                finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
-
-            return await ctx.send(message, embed = finalEmbed)
-        await ctx.send(embed = embed)
+            now = int(nowTimestamp())
+            Reminder().ajoutReminder(ctx.guild.id, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
+            return await ctx.send(f"Ok, je t'en parles dans {time} !")
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
         if reminder == None:
             return await self._reminder(ctx, time, True)
         else:
             return await self._reminder(ctx, time, reminder, True)
+
+
+        #     message = ctx.author.mention
+        #     if mention == 1:
+        #         mentionList = getMentionInString(reminder)
+        #         for i in mentionList:
+        #             message += f" {i}"
+        #     try:
+        #         if fromSlash != True:
+        #             await ctx.message.add_reaction(emoji = '✅')
+        #     except:
+        #         pass
+        #     finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
+        #     finalEmbed.set_footer(text=f"Message d'il y a {time}")
+            
+        #     links = ""
+        #     findedURLs = getURLsInString(reminder)
+        #     for i in range(0, len(findedURLs)):
+        #         links += f"[Lien {i + 1}]({findedURLs[i]}) · "
+        #     if len(findedURLs) > 0:
+        #         finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
+
+        #     return await ctx.send(message, embed = finalEmbed)
+        # await ctx.send(embed = embed)
