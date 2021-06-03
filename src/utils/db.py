@@ -3,7 +3,6 @@ import sqlite3
 class Database:
     def __init__(self):
         self.connexion = self.createConnection(r"src/db/bot.sqlite3")
-        self.curseur = self.connexion.cursor()
 
     def createConnection(self, path):
         """Connexion à une base de donnée SQLite"""
@@ -28,11 +27,12 @@ class Database:
     def requete(self, requete, valeurs = None):
         """Envois une requête vers la base de données"""
         try:
+            curseur = self.connexion.cursor()
             if valeurs:
-               self.curseur.execute(requete, valeurs) 
+                curseur.execute(requete, valeurs) 
             else:
-                self.curseur.execute(requete)
+                curseur.execute(requete)
             self.connexion.commit()
-            return self.curseur.lastrowid
+            curseur.close()
         except sqlite3.Error as e:
             print(e)
