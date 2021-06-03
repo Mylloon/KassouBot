@@ -37,7 +37,8 @@ To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and 
 
 ## __Features__
 
-Everything is explained by doing the `help` command.
+- Everything is explained by doing the `help` command.
+- Using SQLite for the database
 
 ## __Launching locally__
 If you want to run it without Docker, I personally use [direnv](https://direnv.net/) to store variables and have them only in the working folder.
