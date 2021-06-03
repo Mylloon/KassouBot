@@ -4,7 +4,7 @@ import os
 import re
 from discord.ext import commands, tasks
 from random import randint, shuffle
-from datetime import datetime
+from datetime import datetime, timedelta
 from pytz import timezone
 from discord_slash import cog_ext
 import shlex
@@ -529,7 +529,7 @@ class Utils(commands.Cog):
             except:
                 pass
             finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToTimestamp(expired[3]), color = discord.Colour.random())
-            finalEmbed.set_footer(text=f"Message d'il y a {int(nowTimestampUTC()) - expired[3]} secondes")
+            finalEmbed.set_footer(text=f"Message d'il y a {str(timedelta(seconds = int(nowTimestampUTC()) - expired[3])).replace('days', 'jours')} secondes")
             
             links = ""
             findedURLs = getURLsInString(reminder)
