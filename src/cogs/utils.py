@@ -503,7 +503,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
-            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} !")
+            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} ± 1min !")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
