@@ -1,7 +1,7 @@
 import sqlite3
 from pathlib import Path
 
-class Database():
+class Database:
 
     def __init__(self):
         path = Path("src/db/bot.sqlite3").absolute()
@@ -21,6 +21,3 @@ class Database():
     def createDB(self, path):
         print("Creating DB...")
         open(path, "x")
-
-
-Database()
