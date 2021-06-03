@@ -33,6 +33,16 @@ class Database:
             else:
                 curseur.execute(requete)
             self.connexion.commit()
-            curseur.close()
+            return (curseur, curseur.lastrowid)
         except sqlite3.Error as e:
             print(e)
+
+    def affichageResultat(self, curseur):
+        """Affiche le résultat d'une requête"""
+        tableau = []
+        if curseur == None:
+            return tableau
+        lignes = curseur[0].fetchall()
+        for ligne in lignes:
+            tableau.append(ligne)
+        return tableau
