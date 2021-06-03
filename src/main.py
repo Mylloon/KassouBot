@@ -6,6 +6,7 @@ import os
 from discord_slash import SlashCommand
 from discord.ext import commands
 from utils.core import userOrNick, goodTimezone
+from utils.reminder import Reminder
 customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
 
@@ -20,6 +21,7 @@ client.load_extension("cogs.games")
 client.load_extension("cogs.fun")
 client.load_extension("cogs.school")
 client.load_extension("cogs.confreriedukassoulait") # you can remove this cogs, only for my private guild
+Reminder().creationTable()
 print("Terminé !")
 
 @client.event
