@@ -40,5 +40,5 @@ To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and 
 Everything is explained by doing the `help` command.
 
 ## __Launching locally__
-If u want to run it without Docker, I personally use [direnv](https://direnv.net/) to store variables and have them only in the working folder.
+If you want to run it without Docker, I personally use [direnv](https://direnv.net/) to store variables and have them only in the working folder.
 Simply run python3 `src/main.py` to launch the bot in the repo folder.
