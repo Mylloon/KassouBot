@@ -1,15 +1,23 @@
 import sqlite3
 
 class Database:
-
     def __init__(self):
-        path = "src/db/bot.sqlite3"
-        if not self.isDatabaseExists(path):
-            self.createDB(path)
-        self.con = sqlite3.connect(path)
-        print("DB Open")
+        self.curseur = self.createConnection("src/db/bot.sqlite3").cursor()
 
-    def isDatabaseExists(self, path):
+    def createConnection(self, path):
+        """Connexion à une base de donnée SQLite"""
+        if not self.isFileExists(path):
+            open(path, "x")
+        connnexion = None
+        try:
+            connnexion = sqlite3.connect(path)
+            print(f"Database connected with SQLite v{sqlite3.version}")
+        except sqlite3.Error as e:
+            print(e)
+        return connnexion
+
+    def isFileExists(self, path):
+        """Vérifie qu'un fichier existe"""
         try:
             open(path, "r")
         except FileNotFoundError:
@@ -17,6 +25,9 @@ class Database:
         else:
             return True
 
-    def createDB(self, path):
-        print("Creating DB...")
-        open(path, "x")
+    def requete(self, requete):
+        """Reqête vers la base de données"""
+        try:
+            self.curseur.execute(requete)
+        except sqlite3.Error as e:
+            print(e)
