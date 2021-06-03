@@ -2,15 +2,14 @@ import discord
 import time
 import os
 import re
-import asyncio
-from discord.ext import commands
+from discord.ext import commands, tasks
 from random import randint, shuffle
 from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
 import shlex
 from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
-from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, nowTimestamp
+from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, nowTimestampCustom, intToTimestamp, nowTimestampUTC
 from utils.reminder import Reminder
 
 def setup(client):
@@ -22,6 +21,7 @@ class Utils(commands.Cog):
     def __init__(self, client):
         self.client = client
         self.customTimezone = os.environ['TIMEZONE']
+        self._reminderLoop.start()
 
     @commands.command(name='ping')
     async def _ping(self, ctx, *arg):
@@ -498,9 +498,13 @@ class Utils(commands.Cog):
         elif seconds > 7776000: # 90 * 60 * 60 * 24
             embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
-            now = int(nowTimestamp())
-            Reminder().ajoutReminder(ctx.guild.id, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
+            now = int(nowTimestampUTC())
+            messageID = None
+            if fromSlash != True:
+                messageID = ctx.message.id
+            Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
             return await ctx.send(f"Ok, je t'en parles dans {time} !")
+        await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
         if reminder == None:
@@ -508,26 +512,34 @@ class Utils(commands.Cog):
         else:
             return await self._reminder(ctx, time, reminder, True)
 
-
-        #     message = ctx.author.mention
-        #     if mention == 1:
-        #         mentionList = getMentionInString(reminder)
-        #         for i in mentionList:
-        #             message += f" {i}"
-        #     try:
-        #         if fromSlash != True:
-        #             await ctx.message.add_reaction(emoji = '✅')
-        #     except:
-        #         pass
-        #     finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = datetime.utcnow(), color = discord.Colour.random())
-        #     finalEmbed.set_footer(text=f"Message d'il y a {time}")
+    @tasks.loop(minutes = 1)
+    async def _reminderLoop(self):
+        expiration = Reminder().recuperationExpiration(int(nowTimestampUTC()))
+        for expired in expiration:
+            message = f"<@{expired[4]}>"
+            reminder = expired[2]
+            if expired[1] == 1:
+                mentionList = getMentionInString(reminder)
+                for i in mentionList:
+                    message += f" {i}"
+            channel = self.client.get_channel(expired[0])
+            try:
+                sourceMessage = await channel.fetch_message(expired[6])
+                await sourceMessage.add_reaction(emoji = '✅')
+            except:
+                pass
+            finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToTimestamp(expired[3]), color = discord.Colour.random())
+            finalEmbed.set_footer(text=f"Message d'il y a {int(nowTimestampUTC()) - expired[3]} secondes")
             
-        #     links = ""
-        #     findedURLs = getURLsInString(reminder)
-        #     for i in range(0, len(findedURLs)):
-        #         links += f"[Lien {i + 1}]({findedURLs[i]}) · "
-        #     if len(findedURLs) > 0:
-        #         finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
+            links = ""
+            findedURLs = getURLsInString(reminder)
+            for i in range(0, len(findedURLs)):
+                links += f"[Lien {i + 1}]({findedURLs[i]}) · "
+            if len(findedURLs) > 0:
+                finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
+            await channel.send(message, embed = finalEmbed)
+            Reminder().suppressionReminder(expired[5])
 
-        #     return await ctx.send(message, embed = finalEmbed)
-        # await ctx.send(embed = embed)
+    @_reminderLoop.before_loop
+    async def __avant_reminderLoop(self):
+        await self.client.wait_until_ready()
