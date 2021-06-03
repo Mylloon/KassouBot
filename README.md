@@ -32,9 +32,13 @@ To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and 
 
 - In the [Discord Dev Portal](https://discord.com/developers/applications) create an application, and make sure it's a `Bot` (third tab).
 - To invite it, go to the `OAuth2` (second tab) tab, select the scopes `bot` (required) and `applications.commands` (for the slashs commands) and in the bot permissions select `Administrator` (You can select manually at your own risk).
-- You have the link above between the two blocks scope and permissions.
+- You have the link to copy above between the two blocks `scopes` and `permissions`.
 - If you need help, you can [join my Discord](https://discord.gg/Z5ePxH4).
 
 ## __Features__
 
 Everything is explained by doing the `help` command.
+
+## __Run in local__
+If u want to run it without Docker, I personally use [direnv](https://direnv.net/) to store variables and have them only in the working folder.
+Simply run python3 `src/main.py` to launch the bot in the repo folder.
