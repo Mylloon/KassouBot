@@ -1,10 +1,9 @@
 import sqlite3
-from pathlib import Path
 
 class Database:
 
     def __init__(self):
-        path = Path("src/db/bot.sqlite3").absolute()
+        path = "src/db/bot.sqlite3"
         if not self.isDatabaseExists(path):
             self.createDB(path)
         self.con = sqlite3.connect(path)
@@ -12,7 +11,7 @@ class Database:
 
     def isDatabaseExists(self, path):
         try:
-            Path(path).resolve(strict = True)
+            open(path, "r")
         except FileNotFoundError:
             return False
         else:
