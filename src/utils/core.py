@@ -180,5 +180,11 @@ def stringTempsVersSecondes(time):
 
     return remindertime
 
-def nowTimestamp():
+def nowTimestampCustom():
     return datetime.now(timezone(myTimezone)).timestamp()
+
+def nowTimestampUTC():
+    return datetime.utcnow().timestamp()
+
+def intToTimestamp(int):
+    return datetime.fromtimestamp(int)
