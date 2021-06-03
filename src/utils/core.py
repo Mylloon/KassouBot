@@ -2,8 +2,11 @@ import re
 import json
 import requests
 import time
+import os
 from pytz import timezone
 from datetime import datetime
+
+myTimezone = os.environ['TIMEZONE']
 
 def goodTimezone(date, type, tz):
     """renvoie une date en fonction d'un timezone"""
@@ -176,3 +179,6 @@ def stringTempsVersSecondes(time):
                 remindertime += int(tempsEnSeconde) * int(i[0])
 
     return remindertime
+
+def nowTimestamp():
+    return datetime.now(timezone(myTimezone)).timestamp()
