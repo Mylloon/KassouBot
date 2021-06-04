@@ -472,7 +472,7 @@ class Utils(commands.Cog):
         args = shlex.split(args)
         return await self._avis(ctx, *args, True)
 
-    @commands.command(name='reminder', aliases=["remind", "remindme"])
+    @commands.command(name='reminder', aliases=["remind", "remindme", "rappel"])
     async def _reminder(self, ctx, time, *reminder):
         """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme <temps>[@] [message] """
         fromSlash = False
