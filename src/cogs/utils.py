@@ -585,7 +585,7 @@ class Utils(commands.Cog):
                     expiration = f"A déjà expiré."
                 embed.add_field(value = texte, name = f"Fais le {timestampFR(intToTimestamp(reminder[1]))}\n{expiration}", inline = False)
         else:
-            embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappels en attente !")
+            embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappel en attente !")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminderlist", description = "Affiche la liste des rappels d'un utilisateur.")
     async def __reminderlist(self, ctx, user = None):
