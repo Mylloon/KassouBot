@@ -2,7 +2,6 @@ import discord
 import time
 import os
 import re
-import shlex
 from discord.ext import commands, tasks
 from random import randint, shuffle
 from datetime import datetime
@@ -50,7 +49,7 @@ class Utils(commands.Cog):
             await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)} ms\n\n:stopwatch: {ping2} ms\n\n:heartbeat: {ping} ms'))
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
-    @cog_ext.cog_slash(name="ping", description = "Affiche mon ping.")
+    @cog_ext.cog_slash(name="ping", description = "Affiche mon ping, mettre 'help' en argument pour connaître à quoi correspond les données.")
     async def __ping(self, ctx, arg = None):
         ctx.slash_created_at = int(datetime.now(timezone(self.customTimezone)).timestamp())
         if arg == None:
@@ -289,7 +288,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='amongus')
     async def _amongus(self, ctx, *map):
-        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <carte>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
+        """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <mira/polus/skeld/airship>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         fromSlash = False
         if len(map) > 0:
             if map[-1] == True:
@@ -343,7 +342,7 @@ class Utils(commands.Cog):
                 await ctx.invoke(self.client.get_command("amongus"))
         else:
             await ctx.message.add_reaction(emoji = '❓')
-    @cog_ext.cog_slash(name="amongus", description = "Affiche la carte voulue d'Among Us.")
+    @cog_ext.cog_slash(name="amongus", description = "Affiche la carte voulue d'Among Us. Carte dispo : <mira/polus/skeld/airship>")
     async def __amongus(self, ctx, map):
         return await self._amongus(ctx, map, True)
 
@@ -396,7 +395,7 @@ class Utils(commands.Cog):
         if len(args) > 0:
             if args[-1] == True:
                 fromSlash = args[-1]
-                args = args[:-1]
+                args = args[0]
 
         args = list(args)
         if len(args) > 2:
@@ -435,12 +434,21 @@ class Utils(commands.Cog):
             else:
                 return await ctx.send(f"Désolé, mais tu as mis trop de possibilités (maximum : 20)")
         else:
-            return await ctx.send(f'Désolé, mais il manque des arguments : `{ctx.prefix}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')
+            return await ctx.send(f'Désolé, mais il manque des arguments : `{ctx.prefix}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>"`')    
     @cog_ext.cog_slash(name="sondage", description = "Fais un sondage.")
-    async def __sondage(self, ctx, args):
+    async def __sondage(self, ctx, question, prop1, prop2, prop3 = None, prop4 = None,
+    prop5 = None, prop6 = None, prop7 = None, prop8 = None, prop9 = None, prop10 = None,
+    prop11 = None, prop12 = None, prop13 = None, prop14 = None, prop15 = None, prop16 = None,
+    prop17 = None, prop18 = None, prop19 = None, prop20 = None):
         ctx.prefix = "/"
-        args = shlex.split(args)
-        return await self._sondage(ctx, *args, True)
+        args = [question, prop1, prop2, prop3, prop4, prop5, prop6, prop7, prop8,
+        prop9, prop10, prop11, prop12, prop13, prop14, prop15, prop16,
+        prop17, prop18, prop19, prop20]
+        for i in range(3, 20): # suppression des None
+            if args[i] == None:
+                args = args[:i]
+                break
+        return await self._sondage(ctx, args, True)
 
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
@@ -449,7 +457,7 @@ class Utils(commands.Cog):
         if len(args) > 0:
             if args[-1] == True:
                 fromSlash = args[-1]
-                args = args[:-1]
+                args = args[0]
 
         args = list(args)
         if len(args) > 2 or len(args) == 0:
@@ -469,10 +477,12 @@ class Utils(commands.Cog):
                 await message.add_reaction(emoji = i)
             if fromSlash != True:
                 return await ctx.message.delete()
-    @cog_ext.cog_slash(name="avis", description = "Demande un avis.")
-    async def __avis(self, ctx, args):
-        args = shlex.split(args)
-        return await self._avis(ctx, *args, True)
+    @cog_ext.cog_slash(name="avis", description = "Demande un avis, si 2 arguments, alors l'argument 1 est le titre, sinon c'est la demande.")
+    async def __avis(self, ctx, titreoudemande, demande = None):
+        args = [titreoudemande, demande]
+        if args[1] == None:
+            args = args[:1]
+        return await self._avis(ctx, args, True)
 
     @commands.command(name='reminder', aliases=["remind", "remindme", "rappel"])
     async def _reminder(self, ctx, time, *reminder):
@@ -578,8 +588,8 @@ class Utils(commands.Cog):
             embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappels en attente !")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminderlist", description = "Affiche la liste des rappels d'un utilisateur.")
-    async def __reminderlist(self, ctx, utilisateur = None):
-        if utilisateur == None:
+    async def __reminderlist(self, ctx, user = None):
+        if user == None:
             return await self._reminderlist(ctx, True)
         else:
-            return await self._reminderlist(ctx, utilisateur, True)
+            return await self._reminderlist(ctx, user, True)
