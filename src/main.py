@@ -1,11 +1,9 @@
 print("Chargement des extensions & librairie...", end = " ")
 
 import discord
-import re
 import os
 from discord_slash import SlashCommand
 from discord.ext import commands
-from utils.core import userOrNick, goodTimezone
 from utils.reminder import Reminder
 customPrefix = os.environ['PREFIX']
 customTimezone = os.environ['TIMEZONE']
