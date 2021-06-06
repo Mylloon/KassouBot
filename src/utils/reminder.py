@@ -17,7 +17,7 @@ class Reminder(Database):
                   """
         self.requete(requete)
     
-    def ajoutReminder(self, messageID, channelID, mention, reminder, creation, expiration, userID):
+    def ajoutReminder(self, messageID = int, channelID = int, mention = int, reminder = str, creation = int, expiration = int, userID = int):
         """Ajoute un reminder"""
         requete = """
                   INSERT INTO reminder (
@@ -28,7 +28,7 @@ class Reminder(Database):
                   """
         self.requete(requete, (messageID, channelID, mention, reminder, creation, expiration, userID))
     
-    def suppressionReminder(self, id):
+    def suppressionReminder(self, id = int):
         """Supprime un reminder"""
         requete = """
                   DELETE FROM reminder
@@ -36,11 +36,15 @@ class Reminder(Database):
                   """
         self.requete(requete, [id])
 
-    def listeReminder(self, userID = None):
-        """Retourne la liste des reminders, si un userID est mentionné, retourne la liste de cet utilisateur"""
-        return
+    def listeReminder(self, userID = int):
+        """Retourne la liste des reminders d'un utilisateur"""
+        requete = """
+                  SELECT reminder_str, creation_int, expiration_int FROM reminder
+                  WHERE user_id = ?
+                  """
+        return self.affichageResultat(self.requete(requete, [userID]))
 
-    def recuperationExpiration(self, time):
+    def recuperationExpiration(self, time = int):
         """Récupère les reminders qui sont arrivés à expiration et ses infos"""
         requete = """
                   SELECT channel_id, mention_bool, reminder_str, creation_int, user_id, id, message_id FROM reminder

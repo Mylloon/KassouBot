@@ -2,22 +2,22 @@ import discord
 import time
 import os
 import re
+import shlex
 from discord.ext import commands, tasks
 from random import randint, shuffle
-from datetime import datetime, timedelta
+from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
-import shlex
+from utils.reminder import Reminder
 from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
 from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, timedeltaToString, intToTimestamp, nowTimestampUTC
-from utils.reminder import Reminder
+from utils.core import timestampFR
 
 def setup(client):
     client.add_cog(Utils(client))
 
 class Utils(commands.Cog):
     """Commandes essentielles."""
-
     def __init__(self, client):
         self.client = client
         self.customTimezone = os.environ['TIMEZONE']
@@ -140,6 +140,7 @@ class Utils(commands.Cog):
         await ctx.send(embed = embed)
     @_calc.error
     async def _calc_error(self, ctx, error):
+        print(error)
         await ctx.send("Tu n'as pas spécifié de calcul.")
     @cog_ext.cog_slash(name="calc", description = "Calculatrice.")
     async def __calc(self, ctx, calcul):
@@ -150,44 +151,45 @@ class Utils(commands.Cog):
         """Informations pour bien éditer son texte.⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         if fromSlash == None:
             fromSlash = False
-        syntaxe = "-----------------------------------------------------\n"
-        syntaxe += discord.utils.escape_markdown("```Js\n")
+        separateur = "-----------------------------------------------------\n"
+        syntaxe = separateur
+        syntaxe += discord.utils.escape_markdown("```js\n")
         syntaxe += discord.utils.escape_markdown("//code en js (possible de remplacer 'js' par d'autres languages . adaptez le !)\n")
         syntaxe += discord.utils.escape_markdown('console.log("hi");\n')
         syntaxe += discord.utils.escape_markdown("```\n")
-        syntaxe += "```Js\n"
+        syntaxe += "```js\n"
         syntaxe += "//code en js (possible de remplacer 'js' par d'autres languages . adaptez le !)\n"
         syntaxe += 'console.log("hi");\n'
         syntaxe += "```\n"
         syntaxe += "Si ton code est trop long, mets le sur <https://pastebin.com/>\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("`code sur une seule ligne`\n")
         syntaxe += "`code sur une seule ligne`\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("*texte en italique*\n")
         syntaxe += "*texte en italique*\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("**text en gras**\n")
         syntaxe += "**text en gras**\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("<<https://www.youtube.com/watch?v=GhuYKL5NUYg>>\n")
         syntaxe += "Un lien entre crochet, ça empêche Discord de rajouté son intégration automatique (mais le lien fonctionnera toujours).\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("__texte souligné__\n")
         syntaxe += "__texte souligné__\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("~~texte barré~~\n")
         syntaxe += "~~texte barré~~\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("~~__***text en italique-gras-souligné-barré***__~~\n")
         syntaxe += "~~__***text en italique-gras-souligné-barré***__~~\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("\:joy: <- l'emoji ne va pas fonctionné grâce au \ \n")
         syntaxe += "\:joy: <- l'emoji ne va pas fonctionné grâce au \ \n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown("> cette ligne est cité\npas celle là\n")
         syntaxe += "> cette ligne est cité\npas celle là\n"
-        syntaxe += "-----------------------------------------------------\n"
+        syntaxe += separateur
         syntaxe += discord.utils.escape_markdown(">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n")
         syntaxe += ">>> cette ligne est cité\ncelle là aussi (et elles le seront toutes!)\n"
         try:
@@ -503,7 +505,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
-            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} ± 1min !")
+            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1min de retard maximum.")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
@@ -539,7 +541,46 @@ class Utils(commands.Cog):
                 finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
             await channel.send(message, embed = finalEmbed)
             Reminder().suppressionReminder(expired[5])
-
     @_reminderLoop.before_loop
     async def __avant_reminderLoop(self):
         await self.client.wait_until_ready()
+
+    @commands.command(name='reminderlist', aliases=["remindlist", "rl", "rappeliste"])
+    async def _reminderlist(self, ctx, *utilisateur):
+        """Affiche la liste des rappels d'un utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderlist/rl/remindlist/rappeliste [utilisateur] """
+        fromSlash = False
+        if len(utilisateur) > 0:
+            if utilisateur[-1] == True:
+                fromSlash = utilisateur[-1]
+                utilisateur = utilisateur[:-1]
+        if len(utilisateur) > 0:
+            utilisateur = int(getMentionInString(utilisateur[0])[0][3:][:-1])
+        else:
+            utilisateur = ctx.author.id
+
+        reminders = Reminder().listeReminder(utilisateur)
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        embed = discord.Embed(description = f"**Rappel{'s' if len(reminders) > 1 else ''} de <@{utilisateur}>**", color = discord.Colour.random())
+        embed.set_thumbnail(url = self.client.get_user(utilisateur).avatar_url_as(size = 32))
+        if len(reminders) > 0:
+            for reminder in reminders:
+                texte = reminder[0]
+                if len(texte) > 1024:
+                    texte = f"{texte[:1021]}..."
+                expiration = reminder[2] - int(nowTimestampUTC())
+                if expiration > 0:
+                    expiration = f"Expire dans {timedeltaToString(expiration)} +1min de retard max."
+                else:
+                    expiration = f"A déjà expiré."
+                embed.add_field(value = texte, name = f"Fais le {timestampFR(intToTimestamp(reminder[1]))}\n{expiration}", inline = False)
+        else:
+            embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappels en attente !")
+        await ctx.send(embed = embed)
+
+    @cog_ext.cog_slash(name="reminderlist", description = "Affiche la liste des rappels d'un utilisateur.")
+    async def __reminderlist(self, ctx, utilisateur = None):
+        if utilisateur == None:
+            return await self._reminderlist(ctx, True)
+        else:
+            return await self._reminderlist(ctx, utilisateur, True)
