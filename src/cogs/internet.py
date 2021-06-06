@@ -12,7 +12,6 @@ def setup(client):
 
 class Internet(commands.Cog):
     """Commandes relatives à ce qui provient d'internet."""
-
     def __init__(self, client):
         self.client = client
 

@@ -7,7 +7,6 @@ def setup(client):
 
 class School(commands.Cog):
     """Commandes relatives aux cours."""
-
     def __init__(self, client):
         self.client = client
 

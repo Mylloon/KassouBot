@@ -7,7 +7,6 @@ def setup(client):
 
 class Help(commands.Cog):
     """Commandes relatives à l'aide utilisateur."""
-
     def __init__(self, client):
         self.client = client
         self.client.remove_command("help")

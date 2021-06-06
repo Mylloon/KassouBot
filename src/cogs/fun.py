@@ -11,7 +11,6 @@ def setup(client):
 
 class Fun(commands.Cog):
     """Commandes plutôt fun."""
-
     def __init__(self, client):
         self.client = client
 

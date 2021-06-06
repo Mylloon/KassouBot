@@ -14,7 +14,6 @@ def setup(client):
 
 class ConfrerieDuKassoulait(commands.Cog):
     """Unique pour le serveur Discord "La confrérie du Kassoulait"."""
-
     def __init__(self, client):
         self.client = client
 

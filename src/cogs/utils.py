@@ -577,7 +577,6 @@ class Utils(commands.Cog):
         else:
             embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappels en attente !")
         await ctx.send(embed = embed)
-
     @cog_ext.cog_slash(name="reminderlist", description = "Affiche la liste des rappels d'un utilisateur.")
     async def __reminderlist(self, ctx, utilisateur = None):
         if utilisateur == None:

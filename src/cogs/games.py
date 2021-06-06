@@ -9,7 +9,6 @@ def setup(client):
 
 class Games(commands.Cog):
     """Commandes relatives aux jeux."""
-
     def __init__(self, client):
         self.client = client
         self.guessing_game = {}
