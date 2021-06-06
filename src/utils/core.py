@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 
 myTimezone = os.environ['TIMEZONE']
 
-def goodTimezone(date, type, tz):
+def goodTimezone(date, tz, type = 0):
     """renvoie une date en fonction d'un timezone"""
     if type == 0:
         return str(timezone(tz).fromutc(date))[:-13].replace('-', '/').split()
@@ -204,3 +204,7 @@ def timedeltaToString(time):
     age[2] = f"{age[2]}m " if a[2] == 1 else ''
     age[3] = f"{age[3]}s" if a[3] == 1 else ''
     return ''.join(age)
+
+def timestampFR(timestamp):
+    date_edit = str(timestamp).replace('-', '/').split(' ')
+    return f"{date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"

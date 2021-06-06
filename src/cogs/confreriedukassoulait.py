@@ -96,9 +96,9 @@ class ConfrerieDuKassoulait(commands.Cog):
                 embed.set_author(name = userOrNick(message.author), icon_url = message.author.avatar_url)
 
                 if not user_suppressed:
-                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1, customTimezone)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, customTimezone, 1)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
                 else:                
-                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, 1, customTimezone)}\nSupprimé par {userOrNick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, customTimezone, 1)}\nSupprimé par {userOrNick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
                 
                 await channel.send(embed = embed)
                 # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré

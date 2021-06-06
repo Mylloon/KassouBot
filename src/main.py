@@ -110,14 +110,14 @@ async def on_message(message):
                     embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
                     icon_url = message.author.avatar_url
 
-                    date_1 = goodTimezone(msgID.created_at, 0, customTimezone)
+                    date_1 = goodTimezone(msgID.created_at, customTimezone)
                     edit = ""
                     if msgID.edited_at:
-                        date_edit = goodTimezone(msgID.edited_at, 0, customTimezone)
+                        date_edit = goodTimezone(msgID.edited_at, customTimezone)
                         edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"
                     messageDuBas = f"Posté le {date_1[0][8:]}/{date_1[0][5:-3]}/{date_1[0][:4]} à {date_1[1]}{edit}"
 
-                    date_2 = goodTimezone(message.created_at, 0, customTimezone)
+                    date_2 = goodTimezone(message.created_at, customTimezone)
                     date_2 = f"{date_2[0][8:]}/{date_2[0][5:-3]}/{date_2[0][:4]} à {date_2[1]}"
                     
                     if auteur == "Auteur":
