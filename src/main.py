@@ -36,7 +36,8 @@ async def on_ready():
 async def on_command_error(ctx, error):
     if not ctx.invoked_with.startswith(customPrefix):
         print(error)
-        await ctx.message.add_reaction(emoji = '❓')
+        if "discord.errors.NotFound" in str(error) == False:
+            await ctx.message.add_reaction(emoji = '❓')
 
 @client.event
 async def on_message(message):
