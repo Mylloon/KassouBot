@@ -515,7 +515,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
-            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1min de retard maximum.")
+            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
@@ -535,11 +535,10 @@ class Utils(commands.Cog):
                 for i in mentionList:
                     message += f" {i}"
             channel = self.client.get_channel(expired[0])
-            try:
-                sourceMessage = await channel.fetch_message(expired[6])
+            sourceMessage = expired[6]
+            if sourceMessage != None:
+                sourceMessage = await channel.fetch_message(sourceMessage)
                 await sourceMessage.add_reaction(emoji = '✅')
-            except:
-                pass
             finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToTimestamp(expired[3]), color = discord.Colour.random())
             finalEmbed.set_footer(text=f"Message d'il y a {timedeltaToString(int(nowTimestampUTC()) - expired[3])}")
             
@@ -580,12 +579,13 @@ class Utils(commands.Cog):
                     texte = f"{texte[:1021]}..."
                 expiration = reminder[2] - int(nowTimestampUTC())
                 if expiration > 0:
-                    expiration = f"Expire dans {timedeltaToString(expiration)} +1min de retard max."
+                    expiration = f"Expire dans {timedeltaToString(expiration)} +1m de retard max."
                 else:
                     expiration = f"A déjà expiré."
                 embed.add_field(value = texte, name = f"Fais le {timestampFR(intToTimestamp(reminder[1]))}\n{expiration}", inline = False)
         else:
             embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappel en attente !")
+        embed.set_footer(text = "Les rappels qui ont déjà expirés vont apparaître dans quelques instants.")
         await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="reminderlist", description = "Affiche la liste des rappels d'un utilisateur.")
     async def __reminderlist(self, ctx, user = None):
