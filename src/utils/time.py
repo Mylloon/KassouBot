@@ -90,18 +90,13 @@ def ageLayout(tuple):
         if tuple[i] > 1 and i != 1:
             time[i] = time[i] + "s"
     message = ""
-    if tuple[5] > 0: # pour les secondes
-        affichage = [5] # on affiche que : seconde
+    if tuple[5] > 0:
+        affichage = [5]
     if tuple[4] > 0:
-        affichage = [4, 5] # on affiche : minute + seconde
-    if tuple[3] > 0:
-        affichage = [3, 4, 5] # on affiche : heure + minute + seconde
-    if tuple[2] > 0:
-        affichage = [2, 3, 4] # on affiche : jour + heure + minute
-    if tuple[1] > 0:
-        affichage = [1, 2, 3] # on affiche : mois + jour + heure
-    if tuple[0] > 0:
-        affichage = [0, 1, 3] # on affiche : an + mois + heure
+        affichage = [4, 5]
+    for i in [3, 0]:
+        if tuple[i] > 0:
+            affichage = [i, i + 1, i + 2]
     for i in affichage:
         message = message + f", {tuple[i]} {time[i]}"
     return message[2:]
