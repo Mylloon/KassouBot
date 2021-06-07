@@ -105,10 +105,3 @@ def ageLayout(tuple):
     for i in affichage:
         message = message + f", {tuple[i]} {time[i]}"
     return message[2:]
-
-def goodTimezone(date, tz, type = 0):
-    """Renvoie une date en fonction d'un timezone"""
-    if type == 0:
-        return str(timezone(tz).fromutc(date))[:-13].replace('-', '/').split()
-    elif type == 1:
-        return str(timezone(tz).fromutc(date))[:-13].replace('-', '/').replace(' ', ' à ')

@@ -4,7 +4,7 @@ import os
 from discord.ext import commands
 customTimezone = os.environ['TIMEZONE']
 from utils.core import userOrNick
-from utils.time import goodTimezone
+from utils.time import timestampScreen
 
 def setup(client):
     client.add_cog(Citation(client))
@@ -73,18 +73,14 @@ class Citation(commands.Cog):
                         embed.set_author(name = "Citation", icon_url = msgID.author.avatar_url)
                         icon_url = message.author.avatar_url
 
-                        date_1 = goodTimezone(msgID.created_at, customTimezone)
-                        edit = ""
                         if msgID.edited_at:
-                            date_edit = goodTimezone(msgID.edited_at, customTimezone)
-                            edit = f" et modifié le {date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"
-                        messageDuBas = f"Posté le {date_1[0][8:]}/{date_1[0][5:-3]}/{date_1[0][:4]} à {date_1[1]}{edit}"
-
-                        date_2 = goodTimezone(message.created_at, customTimezone)
-                        date_2 = f"{date_2[0][8:]}/{date_2[0][5:-3]}/{date_2[0][:4]} à {date_2[1]}"
+                            edit = f" et modifié le {timestampScreen(msgID.edited_at)}"
+                        else:
+                            edit = ""
+                        messageDuBas = f"Posté le {timestampScreen(msgID.created_at)}{edit}"
                     
                         if auteur == "Auteur":
-                            messageDuBas = messageDuBas + f"\nCité par {userOrNick(message.author)} le {date_2}"
+                            messageDuBas = messageDuBas + f"\nCité par {userOrNick(message.author)} le {timestampScreen(message.created_at)}"
                         embed.set_footer(icon_url = icon_url, text = messageDuBas)
                         if message.content == linkURL.replace(' ',''):
                             await message.channel.send(embed = embed)
