@@ -571,7 +571,7 @@ class Utils(commands.Cog):
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         embed = discord.Embed(description = f"**Rappel{'s' if len(reminders) > 1 else ''} de <@{utilisateur}>**", color = discord.Colour.random())
-        embed.set_thumbnail(url = self.client.get_user(utilisateur).avatar_url_as(size = 32))
+        embed.set_thumbnail(url = self.client.get_user(utilisateur).avatar_url_as(size = 64))
         if len(reminders) > 0:
             for reminder in reminders:
                 texte = reminder[0]
