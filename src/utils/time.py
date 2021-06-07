@@ -73,7 +73,7 @@ def timedeltaToString(time):
 
 def getAge(date):
     """Recupère un age précisément à la seconde près"""
-    joursRestants = datetime.now() - date
+    joursRestants = intToDatetime(nowCustom()) - date
     years = joursRestants.total_seconds() / (365.242 * 24 * 3600)
     months = (years - int(years)) * 12
     days = (months - int(months)) * (365.242 / 12)
@@ -94,7 +94,7 @@ def ageLayout(tuple):
         affichage = [5]
     if tuple[4] > 0:
         affichage = [4, 5]
-    for i in [3, 0]:
+    for i in range(3, 0, -1):
         if tuple[i] > 0:
             affichage = [i, i + 1, i + 2]
     for i in affichage:
