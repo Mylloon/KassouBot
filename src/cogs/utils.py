@@ -3,7 +3,6 @@ from os import environ, path
 from re import findall
 from discord.ext import commands, tasks
 from random import randint, shuffle
-from pytz import timezone
 from discord_slash import cog_ext
 from utils.reminder import Reminder
 from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick
