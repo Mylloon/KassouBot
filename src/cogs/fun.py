@@ -1,5 +1,5 @@
 import discord
-import re
+from re import findall
 from discord.ext import commands
 from random import randint, choice
 from datetime import timedelta
@@ -161,7 +161,7 @@ class Fun(commands.Cog):
                 final_message = message.content
                 suite_auteur = message.author
                 
-        urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', final_message)
+        urls = findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', final_message)
         for i in range (0, len(urls)):
             final_message = final_message.replace(urls[i], '')
 

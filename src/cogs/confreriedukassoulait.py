@@ -1,9 +1,7 @@
 import discord
-import re
-import os
+from re import findall
 from discord.ext import commands
 from random import choice
-customTimezone = os.environ['TIMEZONE']
 from utils.core import userOrNick
 from utils.time import nowCustom, intToDatetime, nowUTC, timestampScreen
 from cogs.internet import Internet
@@ -79,7 +77,7 @@ class ConfrerieDuKassoulait(commands.Cog):
             if not (
                 message.content.startswith(f"{prefix}note") or
                 message.content.startswith(f"{prefix}memo") or
-                len(re.findall(".com/channels/", message.content)) != 0 or
+                len(findall(".com/channels/", message.content)) != 0 or
                 self.client.user.id is message.author.id
             ):
                 user_suppressed = None

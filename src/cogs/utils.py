@@ -1,13 +1,12 @@
 import discord
-import os
-import re
+from os import environ, path
+from re import findall
 from discord.ext import commands, tasks
 from random import randint, shuffle
 from pytz import timezone
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
-from utils.core import cleanUser, userOrNick
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick
 from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
@@ -17,7 +16,7 @@ class Utils(commands.Cog):
     """Commandes essentielles."""
     def __init__(self, client):
         self.client = client
-        self.customTimezone = os.environ['TIMEZONE']
+        self.customTimezone = environ['TIMEZONE']
         self._reminderLoop.start()
 
     @commands.command(name='ping')
@@ -260,9 +259,8 @@ class Utils(commands.Cog):
         voice = len(voice_channels)
         nombreServeur = len(self.client.guilds)
         
-        with open(os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "README.md"), "r") as file:
-            for versionNumber in re.findall(r'https://img.shields.io/badge/version-(\d+\.\d+)', file.readlines()[2]):
-                version = versionNumber
+        with open(path.join(path.dirname(path.dirname(path.dirname(__file__))), "README.md"), "r") as file:
+            version = findall(r'https://img.shields.io/badge/version-(\d+\.\d+)', file.readlines()[2])[0]
 
         embed.add_field(name = "Dev", value = f"[{appinfo.owner}](https://github.com/Mylloon)")
         embed.add_field(name = f"Serveur{'s' if nombreServeur > 1 else ''}", value = f"`{nombreServeur}`")
@@ -398,7 +396,7 @@ class Utils(commands.Cog):
         args = list(args)
         if len(args) > 2:
             question = args[0]
-            for i in re.findall(r'\d+', question):
+            for i in findall(r'\d+', question):
                 question = cleanUser(ctx, question, i)
             propositions = args[1:]
             if len(propositions) <= 20:
@@ -465,7 +463,7 @@ class Utils(commands.Cog):
                 titre = "Nouveau vote"
             else: # si titre défini
                 titre = args[0]
-                for findedId in re.findall(r'\d+', titre): # récupération mention dans titre
+                for findedId in findall(r'\d+', titre): # récupération mention dans titre
                     titre = cleanUser(ctx, titre, findedId)
                 args = args[1:]
             embed = discord.Embed(title = titre, description = cleanCodeStringWithMentionAndURLs(args[0]), color = discord.Colour.random()).set_footer(text = f"Sondage de {userOrNick(ctx.author)}", icon_url = ctx.author.avatar_url)
