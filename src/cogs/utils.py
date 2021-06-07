@@ -6,7 +6,7 @@ from random import randint, shuffle
 from discord_slash import cog_ext
 from utils.reminder import Reminder
 from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick
-from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
+from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom, UTCDatetimeToCustomDatetime
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -362,13 +362,13 @@ class Utils(commands.Cog):
             
             embed.add_field(name = "Compte créé le", value = timestampScreen(user[0].created_at))
             
-            embed.add_field(name = "Âge du compte", value = ageLayout(getAge(user[0].created_at)))
+            embed.add_field(name = "Âge du compte", value = ageLayout(getAge(UTCDatetimeToCustomDatetime(user[0].created_at))))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
             embed.add_field(name = "Serveur rejoint le", value = timestampScreen(user[0].joined_at))
             
-            embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(getAge(user[0].joined_at)))
+            embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(getAge(UTCDatetimeToCustomDatetime(user[0].joined_at))))
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
