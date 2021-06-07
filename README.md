@@ -13,7 +13,7 @@ With a [docker-compose](https://github.com/Confrerie-du-Kassoulait/KassouBot/blo
 ```
 docker run -d \
     --name="KassouBot" \
-    mylloon/kassoubot \
+    index.docker.io/mylloon/kassoubot \
     --TOKEN_DISCORD="yourTokenDiscord" \
     --TOKEN_GENIUS="yourTokenGenius" \
     --TOKEN_REDDIT_CLIENT_ID="yourRedditClientID" \

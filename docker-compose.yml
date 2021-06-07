@@ -1,7 +1,7 @@
 version: "2.1"
 services:
   kassoubot:
-    image: mylloon/kassoubot
+    image: index.docker.io/mylloon/kassoubot
     container_name: KassouBot
     environment:
       - TOKEN_DISCORD=yourTokenDiscord
