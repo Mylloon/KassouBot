@@ -361,15 +361,13 @@ class Utils(commands.Cog):
             
             embed.add_field(name = "ID", value = user[0].id)
             
-            value = str(user[0].created_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
-            embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
+            embed.add_field(name = "Compte créé le", value = timestampScreen(user[0].created_at))
             
             embed.add_field(name = "Âge du compte", value = ageLayout(getAge(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
-            value = str(user[0].joined_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
-            embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
+            embed.add_field(name = "Serveur rejoint le", value = timestampScreen(user[0].joined_at))
             
             embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(getAge(user[0].joined_at)))
             if fromSlash != True:
