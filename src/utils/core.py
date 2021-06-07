@@ -1,8 +1,8 @@
 import re
 import json
 import requests
-import time
 import os
+from time import time
 from pytz import timezone
 from datetime import datetime, timedelta
 
@@ -120,7 +120,7 @@ def removeStartEndSpacesString(string):
 
 def randomImage(link):
     """Récupération d'une image aléatoirement⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-    temps_requete = int(round(time.time() * 1000))
+    temps_requete = int(round(time() * 1000))
     try:
         request_data = requests.get(link)
     except Exception as e:
@@ -134,7 +134,7 @@ def randomImage(link):
     except Exception as e:
         raise Exception(f"Erreur lors de la transformation les données de {link} en json : {e}")
 
-    temps_requete = int(round(time.time() * 1000)) - temps_requete
+    temps_requete = int(round(time() * 1000)) - temps_requete
     return (json_data, temps_requete)
 
 def retirerDoublons(liste):
@@ -183,6 +183,9 @@ def stringTempsVersSecondes(time):
 def nowTimestampCustom():
     return datetime.now(timezone(myTimezone)).timestamp()
 
+def UTCTimestampToCustomTimestamp(timestamp):
+    return timezone(myTimezone).fromutc(timestamp)
+
 def nowTimestampUTC():
     return datetime.utcnow().timestamp()
 
@@ -206,5 +209,7 @@ def timedeltaToString(time):
     return ''.join(age)
 
 def timestampFR(timestamp):
-    date_edit = str(timestamp).replace('-', '/').split(' ')
-    return f"{date_edit[0][8:]}/{date_edit[0][5:-3]}/{date_edit[0][:4]} à {date_edit[1]}"
+    date_edit = str(UTCTimestampToCustomTimestamp(timestamp)).replace('-', '/').split(' ')
+    date = date_edit[0]
+    heure = date_edit[1].split('+')[0]
+    return f"{date[8:]}/{date[5:-3]}/{date[:4]} à {heure}"
