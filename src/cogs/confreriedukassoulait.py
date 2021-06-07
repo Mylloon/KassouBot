@@ -6,7 +6,8 @@ from random import choice
 from datetime import datetime
 from pytz import timezone
 customTimezone = os.environ['TIMEZONE']
-from utils.core import goodTimezone, userOrNick
+from utils.core import userOrNick
+from utils.time import goodTimezone
 from cogs.internet import Internet
 
 def setup(client):

@@ -3,7 +3,8 @@ import re
 import os
 from discord.ext import commands
 customTimezone = os.environ['TIMEZONE']
-from utils.core import goodTimezone, userOrNick
+from utils.core import userOrNick
+from utils.time import goodTimezone
 
 def setup(client):
     client.add_cog(Citation(client))

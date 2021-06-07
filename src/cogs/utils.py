@@ -1,5 +1,4 @@
 import discord
-import time
 import os
 import re
 from discord.ext import commands, tasks
@@ -8,9 +7,9 @@ from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, get_age, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
-from utils.core import cleanUser, userOrNick, ageLayout, stringTempsVersSecondes, timedeltaToString, intToTimestamp, nowTimestampUTC
-from utils.core import timestampFR
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs
+from utils.core import cleanUser, userOrNick
+from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
     client.add_cog(Utils(client))
@@ -36,22 +35,22 @@ class Utils(commands.Cog):
             arg = None
 
         if arg == 'help':
-            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:stopwatch: correspond au temps que met le client a calculer le ping\n\n:heartbeat: correspond au temps que met le client a réagir au messages"))
+            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:heartbeat: correspond au temps que met le client a réagir au messages (0 est normal lors de l'utilisation d'une commande slash)\n\n:stopwatch: correspond au temps que met le client a calculer le ping"))
         else:
-            now = int(round(time.time() * 1000))
+            now = int(round(nowCustom() * 1000))
             if fromSlash != True:
                 ping = now - int(round(ctx.message.created_at.timestamp() * 1000))
             else:
                 ping = now - int(round(ctx.slash_created_at * 1000))
             embed = discord.Embed(description = 'Pinging...')
             message = await ctx.send(embed = embed)
-            ping2 = int(round(time.time() * 1000)) - now
-            await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)} ms\n\n:stopwatch: {ping2} ms\n\n:heartbeat: {ping} ms'))
+            ping2 = int(round(nowCustom() * 1000)) - now
+            await message.edit(embed = discord.Embed(color = discord.Colour.random(), description = f':hourglass: {round(self.client.latency * 1000)} ms\n\n:heartbeat: {ping} ms\n\n:stopwatch: {ping2} ms'))
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
     @cog_ext.cog_slash(name="ping", description = "Affiche mon ping, mettre 'help' en argument pour connaître à quoi correspond les données.")
     async def __ping(self, ctx, arg = None):
-        ctx.slash_created_at = int(datetime.now(timezone(self.customTimezone)).timestamp())
+        ctx.slash_created_at = nowCustom()
         if arg == None:
             return await self._ping(ctx, True)
         else:
@@ -227,7 +226,7 @@ class Utils(commands.Cog):
                 await ctx.message.delete()
             embed = discord.Embed(description = text, color = discord.Colour.random())
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
-            embed.set_footer(text = f'📝 le {datetime.now(timezone(self.customTimezone)).strftime("%d/%m/%Y à %H:%M:%S")}')
+            embed.set_footer(text = f'📝 le {timestampScreen(intToDatetime(nowUTC()))}')
             await ctx.author.send(embed = embed)
             return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
@@ -368,14 +367,14 @@ class Utils(commands.Cog):
             value = str(user[0].created_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Compte créé le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Âge du compte", value = ageLayout(get_age(user[0].created_at)))
+            embed.add_field(name = "Âge du compte", value = ageLayout(getAge(user[0].created_at)))
             
             embed.add_field(name = "Mention", value = user[0].mention)
             
             value = str(user[0].joined_at.astimezone(timezone(self.customTimezone)))[:-13].replace('-', '/').split()
             embed.add_field(name = "Serveur rejoint le", value = f"{value[0][8:]}/{value[0][5:-3]}/{value[0][:4]} à {value[1]}")
             
-            embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(get_age(user[0].joined_at)))
+            embed.add_field(name = "Est sur le serveur depuis", value = ageLayout(getAge(user[0].joined_at)))
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
@@ -510,7 +509,7 @@ class Utils(commands.Cog):
         elif seconds > 7776000: # 90 * 60 * 60 * 24
             embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
-            now = int(nowTimestampUTC())
+            now = int(nowUTC())
             messageID = None
             if fromSlash != True:
                 messageID = ctx.message.id
@@ -526,7 +525,7 @@ class Utils(commands.Cog):
 
     @tasks.loop(minutes = 1)
     async def _reminderLoop(self):
-        expiration = Reminder().recuperationExpiration(int(nowTimestampUTC()))
+        expiration = Reminder().recuperationExpiration(int(nowUTC()))
         for expired in expiration:
             message = f"<@{expired[4]}>"
             reminder = expired[2]
@@ -539,8 +538,8 @@ class Utils(commands.Cog):
             if sourceMessage != None:
                 sourceMessage = await channel.fetch_message(sourceMessage)
                 await sourceMessage.add_reaction(emoji = '✅')
-            finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToTimestamp(expired[3]), color = discord.Colour.random())
-            finalEmbed.set_footer(text=f"Message d'il y a {timedeltaToString(int(nowTimestampUTC()) - expired[3])}")
+            finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToDatetime(expired[3]), color = discord.Colour.random())
+            finalEmbed.set_footer(text=f"Message d'il y a {timedeltaToString(int(nowUTC()) - expired[3])}")
             
             links = ""
             findedURLs = getURLsInString(reminder)
@@ -577,12 +576,12 @@ class Utils(commands.Cog):
                 texte = reminder[0]
                 if len(texte) > 1024:
                     texte = f"{texte[:1021]}..."
-                expiration = reminder[2] - int(nowTimestampUTC())
+                expiration = reminder[2] - int(nowUTC())
                 if expiration > 0:
                     expiration = f"Expire dans {timedeltaToString(expiration)} +1m de retard max."
                 else:
                     expiration = f"A déjà expiré."
-                embed.add_field(value = texte, name = f"Fais le {timestampFR(intToTimestamp(reminder[1]))}\n{expiration}", inline = False)
+                embed.add_field(value = texte, name = f"Fais le {timestampScreen(intToDatetime(reminder[1]))}\n{expiration}", inline = False)
         else:
             embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappel en attente !")
         embed.set_footer(text = "Les rappels qui ont déjà expirés vont apparaître dans quelques instants.")
