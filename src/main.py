@@ -1,12 +1,11 @@
 print("Chargement des extensions & librairie...", end = " ")
 
 import discord
-import os
+from os import environ
 from discord_slash import SlashCommand
 from discord.ext import commands
 from utils.reminder import Reminder
-customPrefix = os.environ['PREFIX']
-customTimezone = os.environ['TIMEZONE']
+customPrefix = environ['PREFIX']
 
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 slash = SlashCommand(client, sync_commands = True)
@@ -53,4 +52,4 @@ async def on_message(message):
         await ctx.send(f">>> Coucou !\nMon préfix est `{prefix}` et ma commande d'aide est `{prefix}help`")
 
 print("Connexion à Discord...", end = " ")
-client.run(os.environ['TOKEN_DISCORD'])
+client.run(environ['TOKEN_DISCORD'])

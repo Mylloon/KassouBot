@@ -1,5 +1,5 @@
 import discord
-import feedparser
+from feedparser import parse
 from os import environ
 from discord.ext import commands
 from random import choice
@@ -193,7 +193,7 @@ class Internet(commands.Cog):
             embed = discord.Embed(title = "Liste des sources", color = discord.Colour.random(), description = ", ".join([key.capitalize() for key in rss_website.keys()]))
             return await ctx.send(embed = embed)
 
-        newsfeed = feedparser.parse(rss_website[choix_site])
+        newsfeed = parse(rss_website[choix_site])
         info = choice([newsfeed.entries[i] for i in range(0, 10 if len(newsfeed.entries) > 10 else len(newsfeed.entries))])
 
         desc = "Pas de description trouvée." if "<p>" in info.description or "</a>" in info.description else info.description

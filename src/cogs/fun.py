@@ -2,9 +2,9 @@ import discord
 from re import findall
 from discord.ext import commands
 from random import randint, choice
-from datetime import timedelta
 from discord_slash import cog_ext
 from utils.core import retirerDoublons
+from utils.time import intToDatetime
 
 def setup(client):
     client.add_cog(Fun(client))
@@ -142,7 +142,7 @@ class Fun(commands.Cog):
         """Se moque du message précédent. - Slash command not available⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         first = 0
         suite_auteur = None
-        temps_limite = (await ctx.message.channel.history(limit = 2).flatten())[1].created_at - timedelta(minutes = 5)
+        temps_limite = intToDatetime((await ctx.message.channel.history(limit = 2).flatten())[1].created_at.timestamp() - 300) # on retire 5 minutes (5 x 60 secondes)
         final_message = ""
         async for message in ctx.message.channel.history(limit = 20, after = temps_limite, oldest_first = False):
             if first == 0:

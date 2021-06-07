@@ -18,11 +18,11 @@ from async_timeout import timeout
 from discord.ext import commands
 
 # Genius API
-import lyricsgenius
-import time
-import os
-genius = lyricsgenius.Genius(os.environ['TOKEN_GENIUS'])
+from lyricsgenius import Genius
+from os import environ
 from utils.core import ligneFormatage, userOrNick
+from utils.time import nowCustom
+genius = Genius(environ['TOKEN_GENIUS'])
 
 # Silence useless bug reports messages
 youtube_dl.utils.bug_reports_message = lambda: ''
@@ -498,7 +498,7 @@ class Music(commands.Cog):
                 message = await ctx.send(f":mag: **Cherche les paroles romanisées de ** `{song.replace(' romanized', '')}`")
             else:
                 message = await ctx.send(f":mag: **Cherche les paroles de ** `{song}`")
-            temps_requete = int(round(time.time() * 1000))
+            temps_requete = int(round(nowCustom() * 1000))
             song_genius = genius.search_song(song)
             couleur_embed = discord.Colour.random()
             try:
@@ -531,7 +531,7 @@ class Music(commands.Cog):
                         await ctx.send(embed = embed)
                     lignetotal = f"{ligneFormatage(ligne)}"
             
-            temps_requete = int(round(time.time() * 1000)) - temps_requete
+            temps_requete = int(round(nowCustom() * 1000)) - temps_requete
             footer_embed = f"Pour {userOrNick(ctx.author)} par Genius en {round(temps_requete / 1000, 2)} s."
             await ctx.message.add_reaction(emoji = '✅')
             if premierembed == True:

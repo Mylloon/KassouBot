@@ -1,5 +1,5 @@
 import discord
-import re
+from re import findall
 from discord.ext import commands
 from utils.core import userOrNick
 from utils.time import timestampScreen
@@ -14,7 +14,7 @@ class Citation(commands.Cog):
 
     @commands.Cog.listener()
     async def on_message(self, message):
-        urls = re.findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
+        urls = findall(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', message.content)
         httpsString = "https://"
         channelsString = "discord.com/channels/"
         for i in range(len(urls)):

@@ -1,7 +1,7 @@
 import discord
+import asyncio
 from discord.ext import commands
 from random import randint, choice
-import asyncio
 from discord_slash import cog_ext
 
 def setup(client):
