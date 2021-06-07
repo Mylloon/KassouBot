@@ -3,7 +3,6 @@ import os
 import re
 from discord.ext import commands, tasks
 from random import randint, shuffle
-from datetime import datetime
 from pytz import timezone
 from discord_slash import cog_ext
 from utils.reminder import Reminder
