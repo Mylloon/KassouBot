@@ -3,11 +3,9 @@ import re
 import os
 from discord.ext import commands
 from random import choice
-from datetime import datetime
-from pytz import timezone
 customTimezone = os.environ['TIMEZONE']
 from utils.core import userOrNick
-from utils.time import goodTimezone
+from utils.time import nowCustom, intToDatetime, nowUTC, timestampScreen
 from cogs.internet import Internet
 
 def setup(client):
@@ -87,7 +85,7 @@ class ConfrerieDuKassoulait(commands.Cog):
                 user_suppressed = None
 
                 async for entry in message.guild.audit_logs(limit=1):
-                    if (datetime.now() - entry.created_at).seconds < 5 and str(entry.action) == 'AuditLogAction.message_delete':
+                    if (intToDatetime(nowCustom()) - entry.created_at).seconds < 5 and str(entry.action) == 'AuditLogAction.message_delete':
                         user_suppressed = entry.user
                 
                 channel = self.client.get_channel(742588187456831659)
@@ -96,9 +94,9 @@ class ConfrerieDuKassoulait(commands.Cog):
                 embed.set_author(name = userOrNick(message.author), icon_url = message.author.avatar_url)
 
                 if not user_suppressed:
-                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, customTimezone, 1)}\nSupprimé le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(text = f"Channel: #{message.channel.name} | Date : {timestampScreen(message.created_at)}\nSupprimé le {timestampScreen(intToDatetime(nowUTC()))}")
                 else:                
-                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {goodTimezone(message.created_at, customTimezone, 1)}\nSupprimé par {userOrNick(user_suppressed)} le {datetime.now(timezone(customTimezone)).strftime('%d/%m/%Y à %H:%M:%S')}")
+                    embed.set_footer(icon_url = user_suppressed.avatar_url, text = f"Channel: #{message.channel.name} | Date : {timestampScreen(message.created_at)}\nSupprimé par {userOrNick(user_suppressed)} le {timestampScreen(intToDatetime(nowUTC()))}")
                 
                 await channel.send(embed = embed)
                 # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
