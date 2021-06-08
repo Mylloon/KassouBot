@@ -509,7 +509,7 @@ class Utils(commands.Cog):
             messageID = None
             if fromSlash != True:
                 messageID = ctx.message.id
-            Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
+            Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id, ctx.guild.id)
             return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
     @_reminder.error
@@ -566,7 +566,7 @@ class Utils(commands.Cog):
         else:
             utilisateur = ctx.author.id
 
-        reminders = Reminder().listeReminder(utilisateur)
+        reminders = Reminder().listeReminder(utilisateur, ctx.guild.id)
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         embed = discord.Embed(description = f"**Rappel{'s' if len(reminders) > 1 else ''} de <@{utilisateur}>**", color = discord.Colour.random())
