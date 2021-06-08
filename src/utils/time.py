@@ -72,17 +72,15 @@ def timedeltaToString(time):
     return ''.join(age)
 
 def getAge(date):
-    """Recupère un âge précisément à la seconde près"""
-    now = intToDatetime(nowUTC())
-    heureAjouter = int(str(UTCDatetimeToCustomDatetime(now)).split('+')[1].split(':')[0])
-    joursRestants = now - date
+    """Décompose la différence entre une date et maintenant avec les bons timezone"""
+    joursRestants = UTCDatetimeToCustomDatetime(intToDatetime(nowUTC())) - UTCDatetimeToCustomDatetime(date)
     years = joursRestants.total_seconds() / (365.242 * 24 * 60 * 60)
     months = (years - int(years)) * 12
     days = (months - int(months)) * (365.242 / 12)
     hours = (days - int(days)) * 24
     minutes = (hours - int(hours)) * 60
     seconds = (minutes - int(minutes)) * 60
-    return (int(years), int(months), int(days),  int(hours) + heureAjouter, int(minutes), int(seconds))
+    return (int(years), int(months), int(days),  int(hours), int(minutes), int(seconds))
 
 def ageLayout(tuple):
     """Avec la méthode `getAge`, permet de mettre en forme un âge⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
