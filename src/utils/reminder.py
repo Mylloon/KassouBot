@@ -1,6 +1,9 @@
 from utils.db import Database
 
 class Reminder(Database):
+    def __init__(self):
+        super().__init__(r"src/db/bot.sqlite3")
+
     def creationTable(self):
         """Créer la table qui stocker les reminders"""
         requete = """

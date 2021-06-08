@@ -1,8 +1,8 @@
 import sqlite3
 
 class Database:
-    def __init__(self):
-        self.connexion = self.createConnection(r"src/db/bot.sqlite3")
+    def __init__(self, urlDatabase):
+        self.connexion = self.createConnection(urlDatabase)
 
     def createConnection(self, path):
         """Connexion à une base de donnée SQLite"""
