@@ -1,7 +1,7 @@
 import sqlite3
 
 class Database:
-    def __init__(self, urlDatabase):
+    def __init__(self, urlDatabase: str):
         self.connexion = self.createConnection(urlDatabase)
 
     def createConnection(self, path):
@@ -29,6 +29,8 @@ class Database:
         try:
             curseur = self.connexion.cursor()
             if valeurs:
+                if type(valeurs) not in [list, tuple]:
+                    valeurs = [valeurs]
                 curseur.execute(requete, valeurs) 
             else:
                 curseur.execute(requete)
