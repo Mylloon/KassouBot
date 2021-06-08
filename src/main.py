@@ -19,7 +19,6 @@ client.load_extension("cogs.fun")
 client.load_extension("cogs.school")
 client.load_extension("cogs.citation")
 client.load_extension("cogs.confreriedukassoulait") # you can remove this cogs, only for my private guild
-Reminder().creationTable()
 print("Terminé !")
 
 @client.event
@@ -29,6 +28,7 @@ async def on_connect():
 @client.event
 async def on_ready():
     await client.change_presence(status = discord.Status.online, activity = discord.Activity(name = f"{customPrefix}help", type = discord.ActivityType.playing))
+    Reminder().creationTable()
     print("Bot prêt.")
 
 @client.event
