@@ -498,6 +498,8 @@ class Utils(commands.Cog):
             time = time[:-1]
             mention = 1
         seconds = stringTempsVersSecondes(time)
+        if type(seconds) != int:
+            return await ctx.send(seconds)
         if seconds == 0:
             embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
         elif seconds > 7776000: # 90 * 60 * 60 * 24
@@ -510,6 +512,10 @@ class Utils(commands.Cog):
             Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id)
             return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
+    @_reminder.error
+    async def _reminder_error(self, ctx, error):
+        if 'time is a required argument that is missing.' in str(error):
+            await ctx.send("Tu n'as pas spécifié de durée.")
     @cog_ext.cog_slash(name="reminder", description = "Met en place un rappel.")
     async def __reminder(self, ctx, time, reminder = None):
         if reminder == None:
