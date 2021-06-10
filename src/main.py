@@ -1,7 +1,7 @@
 print("Chargement des extensions & librairie...", end = " ")
 
 import discord
-from os import environ
+from os import environ, listdir
 from discord_slash import SlashCommand
 from discord.ext import commands
 from utils.reminder import Reminder
@@ -10,15 +10,9 @@ customPrefix = environ['PREFIX']
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 slash = SlashCommand(client, sync_commands = True)
 
-client.load_extension("cogs.help")
-client.load_extension("cogs.utils")
-client.load_extension("cogs.internet")
-client.load_extension("cogs.music")
-client.load_extension("cogs.games")
-client.load_extension("cogs.fun")
-client.load_extension("cogs.school")
-client.load_extension("cogs.citation")
-client.load_extension("cogs.confreriedukassoulait") # you can remove this cogs, only for my private guild
+for file in listdir("src/cogs"):
+    if file.endswith(".py") and file.startswith("-") == False:
+        client.load_extension(f"cogs.{file[:-3]}")
 print("Terminé !")
 
 @client.event
