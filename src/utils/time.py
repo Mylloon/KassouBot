@@ -69,7 +69,7 @@ def timedeltaToString(time):
     age[1] = f"{age[1]}h " if a[1] == 1 else ''
     age[2] = f"{age[2]}m " if a[2] == 1 else ''
     age[3] = f"{age[3]}s" if a[3] == 1 else ''
-    return ''.join(age)
+    return ''.join(age).strip(' ')
 
 def getAge(date):
     """Décompose la différence entre une date et maintenant avec les bons timezone"""
