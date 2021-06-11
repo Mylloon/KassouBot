@@ -10,7 +10,7 @@ customPrefix = environ['PREFIX']
 client = commands.Bot(command_prefix = customPrefix, case_insensitive = True, intents = discord.Intents.all())
 slash = SlashCommand(client, sync_commands = True)
 
-for file in listdir("src/cogs"):
+for file in listdir("cogs"):
     if file.endswith(".py") and file.startswith("-") == False:
         client.load_extension(f"cogs.{file[:-3]}")
 print("Terminé !")
