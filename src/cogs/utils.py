@@ -562,7 +562,10 @@ class Utils(commands.Cog):
                 fromSlash = utilisateur[-1]
                 utilisateur = utilisateur[:-1]
         if len(utilisateur) > 0:
-            utilisateur = int(getMentionInString(utilisateur[0])[0][3:][:-1])
+            try:
+                utilisateur = int(getMentionInString(utilisateur[0])[0][3:][:-1])
+            except:
+                return await ctx.send("L'utilisateur renseigné n'a pas été trouvé.")
         else:
             utilisateur = ctx.author.id
 
