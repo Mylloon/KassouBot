@@ -584,7 +584,7 @@ class Utils(commands.Cog):
                     expiration = f"Expire dans {timedeltaToString(expiration)} +1m de retard max."
                 else:
                     expiration = f"A déjà expiré."
-                embed.add_field(value = texte, name = f"Fais le {timestampScreen(intToDatetime(reminder[1]))}\n{expiration}", inline = False)
+                embed.add_field(value = texte, name = f"#{reminder[3]} • Fais le {timestampScreen(intToDatetime(reminder[1]))}\n{expiration}", inline = False)
         else:
             embed.add_field(name = "\u200b", value = "Vous n'avez aucun rappel en attente !")
         embed.set_footer(text = "Les rappels qui ont déjà expirés vont apparaître dans quelques instants.")
