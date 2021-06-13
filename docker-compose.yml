@@ -12,5 +12,5 @@ services:
       - TIMEZONE=yourTimezone # More info here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
       - PREFIX=yourPrefix
     volumes:
-      - /here/your/path/:/src/db/
+      - /here/your/path/:/db
     restart: unless-stopped

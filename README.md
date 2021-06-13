@@ -21,7 +21,7 @@ docker run -d \
     --TOKEN_REDDIT_USER_AGENT="yourRedditUserAgent" \
     --TIMEZONE="yourTimezone" \
     --PREFIX="yourPrefix" \
-    -v /here/your/path/:/src/db/
+    -v /here/your/path/:/db
 ```
 
 To find reddit tokens, go to [this site](https://www.reddit.com/prefs/apps) and here are the instructions: ![instructions](https://i.imgur.com/tEzYKDA.png)
