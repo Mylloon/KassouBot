@@ -595,3 +595,33 @@ class Utils(commands.Cog):
             return await self._reminderlist(ctx, True)
         else:
             return await self._reminderlist(ctx, user, True)
+
+    @commands.command(name='reminderdelete', aliases=["reminddelete", "rd"])
+    async def _reminderdelete(self, ctx, *id):
+        """Suppprime un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderdelete/rd <id> """
+        fromSlash = False
+        if len(id) > 0:
+            if id[-1] == True:
+                fromSlash = id[-1]
+                id = id[:-1]
+        if len(id) > 0:
+            try:
+                id = int(id[0])
+            except:
+                return await ctx.send("L'ID renseigné n'est pas valide.")
+        else:
+            return await ctx.send("Veuillez renseigner un ID.")
+
+        verification = Reminder().appartenanceReminder(ctx.author.id, id)
+        if verification:
+            Reminder().suppressionReminder(id)
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '✅')
+            return await ctx.send(f"Reminder **#{id}** supprimé !")
+        else:
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
+            return await ctx.send("Rappel non trouvé ou qui ne vous appartiens pas.")
+    @cog_ext.cog_slash(name="reminderdelete", description = "Suppprime un rappel.")
+    async def __reminderdelete(self, ctx, id):
+        return await self._reminderdelete(ctx, id, True)
