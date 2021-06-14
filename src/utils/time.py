@@ -56,7 +56,7 @@ def timestampScreen(timestamp):
 
 def timedeltaToString(time):
     """Différence entre une heure en seconde et maintenant"""
-    age = str(timedelta(seconds = time)).replace('days, ', 'jours, :').split(':')
+    age = str(timedelta(seconds = time)).replace('days, ', 'jours, :').replace('day, ', 'jour, :').split(':')
     if len(age) == 4:
         a = [1, 1, 1, 1] # a pour affichage
     if len(age) == 3:
