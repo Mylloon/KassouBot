@@ -506,7 +506,7 @@ class Utils(commands.Cog):
                     await ctx.message.add_reaction(emoji = '❓')
                 return await ctx.send(seconds)
         if seconds == 0:
-            embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
+            embed.add_field(name="Attention", value="Format pour le temps : `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
         elif seconds > 7776000: # 90 * 60 * 60 * 24
             embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
