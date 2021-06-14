@@ -315,6 +315,7 @@ class Music(commands.Cog):
             return
 
         ctx.voice_state.voice = await destination.connect()
+        await ctx.guild.change_voice_state(channel = destination, self_mute = False, self_deaf = True)
 
     @commands.command(name='stop', aliases=['disconnect', 'dc'])
     async def _leave(self, ctx: commands.Context):
