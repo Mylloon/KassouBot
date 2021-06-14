@@ -494,14 +494,17 @@ class Utils(commands.Cog):
         mention = 0
         if not reminder:
             reminder = "Notification"
-        if time.lower().endswith("@"):
-            time = time[:-1]
-            mention = 1
-        seconds = stringTempsVersSecondes(time)
-        if type(seconds) != int:
-            if fromSlash != True:
-                await ctx.message.add_reaction(emoji = '❓')
-            return await ctx.send(seconds)
+        if time == "help":
+            seconds = 0
+        else:
+            if time.lower().endswith("@"):
+                time = time[:-1]
+                mention = 1
+            seconds = stringTempsVersSecondes(time)
+            if type(seconds) != int:
+                if fromSlash != True:
+                    await ctx.message.add_reaction(emoji = '❓')
+                return await ctx.send(seconds)
         if seconds == 0:
             embed.add_field(name="Attention", value="Mauvais format pour le temps, `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
         elif seconds > 7776000: # 90 * 60 * 60 * 24
