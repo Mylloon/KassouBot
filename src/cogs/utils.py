@@ -593,7 +593,7 @@ class Utils(commands.Cog):
                 utilisateur = utilisateur[:-1]
         if len(utilisateur) > 0:
             try:
-                utilisateur = int(getMentionInString(utilisateur[0])[0][3:][:-1])
+                utilisateur = int(getMentionInString(utilisateur[0])[0][2:][:-1].replace("!", ""))
             except:
                 return await ctx.send("L'utilisateur renseigné n'a pas été trouvé.")
         else:
