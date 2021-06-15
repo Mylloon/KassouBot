@@ -509,9 +509,11 @@ class Utils(commands.Cog):
                     await ctx.message.add_reaction(emoji = '❓')
                 return await ctx.send(seconds)
         if seconds == 0:
-            embed.add_field(name="Attention", value="Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi).\nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message.\nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon.")
-        elif seconds > 7776000: # 90 * 60 * 60 * 24
-            embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
+            embed.add_field(name="Attention", value=
+                "Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi). \
+                \nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message. \
+                \nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
+            )
         else:
             now = int(nowUTC())
             messageID = None
