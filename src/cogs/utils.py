@@ -233,7 +233,7 @@ class Utils(commands.Cog):
     async def _memo_error(self, ctx, error):
         if str(error) == "text is a required argument that is missing.":
             await ctx.send(f"Vous devez renseigner un message : `{ctx.prefix}memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢`.")
-    @cog_ext.cog_slash(name="memo", description = "T'envoie un petit memo par message privé.")
+    @cog_ext.cog_slash(name="note", description = "T'envoie un petit memo par message privé.")
     async def __memo(self, ctx, memo):
         return await self._memo(ctx, memo, True)
 
