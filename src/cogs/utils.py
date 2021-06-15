@@ -504,7 +504,7 @@ class Utils(commands.Cog):
             if time.endswith("@"):
                 time = time[:-1]
                 extrarg = 1
-            if time.lower().endswith("p") or time.lower().endswith("d"):
+            if time.lower().endswith("p"):
                 time = time[:-1]
                 extrarg = 2
                 guildID = 0
@@ -517,7 +517,7 @@ class Utils(commands.Cog):
             embed.add_field(name="Attention", value=
                 "Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi). \
                 \nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message. \
-                \nMet un `P` ou `D` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
+                \nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
             )
         else:
             now = int(nowUTC())
