@@ -519,6 +519,8 @@ class Utils(commands.Cog):
                 \nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message. \
                 \nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
             )
+        elif seconds > (50 * (86400 * 365.242)): # 50 ans
+            embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 50 ans.")
         else:
             now = int(nowUTC())
             messageID = None
