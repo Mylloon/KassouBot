@@ -44,7 +44,7 @@ class Reminder(Database):
         """Retourne la liste des reminders d'un utilisateur."""
         requete = """
                   SELECT reminder_str, creation_int, expiration_int, id FROM reminder
-                  WHERE user_id = ? AND guild_id = ?
+                  WHERE user_id = ? AND (guild_id = ? OR guild_id = 0)
                   """
         return self.affichageResultat(self.requete(requete, [userID, guildID]))
 

@@ -492,17 +492,19 @@ class Utils(commands.Cog):
 
         embed = discord.Embed(color = 0xC41B1B)
         extrarg = 0
+        guildID = ctx.guild.id # can be set to 0 if its a DM message, so it can be see from anywhere
         if not reminder:
             reminder = "Notification"
         if time == "help":
             seconds = 0
         else:
-            if time.lower().endswith("@"):
+            if time.endswith("@"):
                 time = time[:-1]
                 extrarg = 1
-            if time.lower().endswith("P"):
+            if time.lower().endswith("p") or time.lower().endswith("d"):
                 time = time[:-1]
                 extrarg = 2
+                guildID = 0
             seconds = stringTempsVersSecondes(time)
             if type(seconds) != int:
                 if fromSlash != True:
@@ -512,14 +514,14 @@ class Utils(commands.Cog):
             embed.add_field(name="Attention", value=
                 "Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi). \
                 \nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message. \
-                \nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
+                \nMet un `P` ou `D` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon."
             )
         else:
             now = int(nowUTC())
             messageID = None
             if fromSlash != True:
                 messageID = ctx.message.id
-            Reminder().ajoutReminder(messageID, ctx.channel.id, extrarg, reminder, now, now + seconds, ctx.author.id, ctx.guild.id)
+            Reminder().ajoutReminder(messageID, ctx.channel.id, extrarg, reminder, now, now + seconds, ctx.author.id, guildID)
             return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
     @_reminder.error
@@ -541,7 +543,14 @@ class Utils(commands.Cog):
             userID = expired[4] # personne qui a fait le rappel
             channel = self.client.get_channel(expired[0]) # salon du message
             finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToDatetime(expired[3]), color = discord.Colour.random())
-            if channel == None: # si le salon n'existe plus
+            if expired[1] == 2: # s'il faut envoyer en DM le message
+                user =  self.client.get_user(userID)
+                if user == None: # si l'utilisateur n'est pas trouvé
+                    return Reminder().suppressionReminder(expired[5]) # suppression du rappel
+                channel = await user.create_dm() # envoie en DM
+                userID = None # plus de mention
+                sourceMessage = None # plus de message source
+            elif channel == None: # si le salon n'existe plus
                 user =  self.client.get_user(userID)
                 if user == None: # si l'utilisateur n'est pas trouvé
                     return Reminder().suppressionReminder(expired[5]) # suppression du rappel
@@ -572,10 +581,6 @@ class Utils(commands.Cog):
                 mentionList = getMentionInString(reminder)
                 for i in mentionList:
                     message += f" {i}"
-            elif expired[1] == 2: # s'il faut envoyer en DM le message
-                mentionList = getMentionInString(reminder)
-                for i in mentionList:
-                    message += f" {i}x"
             try:
                 await channel.send(message, embed = finalEmbed) # envoie du rappel
             except: # les DM sont fermés
