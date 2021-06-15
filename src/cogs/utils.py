@@ -654,7 +654,7 @@ class Utils(commands.Cog):
         else:
             return await ctx.send("Veuillez renseigner un ID.")
 
-        verification = Reminder().appartenanceReminder(ctx.author.id, id)
+        verification = Reminder().appartenanceReminder(ctx.author.id, id, ctx.guild.id)
         if verification:
             Reminder().suppressionReminder(id)
             if fromSlash != True:
@@ -663,7 +663,7 @@ class Utils(commands.Cog):
         else:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send("Rappel non trouvé ou qui ne vous appartiens pas.")
+            return await ctx.send("Rappel non trouvé, pas sur le bon serveur ou qui ne vous appartiens pas.")
     @cog_ext.cog_slash(name="reminderdelete", description = "Suppprime un rappel.")
     async def __reminderdelete(self, ctx, id):
         return await self._reminderdelete(ctx, id, True)

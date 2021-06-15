@@ -56,14 +56,12 @@ class Reminder(Database):
                   """
         return self.affichageResultat(self.requete(requete, time))
 
-    def appartenanceReminder(self, user = int, id = int):
-        """Vérifie qu'un rappel appartiens à un utilisateur. Renvois False si le rappel n'existe pas."""
+    def appartenanceReminder(self, user = int, id = int, guildID = int):
+        """Vérifie qu'un rappel appartiens à un utilisateur et que la guilde soit la bonne. Renvois False si le rappel n'existe pas."""
         requete = """
-                  SELECT user_id, id, message_id FROM reminder
-                  WHERE id = ? AND user_id = ?
+                  SELECT EXISTS (
+                      SELECT 1 FROM reminder
+                      WHERE id = ? AND user_id = ? AND (guild_id = ? OR guild_id = 0)
+                  )
                   """
-        resultat = self.affichageResultat(self.requete(requete, [id, user]))
-        if len(resultat) > 0:
-            return True
-        else:
-            return False
+        return True if self.affichageResultat(self.requete(requete, [id, user, guildID]))[0][0] == 1 else False
