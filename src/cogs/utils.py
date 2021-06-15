@@ -544,11 +544,12 @@ class Utils(commands.Cog):
                 if user == None: # si l'utilisateur n'est pas trouvé
                     return Reminder().suppressionReminder(expired[5]) # suppression du rappel
                 channel = await user.create_dm() # envoie en DM
-                userID = None
+                userID = None # plus de mention
+                sourceMessage = None # plus de message source
                 finalEmbed.add_field(name = "Info", value = "Message envoyé en DM car le salon n'est plus disponible.")
             else:
                 sourceMessage = expired[6]
-                if sourceMessage != None: # vérification message avec slash command
+                if sourceMessage != None: # vérification message avec slash command et que si c'est pas en DM
                     try:
                         sourceMessage = await channel.fetch_message(sourceMessage) # récupération message
                     except:
