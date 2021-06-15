@@ -491,7 +491,7 @@ class Utils(commands.Cog):
             reminder = None
 
         embed = discord.Embed(color = 0xC41B1B)
-        mention = 0
+        extrarg = 0
         if not reminder:
             reminder = "Notification"
         if time == "help":
@@ -499,7 +499,7 @@ class Utils(commands.Cog):
         else:
             if time.lower().endswith("@"):
                 time = time[:-1]
-                mention = 1
+                extrarg = 1
             seconds = stringTempsVersSecondes(time)
             if type(seconds) != int:
                 if fromSlash != True:
@@ -514,7 +514,7 @@ class Utils(commands.Cog):
             messageID = None
             if fromSlash != True:
                 messageID = ctx.message.id
-            Reminder().ajoutReminder(messageID, ctx.channel.id, mention, reminder, now, now + seconds, ctx.author.id, ctx.guild.id)
+            Reminder().ajoutReminder(messageID, ctx.channel.id, extrarg, reminder, now, now + seconds, ctx.author.id, ctx.guild.id)
             return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
     @_reminder.error

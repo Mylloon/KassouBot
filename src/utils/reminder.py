@@ -21,7 +21,7 @@ class Reminder(Database):
                   """
         self.requete(requete)
     
-    def ajoutReminder(self, messageID = int, channelID = int, mention = int, reminder = str, creation = int, expiration = int, userID = int, guildID = int):
+    def ajoutReminder(self, messageID = int, channelID = int, extrarg = int, reminder = str, creation = int, expiration = int, userID = int, guildID = int):
         """Ajoute un reminder."""
         requete = """
                   INSERT INTO reminder (
@@ -30,7 +30,7 @@ class Reminder(Database):
                       ?, ?, ?, ?, ?, ?, ?, ?
                   );
                   """
-        self.requete(requete, [messageID, channelID, mention, reminder, creation, expiration, userID, guildID])
+        self.requete(requete, [messageID, channelID, extrarg, reminder, creation, expiration, userID, guildID])
     
     def suppressionReminder(self, id = int):
         """Supprime un reminder."""
