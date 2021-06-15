@@ -14,7 +14,7 @@ class Fun(commands.Cog):
     def __init__(self, client):
         self.client = client
 
-    @commands.command(name='iq')
+    @commands.command(name='iq', aliases=["qi"])
     async def _iq(self, ctx, *user):
         """Calcule ton QI.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         fromSlash = False
