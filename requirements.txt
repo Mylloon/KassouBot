@@ -1,7 +1,7 @@
-discord.py[voice]==1.7.2 # discord
+discord.py[voice]==1.7.3 # discord
 pytz==2021.1 # timezone
 asyncpraw==7.2.0 # reddit
-youtube-dl==2021.4.26 # music
+youtube-dl==2021.6.6 # music
 lyricsgenius==3.0.1 # lyrics
-feedparser==6.0.2 # rss feed (news)
-discord-py-slash-command==1.2.0 # slash commands
+feedparser==6.0.6 # rss feed (news)
+discord-py-slash-command==1.2.2 # slash commands
