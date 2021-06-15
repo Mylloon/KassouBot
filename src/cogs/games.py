@@ -61,7 +61,7 @@ class Games(commands.Cog):
             return await ctx.send("Tu es déjà en partie.")
         guess = 5
         self.guessing_game[str(ctx.author.id)] = guess
-        number = randint(1,100)
+        number = randint(1, 100)
         message = f"Choisis un nombre entre 1 et 100 {ctx.author.mention}."
         await ctx.send(message)
         while self.guessing_game[str(ctx.author.id)] != 0: 
@@ -111,7 +111,7 @@ class Games(commands.Cog):
             fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
-        return await ctx.send(f"{'Pile' if randint(0,1) == 1 else 'Face'} !")
+        return await ctx.send(f"{'Pile' if randint(0, 1) == 1 else 'Face'} !")
     @cog_ext.cog_slash(name="pileouface", description = "Pile ou face.")
     async def __pileouface(self, ctx):
         await self._pileouface(ctx, True)

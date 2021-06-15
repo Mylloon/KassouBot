@@ -107,3 +107,6 @@ def ligneFormatage(ligne):
     for balises in liste_balise:
         ligne = ligne.replace(balises[0], balises[1])
     return ligne
+
+def mentionToUser(mention: str):
+    return int(mention[2:-1].replace("!",""))

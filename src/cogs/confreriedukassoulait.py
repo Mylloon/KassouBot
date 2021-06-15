@@ -100,7 +100,6 @@ class ConfrerieDuKassoulait(commands.Cog):
                 # ne fonctionne pas quand un message a été supprimé avant que le bot ai démarré
                 # info sur la personne qui a supprimé ne fonctionne pas si il a supprimé un message auparavant (les logs se rajoute a un log deja existant)
 
-
     @commands.Cog.listener()
     async def on_message(self, message):
         if message.author.id == 786897204816117771 and message.author.name == "GitHub" and message.author.bot: # Autopublish

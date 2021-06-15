@@ -3,7 +3,7 @@ from re import findall
 from discord.ext import commands
 from random import randint, choice
 from discord_slash import cog_ext
-from utils.core import retirerDoublons
+from utils.core import retirerDoublons, mentionToUser
 from utils.time import intToDatetime
 
 def setup(client):
@@ -26,29 +26,25 @@ class Fun(commands.Cog):
             user = ctx.author
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
-            return await ctx.send(f"T'as {randint(randint(-100,0),220)} IQ {user.mention} !")
+            return await ctx.send(f"T'as {randint(randint(-100, 0), 220)} de QI {user.mention} !")
         else:
             user = user[0]
             try:
-                user2 = user
-                user2 = user2[2:-1]
-                user2 = user2.replace("!","")
-                user2 = int(user2)
-                user2 = self.client.get_user(user2)
+                user2 = self.client.get_user(mentionToUser(user))
                 if user2.id == self.client.user.id:
                     if fromSlash != True:
                         await ctx.message.add_reaction(emoji = '✅')
-                    return await ctx.send(f"Bah... pas ouf... j'ai juste 100000 de QI :/")
+                    return await ctx.send(f"Bah euh... j'ai que (au moins) 100 000 de QI :/")
                 else:
                     if fromSlash != True:
                         await ctx.message.add_reaction(emoji = '✅')
                     message = await ctx.send("...")
-                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} de QI  !")
+                    return await message.edit(content = f"{user2.mention} a {randint(randint(-100,0),220)} de QI !")
             except:
                 if fromSlash != True:
                     await ctx.message.add_reaction(emoji = '✅')
                 message = await ctx.send("...")
-                return await message.edit(content = f"{user} a {randint(randint(-100,0),220)} de QI  !")
+                return await message.edit(content = f"{user} a {randint(randint(-100, 0), 220)} de QI !")
     @cog_ext.cog_slash(name="iq", description = "Calcule ton QI.")
     async def __iq(self, ctx, user = None):
         if user == None:

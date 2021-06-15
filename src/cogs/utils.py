@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from random import randint, shuffle
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser
 from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
@@ -32,7 +32,11 @@ class Utils(commands.Cog):
             arg = None
 
         if arg == 'help':
-            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description = ":hourglass: correspond au temps entre deux battements de cœurs\n\n:heartbeat: correspond au temps que met le client a réagir au messages (0 est normal lors de l'utilisation d'une commande slash)\n\n:stopwatch: correspond au temps que met le client a calculer le ping"))
+            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description =
+                ":hourglass: correspond au temps entre deux battements de cœurs\n\n \
+                :heartbeat: correspond au temps que met le client a réagir au messages (0 est normal lors de l'utilisation d'une commande slash)\n\n \
+                :stopwatch: correspond au temps que met le client a calculer le ping"
+            ))
         else:
             now = int(round(nowCustom() * 1000))
             if fromSlash != True:
@@ -53,7 +57,6 @@ class Utils(commands.Cog):
         else:
             return await self._ping(ctx, arg, True)
 
-
     @commands.command(name='avatar')
     async def _avatar(self, ctx, *user):
         """Affiche ton avatar ou celui que tu mentionnes.\n	➡ Syntaxe: {PREFIX}avatar [user]"""
@@ -70,7 +73,7 @@ class Utils(commands.Cog):
         if user == None:
             user = ctx.author
         else:
-            user = self.client.get_user(int(user[2:-1].replace("!","")))
+            user = self.client.get_user(mentionToUser(user))
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         embed = discord.Embed(description = f"[lien vers la photo de profil]({user.avatar_url}) de {user.mention}", color = discord.Colour.random())
@@ -372,7 +375,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '✅')
             return await ctx.send(embed = embed)
-        return await ctx.send(f"Tu mentionnes trop d'utilisateurs :  `{ctx.prefix}whois [@Membre]`")
+        return await ctx.send(f"Tu mentionnes trop d'utilisateurs : `{ctx.prefix}whois [@membre]`")
     @cog_ext.cog_slash(name="whois", description = "Affiche les infos sur l'utilisateur.")
     async def __whois(self, ctx, user: discord.Member = None):
         ctx.prefix = "/" # pas sûr que ce soit utile
@@ -600,7 +603,7 @@ class Utils(commands.Cog):
                 utilisateur = utilisateur[:-1]
         if len(utilisateur) > 0:
             try:
-                utilisateur = int(getMentionInString(utilisateur[0])[0][2:][:-1].replace("!", ""))
+                utilisateur = mentionToUser(getMentionInString(utilisateur[0])[0])
             except:
                 return await ctx.send("L'utilisateur renseigné n'a pas été trouvé.")
         else:
