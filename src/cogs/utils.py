@@ -500,13 +500,16 @@ class Utils(commands.Cog):
             if time.lower().endswith("@"):
                 time = time[:-1]
                 extrarg = 1
+            if time.lower().endswith("P"):
+                time = time[:-1]
+                extrarg = 2
             seconds = stringTempsVersSecondes(time)
             if type(seconds) != int:
                 if fromSlash != True:
                     await ctx.message.add_reaction(emoji = '❓')
                 return await ctx.send(seconds)
         if seconds == 0:
-            embed.add_field(name="Attention", value="Format pour le temps : `d` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde\nMet un `@` accolée à l'unité pour mentionner les gens mentionner dans ton message.")
+            embed.add_field(name="Attention", value="Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi).\nMet un `@` accolée aux temps pour mentionner les gens mentionner dans ton message.\nMet un `P` accolée au temps pour que le bot te DM au lieu de t'envoyer un message dans ce salon.")
         elif seconds > 7776000: # 90 * 60 * 60 * 24
             embed.add_field(name="Attention", value="Tu as spécifié une durée trop longue, la durée maximum étant de 90 jours.")
         else:
@@ -530,43 +533,51 @@ class Utils(commands.Cog):
 
     @tasks.loop(minutes = 1)
     async def _reminderLoop(self):
-        expiration = Reminder().recuperationExpiration(int(nowUTC()))
-        for expired in expiration:
-            reminder = expired[2]
-            userID = expired[4]
-            channel = self.client.get_channel(expired[0])
+        expiration = Reminder().recuperationExpiration(int(nowUTC())) # on récupères les éléments expirés
+        for expired in expiration: # on regarde tout les éléments expirés
+            reminder = expired[2] # message
+            userID = expired[4] # personne qui a fait le rappel
+            channel = self.client.get_channel(expired[0]) # salon du message
             finalEmbed = discord.Embed(description = cleanCodeStringWithMentionAndURLs(reminder), timestamp = intToDatetime(expired[3]), color = discord.Colour.random())
-            if channel == None:
+            if channel == None: # si le salon n'existe plus
                 user =  self.client.get_user(userID)
                 if user == None: # si l'utilisateur n'est pas trouvé
-                    return Reminder().suppressionReminder(expired[5])
-                channel = await user.create_dm()
+                    return Reminder().suppressionReminder(expired[5]) # suppression du rappel
+                channel = await user.create_dm() # envoie en DM
                 userID = None
                 finalEmbed.add_field(name = "Info", value = "Message envoyé en DM car le salon n'est plus disponible.")
             else:
                 sourceMessage = expired[6]
-                if sourceMessage != None:
-                    sourceMessage = await channel.fetch_message(sourceMessage)
-                    await sourceMessage.add_reaction(emoji = '✅')
+                if sourceMessage != None: # vérification message avec slash command
+                    try:
+                        sourceMessage = await channel.fetch_message(sourceMessage) # récupération message
+                    except:
+                        sourceMessage = None # message a été supprimé
+                    if sourceMessage != None:
+                        await sourceMessage.add_reaction(emoji = '✅') # ajout réaction
             finalEmbed.set_footer(text=f"Message d'il y a {timedeltaToString(int(nowUTC()) - expired[3])}")
             links = ""
             findedURLs = getURLsInString(reminder)
-            for i in range(0, len(findedURLs)):
+            for i in range(0, len(findedURLs)): # ajout de field "lien" pour pouvoir cliquer sur les liens facilement
                 links += f"[Lien {i + 1}]({findedURLs[i]}) · "
             if len(findedURLs) > 0:
                 finalEmbed.add_field(name = f"Lien{'s' if len(findedURLs) > 1 else ''}", value = links[:-3])
             message = ""
-            if userID != None:
+            if userID != None: # metion de l'utilisateur si le message n'est pas en DM
                 message = f"<@{userID}>"
-            if expired[1] == 1:
+            if expired[1] == 1: # s'il faut mentionner les personnes dans le message
                 mentionList = getMentionInString(reminder)
                 for i in mentionList:
                     message += f" {i}"
+            elif expired[1] == 2: # s'il faut envoyer en DM le message
+                mentionList = getMentionInString(reminder)
+                for i in mentionList:
+                    message += f" {i}x"
             try:
-                await channel.send(message, embed = finalEmbed)
+                await channel.send(message, embed = finalEmbed) # envoie du rappel
             except: # les DM sont fermés
-                return Reminder().suppressionReminder(expired[5])
-            Reminder().suppressionReminder(expired[5])
+                pass
+            return Reminder().suppressionReminder(expired[5]) # suppression du rappel
     @_reminderLoop.before_loop
     async def __avant_reminderLoop(self):
         await self.client.wait_until_ready()
