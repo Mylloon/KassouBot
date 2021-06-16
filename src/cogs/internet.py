@@ -34,7 +34,7 @@ class Internet(commands.Cog):
             subredditchoix = choice(['memes', 'goodanimemes', 'dankmemes', 'DeepFried',
             'educationalmemes', 'funny', 'marvelmemes', 'me_irl', 'meme', 'MemeEconomy', 'Memes_Of_The_Dank', 'MinecraftMemes',
             'physicsmemes', 'blackpeopletwitter', 'metal_me_irl', '195', 'shittyadviceanimals', 'meirl',
-            '2meirl4meirl', 'AdviceAnimals', 'weirdmemes'])
+            '2meirl4meirl', 'AdviceAnimals', 'weirdmemes', 'LeagueOfMemes'])
 
         try:
             async with Reddit(client_id = environ['TOKEN_REDDIT_CLIENT_ID'], client_secret = environ['TOKEN_REDDIT_CLIENT_SECRET'], user_agent = f"disreddit /u/{environ['TOKEN_REDDIT_USER_AGENT']}, http://localhost:8080") as reddit:
