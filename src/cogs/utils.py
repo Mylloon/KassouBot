@@ -496,6 +496,7 @@ class Utils(commands.Cog):
         embed = discord.Embed(color = 0xC41B1B)
         extrarg = 0
         guildID = ctx.guild.id # can be set to 0 if its a DM message, so it can be see from anywhere
+        destination = "ici"
         if not reminder:
             reminder = "Notification"
         if time == "help":
@@ -508,6 +509,7 @@ class Utils(commands.Cog):
                 time = time[:-1]
                 extrarg = 2
                 guildID = 0
+                destination = "en MP"
             seconds = stringTempsVersSecondes(time)
             if type(seconds) != int:
                 if fromSlash != True:
@@ -527,7 +529,7 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, extrarg, reminder, now, now + seconds, ctx.author.id, guildID)
-            return await ctx.send(f"Ok, je t'en parles dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
+            return await ctx.send(f"Ok, je t'en parles {destination} dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
         await ctx.send(embed = embed)
     @_reminder.error
     async def _reminder_error(self, ctx, error):
