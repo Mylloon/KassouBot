@@ -15,11 +15,6 @@ class ConfrerieDuKassoulait(commands.Cog):
         self.client = client
 
     @commands.Cog.listener()
-    async def on_ready(self):
-        channel = self.client.get_channel(742564480050790512)
-        await channel.send("Le bot a bien démarré.")
-
-    @commands.Cog.listener()
     async def on_member_join(self, member):
         if member.guild.id == 441208120644075520: # Confrérie du Kassoulait
             if member.bot == True:
@@ -27,12 +22,12 @@ class ConfrerieDuKassoulait(commands.Cog):
             else:
                 role = discord.utils.get(member.guild.roles, name = "Copain")
             await member.add_roles(role)
-            try:
-                await member.send(f"Coucou **{member.name}** sur {member.guild.name} ! 🥰\n\nTu as le rôle **{role}** 💖!")
+            try: # DM possiblement fermé
+                await member.send(f"Coucou **{member.name}** sur {member.guild.name} ! 🥰\n\nJ'te donne le rôle de **{role}** 💖!")
             except:
                 pass
             channel = self.client.get_channel(741639570172674120) # salons des arrivées
-            switch = [
+            msgBienvenue = [
                 f"Bienvenue, {member.mention}. On espère que tu as apporté de la pizza.",
                 f"C'est un plaisir de te voir, {member.mention}.",
                 f"{member.mention} vient juste d'arriver !",
@@ -46,29 +41,13 @@ class ConfrerieDuKassoulait(commands.Cog):
                 f"{member.mention} a rejoint le groupe."
             ]
             message = await channel.send("...") # évite d'envoyer une notification
-            await message.edit(content = choice(switch))
+            await message.edit(content = choice(msgBienvenue))
 
     @commands.Cog.listener()
     async def on_member_remove(self, member):
         if member.guild.id == 441208120644075520: # Confrérie du Kassoulait
             channel = self.client.get_channel(741639570172674120) # salons des arrivées
-            await channel.send(f"{member.mention} vient de quitter le serveur.")
-
-    @commands.Cog.listener()
-    async def on_raw_reaction_add(self, payload):
-        if payload.message_id == 644922358745792512: # Règles de la Confrérie du Kassoulait
-            if payload.emoji.name == '✅':
-                role = discord.utils.get(payload.member.guild.roles, name="règles-acceptés")
-                await payload.member.add_roles(role)
-
-    @commands.Cog.listener()
-    async def on_raw_reaction_remove(self, payload):
-        if payload.message_id == 644922358745792512: # Règles de la Confrérie du Kassoulait
-            if payload.emoji.name == '✅':
-                guild = discord.utils.find(lambda g : g.id == payload.guild_id, self.client.guilds)
-                member = discord.utils.find(lambda m: m.id == payload.user_id, guild.members)
-                role = discord.utils.get(guild.roles, name="règles-acceptés")
-                await member.remove_roles(role)
+            await channel.send(f"{member.mention} ({member.name}) vient de quitter le serveur.")
 
     @commands.Cog.listener()
     async def on_message_delete(self, message):
