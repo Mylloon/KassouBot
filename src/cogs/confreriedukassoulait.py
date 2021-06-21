@@ -23,7 +23,7 @@ class ConfrerieDuKassoulait(commands.Cog):
                 role = discord.utils.get(member.guild.roles, name = "Copain")
             await member.add_roles(role)
             try: # DM possiblement fermé
-                await member.send(f"Coucou **{member.name}** sur {member.guild.name} ! 🥰\n\nJ'te donne le rôle de **{role}** 💖!")
+                await member.send(f"Coucou **{member.name}** dans **{member.guild.name}** ! 🥰\n\nJ'te donne le rôle de **{role}** 💖!")
             except:
                 pass
             channel = self.client.get_channel(741639570172674120) # salons des arrivées
