@@ -96,8 +96,8 @@ class ConfrerieDuKassoulait(commands.Cog):
             "kotsur", "bisad", "büsi", "chatz", "paka", "muc", "poonai", "puunay", "kocour", "kocka", "maa-oh", "kedi", "kit", "con mêo",
             "tchèt", "mouss", "ologbo", "kats", "猫", "кот", "고양이", "poticha", "😼", "ʇɐɥɔ", "chaton"]
             if message.content.lower() in chiens:
-                await Internet(self.client)._dog(self, await self.client.get_context(message))
-                await Internet(self.client)._dog(self, await self.client.get_context(message))
+                for _ in range(0, 2):
+                    await Internet(self.client)._dog(self, await self.client.get_context(message))
             if message.content.lower() in chats:
-                await Internet(self.client)._cat(self, await self.client.get_context(message))
-                await Internet(self.client)._cat(self, await self.client.get_context(message))
+                for _ in range(0, 2):
+                    await Internet(self.client)._cat(self, await self.client.get_context(message))
