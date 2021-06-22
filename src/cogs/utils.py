@@ -544,6 +544,7 @@ class Utils(commands.Cog):
 
     @tasks.loop(minutes = 1)
     async def _reminderLoop(self):
+        """Méthode qui se répète toute les minutes pour vérifier si des rappels n'ont pas expirés, si expirés, les envoient."""
         expiration = Reminder().recuperationExpiration(int(nowUTC())) # on récupères les éléments expirés
         for expired in expiration: # on regarde tout les éléments expirés
             reminder = expired[2] # message
