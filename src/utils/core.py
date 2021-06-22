@@ -118,8 +118,10 @@ def getChangelogs(version = 'latest'):
         version = f'tags/v{version}'
     changements = requests.get(f"https://api.github.com/repos/Confrerie-du-Kassoulait/KassouBot/releases/{version}").json()
     try:
-        changements["message"] # renvois None si aucune version correspondante n'a été trouvée
-        return None
+        if changements["message"].startswith("API"): # renvois 0 si c'est une erreur API
+            return 0
+        else: # renvois None si aucune version correspondante n'a été trouvée
+            return None
     except:
         pass
-    return (changements["html_url"], changements["tag_name"][1:], changements["body"])
+    return [changements["html_url"], changements["tag_name"][1:], changements["body"]]
