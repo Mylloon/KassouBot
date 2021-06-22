@@ -109,4 +109,17 @@ def ligneFormatage(ligne):
     return ligne
 
 def mentionToUser(mention: str):
+    """Récupère une mention et renvois son ID"""
     return int(mention[2:-1].replace("!",""))
+
+def getChangelogs(version = 'latest'):
+    """Récupère les changements d'une version (par défaut, la dernière en date) et renvois dans l'ordre : url, n° version, changements"""
+    if version != 'latest':
+        version = f'tags/v{version}'
+    changements = requests.get(f"https://api.github.com/repos/Confrerie-du-Kassoulait/KassouBot/releases/{version}").json()
+    try:
+        changements["message"] # renvois None si aucune version correspondante n'a été trouvée
+        return None
+    except:
+        pass
+    return (changements["html_url"], changements["tag_name"][1:], changements["body"])

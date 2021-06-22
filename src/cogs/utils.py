@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from random import randint, shuffle
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser, getChangelogs
 from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
@@ -482,7 +482,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='reminder', aliases=["remind", "remindme", "rappel"])
     async def _reminder(self, ctx, time, *reminder):
-        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme/rappel <temps>[@] [message] """
+        """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme/rappel <temps>[@] [message]"""
         fromSlash = False
         if len(reminder) > 0:
             if reminder[-1] == True:
@@ -599,7 +599,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='reminderlist', aliases=["remindlist", "rl", "rappeliste"])
     async def _reminderlist(self, ctx, *utilisateur):
-        """Affiche la liste des rappels d'un utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderlist/rl/remindlist/rappeliste [utilisateur] """
+        """Affiche la liste des rappels d'un utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderlist/rl/remindlist/rappeliste [utilisateur]"""
         fromSlash = False
         if len(utilisateur) > 0:
             if utilisateur[-1] == True:
@@ -642,7 +642,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='reminderdelete', aliases=["reminddelete", "rd"])
     async def _reminderdelete(self, ctx, *id):
-        """Suppprime un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderdelete/rd <id> """
+        """Suppprime un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderdelete/rd <id>"""
         fromSlash = False
         if len(id) > 0:
             if id[-1] == True:
@@ -669,3 +669,30 @@ class Utils(commands.Cog):
     @cog_ext.cog_slash(name="reminderdelete", description = "Suppprime un rappel.")
     async def __reminderdelete(self, ctx, id):
         return await self._reminderdelete(ctx, id, True)
+
+    @commands.command(name='changelogs', aliases=["changelog", "changement", "changements"])
+    async def _changelogs(self, ctx, *version):
+        """Affiche les changements de la dernière version ou d'une version précise.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}changelogs/changelog/changement/changements [version] """
+        fromSlash = False
+        if len(version) > 0:
+            if version[-1] == True:
+                fromSlash = version[-1]
+                version = version[:-1]
+        if len(version) > 0:
+            version = version[0] 
+        else:
+            version = 'latest'
+        changes = getChangelogs(version)
+        if changes == None:
+            if fromSlash != True:
+                await ctx.message.add_reaction(emoji = '❌')
+            return await ctx.send("Veuillez renseigner un numéro de version valide et existant.")
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        await ctx.send(f"url: {changes[0]}\nnum de version: {changes[1]}\ntaille du message de changements: {len(changes[2])}")
+    @cog_ext.cog_slash(name="changelogs", description = "Affiche les changements de la dernière version ou d'une version précise.")
+    async def __changelogs(self, ctx, version: int = None):
+        if version == None:
+            return await self._reminderlist(ctx, True)
+        else:
+            return await self._reminderlist(ctx, version, True)
