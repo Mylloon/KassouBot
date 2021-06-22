@@ -269,9 +269,12 @@ class Utils(commands.Cog):
         embed.add_field(name = f"Membre{'s' if total_unique > 1 else ''}", value = f"`{total_unique}` au total\n`{total_online}` en ligne")
         embed.add_field(name = f"Salon{'s' if (text + voice) > 1 else ''}", value = f"`{text}` textuel{'s' if text > 1 else ''}\n`{voice}` voca{'ux' if voice > 1 else 'l'}")
         embed.add_field(name = "Prefix", value = f"`{ctx.prefix}`")
-        embed.add_field(name = "Code source", value = f"[Lien Github](https://github.com/Confrerie-du-Kassoulait/KassouBot/)")
+        embed.add_field(name = "Code source", value = "[Lien Github](https://github.com/Confrerie-du-Kassoulait/KassouBot/)")
         embed.add_field(name = "Timezone", value = f"`{self.customTimezone}`")
         embed.add_field(name = "Version", value = f"`{version}`")
+        changes = getChangelogs(version)
+        if changes != None and changes != 0:
+            embed.add_field(name = "Changements", value = f"[Lien Github]({changes[0]})")
         embed.set_footer(text = f"Basé sur discord.py {discord.__version__}")
         try:
             if fromSlash != True:
@@ -673,7 +676,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='changelogs', aliases=["changelog", "changement", "changements"])
     async def _changelogs(self, ctx, *version):
-        """Affiche les changements de la dernière version ou d'une version précise.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}changelogs/changelog/changement/changements [version] """
+        """Affiche les changements de la dernière version ou d'une version précise.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}changelogs/changelog/changement/changements [version]"""
         fromSlash = False
         if len(version) > 0:
             if version[-1] == True:
@@ -684,16 +687,24 @@ class Utils(commands.Cog):
         else:
             version = 'latest'
         changes = getChangelogs(version)
-        if changes == None:
+        if changes == None or changes == 0:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send("Veuillez renseigner un numéro de version valide et existant.")
+            if changes == None:
+                message = "Veuillez renseigner un numéro de version valide et existant."
+            else:
+                message = "Trop de requêtes sur l'API de Github, réessayez plus tard."
+            return await ctx.send(message)
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
-        await ctx.send(f"url: {changes[0]}\nnum de version: {changes[1]}\ntaille du message de changements: {len(changes[2])}")
+        if len(changes[2]) > 2048:
+            changes[2] = f"{changes[2][:1900]}..."
+        embed = discord.Embed(description = f"[lien vers la page Github]({changes[0]})\n\n{changes[2]}", color = discord.Colour.random())
+        embed.set_author(name = f"Changements de la v{changes[1]}")
+        await ctx.send(embed = embed)
     @cog_ext.cog_slash(name="changelogs", description = "Affiche les changements de la dernière version ou d'une version précise.")
-    async def __changelogs(self, ctx, version: int = None):
+    async def __changelogs(self, ctx, version = None):
         if version == None:
-            return await self._reminderlist(ctx, True)
+            return await self._changelogs(ctx, True)
         else:
-            return await self._reminderlist(ctx, version, True)
+            return await self._changelogs(ctx, version, True)
