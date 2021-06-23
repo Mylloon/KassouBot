@@ -125,3 +125,18 @@ def getChangelogs(version = 'latest'):
     except:
         pass
     return [changements["html_url"], changements["tag_name"][1:], changements["body"]]
+
+def isSlash(arg):
+    """Regarde si la commande viens d'un slash ou pas, retourne l'argument sans le 'True' si c'est le cas"""
+    fromSlash = False
+    fullarg = arg
+    if len(arg) > 0:
+        if arg[-1] == True or arg[-1] == None:
+            fromSlash = arg[-1]
+            fullarg = arg[:-1]
+    if len(fullarg) == 0:
+        arg = None
+    else:
+        arg = arg[0]
+
+    return (arg, fromSlash, fullarg)
