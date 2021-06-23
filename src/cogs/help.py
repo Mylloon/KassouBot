@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext
+from utils.core import isSlash
 
 def setup(client):
     client.add_cog(Help(client))
@@ -14,11 +15,7 @@ class Help(commands.Cog):
     @commands.command(name='help')
     async def _help(self, ctx, *cog):
         """Affiche toutes les commandes du bot.\n	➡ Syntaxe: {PREFIX}help [catégorie]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(cog) > 0:
-            if cog[-1] == True:
-                fromSlash = cog[-1]
-                cog = cog[:-1]
+        _, fromSlash, cog = isSlash(cog)
 
         if not cog: # Liste des Cog
             halp = discord.Embed(title = 'Liste des catégories et commandes sans catégorie',
@@ -79,7 +76,7 @@ class Help(commands.Cog):
     @commands.command(name='invite')
     async def _invite(self, ctx, fromSlash = None):
         """Invite ce bot sur ton serveur !"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         embed = discord.Embed(description = f"[Lien vers l'invitation Discord](https://discord.com/api/oauth2/authorize?client_id={self.client.user.id}&permissions=8&scope=bot%20applications.commands)").set_author(name="Invite moi !")
         if fromSlash != True:

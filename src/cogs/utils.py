@@ -5,7 +5,7 @@ from discord.ext import commands, tasks
 from random import randint, shuffle
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser, getChangelogs
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser, getChangelogs, isSlash
 from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
@@ -20,16 +20,7 @@ class Utils(commands.Cog):
 
     @commands.command(name='ping')
     async def _ping(self, ctx, *arg):
-        """Affiche mon ping.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}ping [help]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(arg) > 0:
-            if arg[-1] == True:
-                fromSlash = arg[-1]
-                arg = arg[:-1]
-        if len(arg) > 0:
-            arg = arg[0]
-        else:
-            arg = None
+        arg, fromSlash, _ = isSlash(arg)
 
         if arg == 'help':
             return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description =
@@ -60,15 +51,7 @@ class Utils(commands.Cog):
     @commands.command(name='avatar')
     async def _avatar(self, ctx, *user):
         """Affiche ton avatar ou celui que tu mentionnes.\n	➡ Syntaxe: {PREFIX}avatar [user]"""
-        fromSlash = False
-        if len(user) > 0:
-            if user[-1] == True:
-                fromSlash = user[-1]
-                user = user[:-1]
-        if len(user) > 0:
-            user = user[0]
-        else:
-            user = None
+        user, fromSlash, _ = isSlash(user)
 
         if user == None:
             user = ctx.author
@@ -90,14 +73,8 @@ class Utils(commands.Cog):
     @commands.command(name='calc')
     async def _calc(self, ctx, *calcul):
         """Calculatrice.\n	➡ Syntaxe: {PREFIX}calc <calcul>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(calcul) > 0:
-            if calcul[-1] == True:
-                fromSlash = calcul[-1]
-                calcul = calcul[:-1]
-        if len(calcul) > 0:
-            calcul = calcul[0]
-        else:
+        calcul, fromSlash, _ = isSlash(calcul)
+        if calcul == None:
             raise ModuleNotFoundError
 
         equation = calcul.replace('^', '**').replace('x', '*').replace('×', '*').replace('÷', '/').replace('≥', '>=').replace('≤', '<=')
@@ -137,8 +114,7 @@ class Utils(commands.Cog):
             await ctx.message.add_reaction(emoji = '✅')
         await ctx.send(embed = embed)
     @_calc.error
-    async def _calc_error(self, ctx, error):
-        print(error)
+    async def _calc_error(self, ctx, _):
         await ctx.send("Tu n'as pas spécifié de calcul.")
     @cog_ext.cog_slash(name="calc", description = "Calculatrice.")
     async def __calc(self, ctx, calcul):
@@ -147,7 +123,7 @@ class Utils(commands.Cog):
     @commands.command(name='syntax')
     async def _syntax(self, ctx, fromSlash = None):
         """Informations pour bien éditer son texte.⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         separateur = "-----------------------------------------------------\n"
         syntaxe = separateur
@@ -203,11 +179,7 @@ class Utils(commands.Cog):
     @commands.command(name='memo', aliases = ['note'])
     async def _memo(self, ctx, *text):
         """T'envoie un petit memo par message privé.\n	➡ Syntaxe: {PREFIX}memo/note <message>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(text) > 0:
-            if text[-1] == True:
-                fromSlash = text[-1]
-                text = text[:-1]
+        _, fromSlash, text = isSlash(text)
         if len(text) > 0:
             text = " ".join(text)
         else:
@@ -240,7 +212,7 @@ class Utils(commands.Cog):
     @commands.command(name='infos', aliases = ['info'])
     async def _infos(self, ctx, fromSlash = None):
         """Donne des infos sur le bot.\n	➡ Syntaxe: {PREFIX}infos/info⁢"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         appinfo = await self.client.application_info()
 
@@ -290,11 +262,7 @@ class Utils(commands.Cog):
     @commands.command(name='amongus')
     async def _amongus(self, ctx, *map):
         """Affiche la carte voulue d'Among Us.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}amongus <mira/polus/skeld/airship>⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(map) > 0:
-            if map[-1] == True:
-                fromSlash = map[-1]
-                map = map[:-1]
+        _, fromSlash, map = isSlash(map)
         if len(map) > 0:
             map = " ".join(map)
         else:
@@ -345,16 +313,13 @@ class Utils(commands.Cog):
             await ctx.message.add_reaction(emoji = '❓')
     @cog_ext.cog_slash(name="amongus", description = "Affiche la carte voulue d'Among Us. Carte dispo : <mira/polus/skeld/airship>")
     async def __amongus(self, ctx, map):
+        ctx.prefix = "/"
         return await self._amongus(ctx, map, True)
 
     @commands.command(name='whois')
     async def _whois(self, ctx, *user: discord.Member):
         """Affiche les infos sur l'utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}whois [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(user) > 0:
-            if user[-1] == True:
-                fromSlash = user[-1]
-                user = user[:-1]
+        _, fromSlash, user = isSlash(user)
 
         if len(user) <= 1:
             if user == ():
@@ -390,17 +355,16 @@ class Utils(commands.Cog):
     @commands.command(name='sondage')
     async def _sondage(self, ctx, *args):
         """Fais un sondage.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}sondage "<Question>" "<Proposition1>" "<Proposition...>" "<Proposition20>" """
-        fromSlash = False
-        if len(args) > 0:
-            if args[-1] == True:
-                fromSlash = args[-1]
-                args = args[0]
+        _, fromSlash, args = isSlash(args)
+        if type(args[0]) == list:
+            args = args[0]
 
         args = list(args)
         if len(args) > 2:
             question = args[0]
             for i in findall(r'\d+', question):
-                question = cleanUser(ctx, question, i)
+                if len(str(i)) == 18: # id de 18 chiffres
+                    question = cleanUser(ctx, question, i)
             propositions = args[1:]
             if len(propositions) <= 20:
                 message = ""
@@ -452,11 +416,9 @@ class Utils(commands.Cog):
     @commands.command(name='avis', aliases=['vote'])
     async def _avis(self, ctx, *args):
         """Demande un avis.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}avis/vote "[Titre]" "<Demande>" """
-        fromSlash = False
-        if len(args) > 0:
-            if args[-1] == True:
-                fromSlash = args[-1]
-                args = args[0]
+        _, fromSlash, args = isSlash(args)
+        if type(args[0]) == list:
+            args = args[0]
 
         args = list(args)
         if len(args) > 2 or len(args) == 0:
@@ -486,11 +448,7 @@ class Utils(commands.Cog):
     @commands.command(name='reminder', aliases=["remind", "remindme", "rappel"])
     async def _reminder(self, ctx, time, *reminder):
         """Met en place un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminder/remind/remindme/rappel <temps>[@] [message]"""
-        fromSlash = False
-        if len(reminder) > 0:
-            if reminder[-1] == True:
-                fromSlash = reminder[-1]
-                reminder = reminder[:-1]
+        _, fromSlash, reminder = isSlash(reminder)
         if len(reminder) > 0:
             reminder = " ".join(reminder)
         else:
@@ -604,11 +562,7 @@ class Utils(commands.Cog):
     @commands.command(name='reminderlist', aliases=["remindlist", "rl", "rappeliste"])
     async def _reminderlist(self, ctx, *utilisateur):
         """Affiche la liste des rappels d'un utilisateur.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderlist/rl/remindlist/rappeliste [utilisateur]"""
-        fromSlash = False
-        if len(utilisateur) > 0:
-            if utilisateur[-1] == True:
-                fromSlash = utilisateur[-1]
-                utilisateur = utilisateur[:-1]
+        _, fromSlash, utilisateur = isSlash(utilisateur)
         if len(utilisateur) > 0:
             try:
                 utilisateur = mentionToUser(getMentionInString(utilisateur[0])[0])
@@ -647,12 +601,8 @@ class Utils(commands.Cog):
     @commands.command(name='reminderdelete', aliases=["reminddelete", "rd"])
     async def _reminderdelete(self, ctx, *id):
         """Suppprime un rappel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}reminderdelete/rd <id>"""
-        fromSlash = False
-        if len(id) > 0:
-            if id[-1] == True:
-                fromSlash = id[-1]
-                id = id[:-1]
-        if len(id) > 0:
+        id, fromSlash, _ = isSlash(id)
+        if id:
             try:
                 id = int(id[0])
             except:
@@ -677,16 +627,10 @@ class Utils(commands.Cog):
     @commands.command(name='changelogs', aliases=["changelog", "changement", "changements"])
     async def _changelogs(self, ctx, *version):
         """Affiche les changements de la dernière version ou d'une version précise.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}changelogs/changelog/changement/changements [version]"""
-        fromSlash = False
-        if len(version) > 0:
-            if version[-1] == True:
-                fromSlash = version[-1]
-                version = version[:-1]
-        if len(version) > 0:
-            version = version[0] 
-        else:
+        version, fromSlash, _ = isSlash(version)
+        if not version:
             version = 'latest'
-        changes = getChangelogs(version)
+        changes = getChangelogs(version.replace(',', '.'))
         if changes == None or changes == 0:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')

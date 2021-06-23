@@ -3,7 +3,7 @@ from re import findall
 from discord.ext import commands
 from random import randint, choice
 from discord_slash import cog_ext
-from utils.core import retirerDoublons, mentionToUser
+from utils.core import retirerDoublons, mentionToUser, isSlash
 from utils.time import intToDatetime
 
 def setup(client):
@@ -17,11 +17,8 @@ class Fun(commands.Cog):
     @commands.command(name='iq', aliases=["qi"])
     async def _iq(self, ctx, *user):
         """Calcule ton QI.\n	➡ Syntaxe: {PREFIX}iq [user]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        fromSlash = False
-        if len(user) > 0:
-            if user[-1] == True:
-                fromSlash = user[-1]
-                user = user[:-1]
+        _, fromSlash, user = isSlash(user)
+
         if len(user) == 0:
             user = ctx.author
             if fromSlash != True:
@@ -55,11 +52,8 @@ class Fun(commands.Cog):
     @commands.command(name='love')
     async def _love(self, ctx, *users: discord.Member):
         """Découvre la probabilité que ces deux personnes se mettent en couple.\n	➡ Syntaxe: {PREFIX}love <User1> <User2>"""
-        fromSlash = False
-        if len(users) > 0:
-            if users[-1] == True:
-                fromSlash = users[-1]
-                users = users[:-1]
+        _, fromSlash, users = isSlash(users)
+
         if len(users) == 2 or len(users) == 1:
             UneDemande = False
             if len(users) == 1:
@@ -116,7 +110,7 @@ class Fun(commands.Cog):
     @commands.command(name='8ball', aliases=['8b', '8balls'])
     async def _8ball(self, ctx, fromSlash = None):
         """Répond à ta question 🔮.\n	➡ Syntaxe: {PREFIX}8ball/8b⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         reponses=["c'est sûr.","il en est décidément ainsi.","incontestablement.","oui sans aucun doute.","tu peux t'y fier.","tel que je le vois, oui.","c'est le plus probable.",
         "cela montre de bonnes perspectives.","certes.","les signes indiquent que oui.","ma réponse est oui.","ta question est trop floue, réessaie.","redemandes plus tard stp.",
@@ -177,14 +171,11 @@ class Fun(commands.Cog):
     @commands.command(name='random', aliases=['randint'])
     async def _random(self, ctx, *n):
         """Tire au hasard un chiffre entre 1 et n (par défaut n=10)\n	➡ Syntaxe: {PREFIX}random/randint [n]"""
-        fromSlash = False
-        if len(n) > 0:
-            if n[-1] == True:
-                fromSlash = n[-1]
-                n = n[:-1]
-        if len(n) > 0:
+        n, fromSlash, _ = isSlash(n)
+        
+        if n:
             try:
-                n = int(n[0])
+                n = int(n)
             except:
                 return await ctx.send("Veuillez renseigner un chiffre valide.")
         else:

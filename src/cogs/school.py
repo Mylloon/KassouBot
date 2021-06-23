@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext
+from utils.core import isSlash
 
 def setup(client):
     client.add_cog(School(client))
@@ -14,15 +15,7 @@ class School(commands.Cog):
     # @commands.has_any_role("Professeur", "professeur", "Prof", "prof")
     async def _appel(self, ctx, *voice_channel: int):
         """Fais l'appel.⁢⁢⁢⁢⁢\n	➡ Syntaxe: {PREFIX}appel [ID salon vocal]"""
-        fromSlash = False
-        if len(voice_channel) > 0:
-            if voice_channel[-1] == True:
-                fromSlash = voice_channel[-1]
-                voice_channel = voice_channel[:-1]
-        if len(voice_channel) > 0:
-            voice_channel = voice_channel[0]
-        else:
-            voice_channel = None
+        voice_channel, fromSlash, _ = isSlash(voice_channel)
 
         voice_channels = []
         voice_channels.extend(ctx.guild.voice_channels)
@@ -77,7 +70,7 @@ class School(commands.Cog):
     @commands.command(name='getid', hidden = True)
     async def _getid(self, ctx, fromSlash = None):
         """Tuto vidéo sur comment récupérer l'ID d'un utilisateur/salon⁢⁢⁢⁢⁢"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
