@@ -3,6 +3,7 @@ import asyncio
 from discord.ext import commands
 from random import randint, choice
 from discord_slash import cog_ext
+from utils.core import isSlash
 
 def setup(client):
     client.add_cog(Games(client))
@@ -16,28 +17,27 @@ class Games(commands.Cog):
     @commands.command(name='chifumi', aliases = ["shifumi", "ppc"])
     async def _chifumi(self, ctx, *choix):
         """Un simple Chifumi contre le bot.\n	➡ Syntaxe: {PREFIX}chifumi/shifumi/ppc <pierre/papier/ciseaux>"""
-        fromSlash = False
-        if len(choix) < 1:
+        choix, fromSlash, _ = isSlash(choix)
+        if choix == None:
             raise ModuleNotFoundError
-        if choix[-1] == True:
-            fromSlash = choix[-1]
-        choix = choix[0]
 
         choix_jeu = ["Pierre ✊", "Papier 🧻", "Ciseaux ✂"]
         orditxt = choice(choix_jeu)
         ordi = choix_jeu.index(orditxt)
 
-        PIERRE = 0
-        PAPIER = 1
-        CISEAUX = 2
+        pierre = 0
+        papier = 1
+        ciseaux = 2
 
         choix = choix.lower()
         if choix == "pierre":
-            choix = PIERRE
-        if choix == "papier" or choix == "feuille":
-            choix = PAPIER
-        if choix == "ciseaux" or choix == "ciseau":
-            choix = CISEAUX
+            choix = pierre
+        elif choix == "papier" or choix == "feuille":
+            choix = papier
+        elif choix == "ciseaux" or choix == "ciseau":
+            choix = ciseaux
+        else:
+            return await ctx.send("Je n'ai pas compris ce que tu as joué, réessaie.")
 
         description = (f"{choix_jeu[choix][:-1]} VS {choix_jeu[ordi][:-1]}\n\n**"
                        f"{('Égalité !', 'Tu as perdu !', 'Tu as gagné !')[(choix != ordi) + ((choix > ordi and ordi +1 == choix) or (choix < ordi and choix + ordi == 2))]}**")
@@ -107,7 +107,7 @@ class Games(commands.Cog):
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx, fromSlash = None):
         """Pile ou face.\n	➡ Syntaxe: {PREFIX}pileouface/pf"""
-        if fromSlash == None:
+        if fromSlash != True:
             fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
