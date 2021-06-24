@@ -68,10 +68,7 @@ class Games(commands.Cog):
         await ctx.send(message)
         while self.guessing_game[str(ctx.author.id)] != 0: 
             try:
-                def check(message):
-                    if message.author.bot == False:
-                        return str(message.author.id) in self.guessing_game
-                msg = await self.client.wait_for('message', check = check, timeout = 30)
+                msg = await self.client.wait_for('message', check = lambda message: str(message.author.id) in self.guessing_game if message.author.bot == False else None, timeout = 30)
             except asyncio.TimeoutError:
                 del self.guessing_game[str(ctx.author.id)]
                 return await ctx.send(f"Tu as mis trop de temps a répondre {ctx.author.mention}. La réponse était {number}.")
