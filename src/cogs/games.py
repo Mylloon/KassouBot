@@ -3,7 +3,7 @@ import asyncio
 from discord.ext import commands
 from random import randint, choice
 from discord_slash import cog_ext
-from utils.core import isSlash
+from utils.core import isSlash, mySendHidden
 
 def setup(client):
     client.add_cog(Games(client))
@@ -37,7 +37,7 @@ class Games(commands.Cog):
         elif choix == "ciseaux" or choix == "ciseau":
             choix = ciseaux
         else:
-            return await ctx.send("Je n'ai pas compris ce que tu as joué, réessaie.")
+            return await mySendHidden(ctx, fromSlash, "Je n'ai pas compris ce que tu as joué, réessaie.")
 
         description = (f"{choix_jeu[choix][:-1]} VS {choix_jeu[ordi][:-1]}\n\n**"
                        f"{('Égalité !', 'Tu as perdu !', 'Tu as gagné !')[(choix != ordi) + ((choix > ordi and ordi +1 == choix) or (choix < ordi and choix + ordi == 2))]}**")
@@ -55,10 +55,12 @@ class Games(commands.Cog):
         return await self._chifumi(ctx, choix, True)
 
     @commands.command(name='plusoumoins', aliases = ['+ou-', '+-'])
-    async def _plusoumoins(self, ctx):
+    async def _plusoumoins(self, ctx, fromSlash = None):
         """Un plus ou moins entre 1 et 100.\n	➡ Syntaxe: {PREFIX}plusoumoins/+ou-/+-⁢⁢⁢⁢⁢"""
+        if fromSlash != True:
+            fromSlash = False
         if str(ctx.author.id) in self.guessing_game:
-            return await ctx.send("Tu es déjà en partie.")
+            return await mySendHidden(ctx, fromSlash, "Tu es déjà en partie.")
         guess = 5
         self.guessing_game[str(ctx.author.id)] = guess
         number = randint(1, 100)
@@ -102,7 +104,7 @@ class Games(commands.Cog):
         await ctx.send(f"T'as pas trouvé {ctx.author.mention}... dommage, c'était {number}.")
     @cog_ext.cog_slash(name="plusoumoins", description = "Un plus ou moins entre 1 et 100.")
     async def __plusoumoins(self, ctx):
-        await self._plusoumoins(ctx)
+        await self._plusoumoins(ctx, True)
 
     @commands.command(name='pileouface', aliases=['pf'])
     async def _pileouface(self, ctx, fromSlash = None):

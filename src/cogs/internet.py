@@ -5,7 +5,7 @@ from discord.ext import commands
 from random import choice
 from asyncpraw import Reddit
 from discord_slash import cog_ext
-from utils.core import randomImage, isSlash
+from utils.core import randomImage, isSlash, mySendHidden
 
 def setup(client):
     client.add_cog(Internet(client))
@@ -29,7 +29,7 @@ class Internet(commands.Cog):
             '2meirl4meirl', 'AdviceAnimals', 'weirdmemes', 'LeagueOfMemes'])
         
         if fromSlash != None and subredditchoix == "nsfw": # demande de nsfw sans passé par la commande appropriée
-            return await ctx.send(f"Désolé, tu demandes du nsfw... Fais plutôt **{ctx.prefix}sexe**.")
+            return await mySendHidden(ctx, fromSlash, f"Désolé, tu demandes du nsfw... Fais plutôt **{ctx.prefix}sexe**.")
 
         try:
             async with Reddit(client_id = environ['TOKEN_REDDIT_CLIENT_ID'], client_secret = environ['TOKEN_REDDIT_CLIENT_SECRET'], user_agent = f"disreddit /u/{environ['TOKEN_REDDIT_USER_AGENT']}, http://localhost:8080") as reddit:
@@ -65,7 +65,7 @@ class Internet(commands.Cog):
             print(f"Error in _memes command = args: {args}, subreddit: {subredditchoix}, error: {error}")
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send(f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
+            return await mySendHidden(ctx, fromSlash, f"Ce subreddit est interdit, mis en quarantaine ou n'existe pas. ({subredditchoix})")
     @cog_ext.cog_slash(name="meme", description = "Envoie un meme de reddit.")
     async def __memes(self, ctx, subreddit = None):
         ctx.prefix = "/"
@@ -132,7 +132,7 @@ class Internet(commands.Cog):
         else:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            await ctx.send(f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
+            await mySendHidden(ctx, fromSlash, f"Désolé mais je n'envois ce genre de message seulement dans les salons NSFW !")
     @cog_ext.cog_slash(name="sexe", description = "Envois une image coquine. (NSFW)")
     async def __sexe(self, ctx):
         return await self._sexe(ctx, True)

@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext
-from utils.core import isSlash
+from utils.core import isSlash, mySendHidden
 
 def setup(client):
     client.add_cog(School(client))
@@ -23,14 +23,14 @@ class School(commands.Cog):
             await ctx.message.add_reaction(emoji = "✅")
         limite_voice_channels = 7
         if len(voice_channels) > limite_voice_channels and not voice_channel:
-            return await ctx.send(f"""Désolé mais il y a plus de {limite_voice_channels} salons vocaux sur ce serveur, utilisez plutôt `{ctx.prefix}appel {{ID salon vocal}}`.
+            return await mySendHidden(ctx, fromSlash, f"""Désolé mais il y a plus de {limite_voice_channels} salons vocaux sur ce serveur, utilisez plutôt `{ctx.prefix}appel {{ID salon vocal}}`.
             \nPour savoir comment récuperer l'id d'un salon vous pouvez faire `{ctx.prefix}getid`.""")
         if voice_channel:
             canal = self.client.get_channel(voice_channel)
             if canal.type.__str__() == "voice":
                 voice_channels = [canal]
             else:
-                return await ctx.send("Tu as spécifié un channel textuelle et non vocal.")
+                return await mySendHidden(ctx, fromSlash, "Tu as spécifié un channel textuelle et non vocal.")
         if len(voice_channels) > 0:
             embed = discord.Embed(title = "Réagissez à ce message avec ✋ pour signaler votre présence.", description = f"(attention, je réagis aussi) — Demandeur : {ctx.author.mention}")
             for channel in voice_channels:
@@ -51,7 +51,7 @@ class School(commands.Cog):
             message = await ctx.send("Aucun salon vocal dans ce serveur, réagissez à ce message avec ✋ pour signaler votre présence (attention, je réagis aussi).")
         await message.add_reaction(emoji = "✋")
     @_appel.error
-    async def _appel_error(self, ctx, error):
+    async def _appel_error(self, ctx, _):
         # if isinstance(error, commands.CheckFailure):
         #     await ctx.send("Tu n'as pas la permission de faire cette commande, demande à un professeur.")
         # else:
@@ -74,7 +74,7 @@ class School(commands.Cog):
             fromSlash = False
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
-        return await ctx.send("Explication sur comment récuperer l'ID d'un utilisateur/salon : https://cdn.discordapp.com/attachments/640312926892195842/780802253258358834/GetID.mp4")
+        return await mySendHidden(ctx, fromSlash, "Explication sur comment récuperer l'ID d'un utilisateur/salon : https://cdn.discordapp.com/attachments/640312926892195842/780802253258358834/GetID.mp4")
     @cog_ext.cog_slash(name="getid", description = "Tuto vidéo sur comment récupérer l'ID d'un utilisateur/salon⁢⁢⁢⁢⁢")
     async def __getid(self, ctx):
         return await self._getid(ctx, True)

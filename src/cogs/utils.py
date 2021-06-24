@@ -5,7 +5,8 @@ from discord.ext import commands, tasks
 from random import randint, shuffle
 from discord_slash import cog_ext
 from utils.reminder import Reminder
-from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick, mentionToUser, getChangelogs, isSlash
+from utils.core import map_list_among_us, getURLsInString, getMentionInString, cleanCodeStringWithMentionAndURLs, cleanUser, userOrNick
+from utils.core import mySendHidden, mentionToUser, getChangelogs, isSlash
 from utils.time import stringTempsVersSecondes, nowUTC, intToDatetime, timedeltaToString, timestampScreen, getAge, ageLayout, nowCustom
 
 def setup(client):
@@ -23,7 +24,7 @@ class Utils(commands.Cog):
         arg, fromSlash, _ = isSlash(arg)
 
         if arg == 'help':
-            return await ctx.send(embed = discord.Embed(color = discord.Colour.random(), description =
+            return await mySendHidden(ctx, fromSlash, embed = discord.Embed(color = discord.Colour.random(), description =
                 ":hourglass: correspond au temps entre deux battements de cœurs\n\n \
                 :heartbeat: correspond au temps que met le client a réagir au messages (0 est normal lors de l'utilisation d'une commande slash)\n\n \
                 :stopwatch: correspond au temps que met le client a calculer le ping"
@@ -96,9 +97,9 @@ class Utils(commands.Cog):
                 else:
                     answer = str(eval(equation))
             except ZeroDivisionError:
-                return await ctx.send("Tu ne peux pas divisé par 0.")
+                return await mySendHidden(ctx, fromSlash, "Tu ne peux pas diviser par 0.")
         except TypeError:
-            return await ctx.send("Requête de calcul invalide.")
+            return await mySendHidden(ctx, fromSlash, "Requête de calcul invalide.")
         if '.' in answer:
             aftercomma = answer.split(".")[1]
             if len(aftercomma) > 2:
@@ -171,7 +172,7 @@ class Utils(commands.Cog):
                 await ctx.message.add_reaction(emoji = '✅')
         except:
             pass
-        await ctx.send(syntaxe)
+        await mySendHidden(ctx, fromSlash, syntaxe)
     @cog_ext.cog_slash(name="syntax", description = "Informations pour bien éditer son texte.")
     async def __syntax(self, ctx):
         return await self._syntax(ctx, True)
@@ -188,11 +189,11 @@ class Utils(commands.Cog):
         if len(text) <= 5:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send("Ta note doit au moins faire 5 caractères.")
+            return await mySendHidden(ctx, fromSlash, "Ta note doit au moins faire 5 caractères.")
         elif len(text) >= 2048:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send("Ta note doit faire moins de 2048 caractères.")
+            return await ctx.send(ctx, fromSlash, message = "Ta note doit faire moins de 2048 caractères.")
         else:
             if fromSlash != True:
                 await ctx.message.delete()
@@ -200,7 +201,8 @@ class Utils(commands.Cog):
             embed.set_author(name = f"Mémo noté depuis {ctx.guild.name}", icon_url = ctx.author.avatar_url)
             embed.set_footer(text = f'📝 le {timestampScreen(intToDatetime(nowUTC()))}')
             await ctx.author.send(embed = embed)
-            return await ctx.send("Tu viens de recevoir ton mémo !", delete_after = 5)
+            
+            return await mySendHidden(ctx, fromSlash, "Tu viens de recevoir ton mémo !", delete_after = 5)
     @_memo.error
     async def _memo_error(self, ctx, error):
         if str(error) == "text is a required argument that is missing.":
@@ -297,7 +299,7 @@ class Utils(commands.Cog):
                 await ctx.message.add_reaction(emoji = '✅')
             await ctx.send(embed = embed)
         else:
-            await ctx.send(f"`{ctx.prefix}amongus <mira/polus/skeld/airship>`")
+            await mySendHidden(ctx, fromSlash, f"`{ctx.prefix}amongus <mira/polus/skeld/airship>`")
     @commands.command(name='among', hidden = True)
     async def _among(self, ctx, *, args = ""):
         """Raccourci à la commande amongus⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
@@ -475,7 +477,7 @@ class Utils(commands.Cog):
             if type(seconds) != int:
                 if fromSlash != True:
                     await ctx.message.add_reaction(emoji = '❓')
-                return await ctx.send(seconds)
+                return await mySendHidden(ctx, fromSlash, seconds)
         if seconds == 0:
             embed.add_field(name="Attention", value=
                 "Format pour le temps : `d` ou `j` pour jour, `h` pour heure, `m` pour minute, `s` pour seconde (légères variances acceptés aussi). \
@@ -490,8 +492,8 @@ class Utils(commands.Cog):
             if fromSlash != True:
                 messageID = ctx.message.id
             Reminder().ajoutReminder(messageID, ctx.channel.id, extrarg, reminder, now, now + seconds, ctx.author.id, guildID)
-            return await ctx.send(f"Ok, je t'en parles {destination} dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
-        await ctx.send(embed = embed)
+            return await mySendHidden(ctx, fromSlash, f"Ok, je t'en parles {destination} dans {timedeltaToString(seconds)} avec 1m de retard maximum.")
+        await mySendHidden(ctx, fromSlash, embed = embed)
     @_reminder.error
     async def _reminder_error(self, ctx, error):
         if 'time is a required argument that is missing.' in str(error):
@@ -567,7 +569,7 @@ class Utils(commands.Cog):
             try:
                 utilisateur = mentionToUser(getMentionInString(utilisateur[0])[0])
             except:
-                return await ctx.send("L'utilisateur renseigné n'a pas été trouvé.")
+                return await mySendHidden(ctx, fromSlash, "L'utilisateur renseigné n'a pas été trouvé.")
         else:
             utilisateur = ctx.author.id
 
@@ -606,7 +608,7 @@ class Utils(commands.Cog):
             try:
                 id = int(id[0])
             except:
-                return await ctx.send("L'ID renseigné n'est pas valide.")
+                return await mySendHidden(ctx, fromSlash, "L'ID renseigné n'est pas valide.")
         else:
             return await ctx.send("Veuillez renseigner un ID.")
 
@@ -619,7 +621,7 @@ class Utils(commands.Cog):
         else:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send("Rappel non trouvé, pas sur le bon serveur ou qui ne vous appartiens pas.")
+            return await mySendHidden(ctx, fromSlash, "Rappel non trouvé, pas sur le bon serveur ou qui ne vous appartiens pas.")
     @cog_ext.cog_slash(name="reminderdelete", description = "Suppprime un rappel.")
     async def __reminderdelete(self, ctx, id):
         return await self._reminderdelete(ctx, id, True)
@@ -638,7 +640,7 @@ class Utils(commands.Cog):
                 message = "Veuillez renseigner un numéro de version valide et existant."
             else:
                 message = "Trop de requêtes sur l'API de Github, réessayez plus tard."
-            return await ctx.send(message)
+            return await mySendHidden(ctx, fromSlash, message)
         if fromSlash != True:
             await ctx.message.add_reaction(emoji = '✅')
         if len(changes[2]) > 2048:

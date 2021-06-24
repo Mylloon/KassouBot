@@ -1,7 +1,7 @@
 import discord
 from discord.ext import commands
 from discord_slash import cog_ext
-from utils.core import isSlash
+from utils.core import isSlash, mySendHidden
 
 def setup(client):
     client.add_cog(Help(client))
@@ -17,6 +17,7 @@ class Help(commands.Cog):
         """Affiche toutes les commandes du bot.\n	➡ Syntaxe: {PREFIX}help [catégorie]⁢⁢⁢⁢⁢⁢⁢⁢⁢⁢"""
         _, fromSlash, cog = isSlash(cog)
 
+        erreur = False
         if not cog: # Liste des Cog
             halp = discord.Embed(title = 'Liste des catégories et commandes sans catégorie',
                             description = f'Utilisez `{ctx.prefix}help [catégorie]` pour en savoir plus sur elles et leur commande.',
@@ -42,6 +43,7 @@ class Help(commands.Cog):
             await ctx.send(embed = halp)
         else: # Avertissement si il y a trop d'arguments dans la variable cog
             if len(cog) > 1:
+                await ctx.message.add_reaction(emoji = '❌')
                 halp = discord.Embed(title = 'Erreur !', description = "Tu as renseigné trop d'arguments !", color = 0xC41B1B)
                 await ctx.send(embed = halp)
             else: # Liste des commandes avec cogs.
@@ -59,12 +61,14 @@ class Help(commands.Cog):
                                     halp.add_field(name = f"`{ctx.prefix}{c.name}` - {str(c.help).split(backslash)[0]}", value = f"{''.join(cmds_help)}\u200b", inline = False)
                             found = True
                 if not found: # Rappel si le cog n'existe pas.
-                    await ctx.message.add_reaction(emoji = '❌')
+                    if fromSlash != True:
+                        await ctx.message.add_reaction(emoji = '❌')
                     halp = discord.Embed(title = 'Erreur !', description = f"Qu'est ce que {cog[0]} ?", color = 0xC41B1B)
+                    erreur = True
                 else:
                     if fromSlash != True:
                         await ctx.message.add_reaction(emoji = '✅')
-                await ctx.send('', embed = halp)
+                await mySendHidden(ctx, erreur, embed = halp)
     @cog_ext.cog_slash(name="help", description = "Affiche toutes les commandes du bot.")
     async def __help(self, ctx, cog = None):
         ctx.prefix = "/"

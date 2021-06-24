@@ -140,3 +140,15 @@ def isSlash(arg):
         arg = arg[0]
 
     return (arg, fromSlash, fullarg)
+
+async def mySendHidden(
+        ctx, fromSlash, message = None, tts = False, embed = None, file = None, files = None,
+        delete_after = None, allowed_mentions = None):
+    if fromSlash == True: # can't delete hidden message
+        await ctx.send( # sending hidden message
+            content = message, tts = tts, embed = embed, file = file, files = files,
+            delete_after = None, allowed_mentions = allowed_mentions, hidden = fromSlash)
+    else:
+        await ctx.send( # sending normal message
+            content = message, tts = tts, embed = embed, file = file, files = files,
+            delete_after = delete_after, allowed_mentions = allowed_mentions)

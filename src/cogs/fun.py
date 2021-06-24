@@ -3,7 +3,7 @@ from re import findall
 from discord.ext import commands
 from random import randint, choice
 from discord_slash import cog_ext
-from utils.core import retirerDoublons, mentionToUser, isSlash
+from utils.core import retirerDoublons, mentionToUser, isSlash, mySendHidden
 from utils.time import intToDatetime
 
 def setup(client):
@@ -65,7 +65,7 @@ class Fun(commands.Cog):
             if users[0] == users[1]:
                 if fromSlash != True:
                     await ctx.message.add_reaction(emoji = '✅')
-                return await ctx.send("Je suis sûr que cette personne s'aime ! :angry:")
+                return await mySendHidden(ctx, fromSlash, "Je suis sûr que cette personne s'aime ! :angry:")
             if users[0].nick:
                 user1 = list(users[0].nick)
             else:
@@ -177,7 +177,7 @@ class Fun(commands.Cog):
             try:
                 n = int(n)
             except:
-                return await ctx.send("Veuillez renseigner un chiffre valide.")
+                return await mySendHidden(ctx, fromSlash, "Veuillez renseigner un chiffre valide.")
         else:
             n = 10
     
