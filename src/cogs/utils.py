@@ -193,7 +193,7 @@ class Utils(commands.Cog):
         elif len(text) >= 2048:
             if fromSlash != True:
                 await ctx.message.add_reaction(emoji = '❌')
-            return await ctx.send(ctx, fromSlash, message = "Ta note doit faire moins de 2048 caractères.")
+            return await ctx.send(ctx, fromSlash, "Ta note doit faire moins de 2048 caractères.")
         else:
             if fromSlash != True:
                 await ctx.message.delete()
