@@ -24,6 +24,10 @@ async def on_disconnect():
     print(f"Déconnecté.")
 
 @client.event
+async def on_resumed():
+    print(f"Reconnecté !")
+
+@client.event
 async def on_ready():
     await client.change_presence(status = discord.Status.online, activity = discord.Activity(name = f"{customPrefix}help", type = discord.ActivityType.playing))
     Reminder().creationTable()
