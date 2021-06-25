@@ -26,6 +26,8 @@ def userOrNick(user):
 def cleanUser(ctx, stringMessage, stringID):
     """récupère l'utilisateur avec son id"""
     stringMessage = stringMessage.replace("<@!", "").replace(">", "").replace("<@", "") # améliorer ça avec du regex
+    if len(str(stringMessage)) not in (17, 18): # si ce n'est pas un ID valide
+        return stringMessage
     associatedID = userOrNick(ctx.author.guild.get_member(int(stringID)))
     try:
         stringMessage = stringMessage.replace(stringID, associatedID)

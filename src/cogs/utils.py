@@ -365,8 +365,7 @@ class Utils(commands.Cog):
         if len(args) > 2:
             question = args[0]
             for i in findall(r'\d+', question):
-                if len(str(i)) == 18: # id de 18 chiffres
-                    question = cleanUser(ctx, question, i)
+                question = cleanUser(ctx, question, i)
             propositions = args[1:]
             if len(propositions) <= 20:
                 message = ""
