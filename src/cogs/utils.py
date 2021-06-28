@@ -653,3 +653,15 @@ class Utils(commands.Cog):
             return await self._changelogs(ctx, True)
         else:
             return await self._changelogs(ctx, version, True)
+
+    @commands.command(name='minecraft', aliases=["codecouleurminecraft", "minecraftcodecouleur"])
+    async def _minecraft(self, ctx, fromSlash = None):
+        """Affiche le code couleur utilisé dans Minecraft.\n	➡ Syntaxe: {PREFIX}minecraft/codecouleurminecraft/minecraftcodecouleur"""
+        if fromSlash != True:
+            fromSlash = False
+        if fromSlash != True:
+            await ctx.message.add_reaction(emoji = '✅')
+        return await ctx.send("https://imgr.search.brave.com/5-k6Lgh0OyRI8IVwhiBrNRmlY94utGxSX0k9tvtpqiA/fit/590/150/no/1/aHR0cDovL2kuaW1n/dXIuY29tL3Azd2lz/OVAucG5n")
+    @cog_ext.cog_slash(name="minecraft", description = "Affiche le code couleur utilisé dans Minecraft.")
+    async def __minecraft(self, ctx):
+        return await self._minecraft(ctx, True)
