@@ -3,8 +3,9 @@
 [![Version](https://img.shields.io/badge/version-1.5-green?style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/releases/latest)
 [![Docker Stars](https://img.shields.io/docker/stars/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/r/mylloon/kassoubot)
 [![Docker Pulls](https://img.shields.io/docker/pulls/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/r/mylloon/kassoubot)
-[![Github stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot?label=Github%20Stars&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/stargazers)
-[![Github forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot?label=Github%20Forks&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/network)
+[![Docker Image Size](https://img.shields.io/docker/image-size/mylloon/kassoubot?style=for-the-badge)](https://hub.docker.com/r/mylloon/kassoubot)
+[![Github Stars](https://img.shields.io/github/stars/Confrerie-du-Kassoulait/kassoubot?label=Github%20Stars&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/stargazers)
+[![Github Forks](https://img.shields.io/github/forks/Confrerie-du-Kassoulait/KassouBot?label=Github%20Forks&style=for-the-badge)](https://github.com/Confrerie-du-Kassoulait/KassouBot/network)
 ## __Setting up__
 
 You have to replace `TOKEN_DISCORD`, `PREFIX`, `TOKEN_GENIUS`, `TOKEN_REDDIT_CLIENT_ID`, `TOKEN_REDDIT_CLIENT_SECRET`, `TOKEN_REDDIT_USER_AGENT` and [`TIMEZONE`](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) with your desired values. You must also specify a path to the folder where the database will be.\
